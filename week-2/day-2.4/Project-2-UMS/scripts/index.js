@@ -1,3 +1,12 @@
+let ID
+
+// let user = [{
+//     name = userName
+
+// }]
+
+
+
 
 $(document).ready(function () {
     // Activate tooltip
@@ -11,9 +20,8 @@ window.onload = () => {
 
 // Funtion to get data from API
 async function getUserData() {
-    let response = await fetch('https://jsonplaceholder.typicode.com/users');
+    let response = await fetch('http://localhost:3000/users');
     let json = await response.json();
-    // console.log(json);
     return json;
 }
 
@@ -24,46 +32,113 @@ async function loadTable() {
     return createTable(data);
 }
 
+// funtion to get ID
+function getId(id) {
+    ID = id;
+    return console.log("getUserID ="+ ID);
+}
+
+// function to delete user and update the database
+async function deleteUser(ID, event) {
+    event.preventDefault();
+        await fetch(`http://localhost:3000/users/${ID}`,{method: "DELETE"});    //`http://localhost:3000/users/${ID}`
+        let json = await response.json();
+        return ID = null;
+    }
+
+
+
+
+
+
+// function to add user and update the database
+// async function addUser(ID,event) {
+//     fetch(`http://localhost:3000/users/${ID}`,{method: "PUT"});    //`http://localhost:3000/users/${ID}`
+//     let json = await response.json();
+//     // console.log(json);
+//     return json;
+// }
+
+// ADD user modal
+// function addUser() {
+// const name = document.querySelector(".name");
+// const email = document.querySelector(".email");
+// const address = document.querySelector(".address");
+// const phone = document.querySelector(".phone");
+// const company = document.querySelector(".company");
+// const website = document.querySelector(".website");
+// const userName = name.value;
+// const userEmail = email.value;
+// const userAddress = address.value;
+// const userPhone = phone.value;
+// const userCompany = company.value;
+// const userWebsite = website.value;
+// }
+
+// function addUser() {
+//     const userInfo = getElementById("addEmployeeModal").innerText
+// }
+
+// function addUser() {
+//     const form = document.getElementById("addUser");
+//     const submitter = document.querySelector("button[value=save]");
+//     const formData = new FormData(form, submitter);
+
+//     // const output = document.getElementById("output");
+
+//     for (const [key, value] of formData) {
+//       output.textContent += `${key}: ${value}\n`;
+//     }
+//     console.log(Object.fromEntries(formData));
+// }
+
+// async function deleteUser(ID,event) {
+//     if (event) event.preventDefault(); // Prevent default only if event exists
+
+//     console.log(ID)
+//     debugger
+
+//     try {
+//         const response = await fetch(`http://localhost:3000/users/${ID}`, {
+//             method: "DELETE",
+//         });
+
+//         if (response.ok) {
+//             console.log(`User with ID ${ID} deleted successfully.`);
+//             if (typeof loadTable === "function") {
+//                 loadTable(); // Refresh the table after deletion
+//             }
+//         } else {
+//             console.error(`Failed to delete user: ${response.status}`);
+//         }
+//     } catch (error) {
+//         console.error("Error deleting user:", error);
+//     }
+// }
+
+
 // Funtion to create table
 function createTable(data) {
-    const tableBody = document.getElementById("table")
-    data.forEach(element => {
-        const tableRow = createEle("tr", null, null);
-        const dataId = createEle("td", element.id, null);
-        const dataName = createEle("td", element.name, null);
-        const dataEmail = createEle("td", element.email, null);
-        const dataAddress = createEle("td", `${element.address.suite}, ${element.address.street},  ${element.address.city}` , null);
-        const dataPhone = createEle("td", element.phone, null);
-        const dataCompany = createEle("td", element.company.name, null);
-        const dataWebsite = createEle("td", element.website, null);
+    const tableBody = document.getElementById("table");
+    data.forEach(data => {
+            const tableRow = `
+                        <tr>
+						<td>${data.id}</td>
+                        <td>${data.name}</td>
+						<td>${data.email}</td>
+						<td>${data.address.suite + ", " + data.address.street + ", " +  data.address.city}</td>
+						<td>${data.phone}</td>
+                        <td>${data.company.name}</td>
+                        <td>${data.website}</td>
+						<td>
+							<a href="#editEmployeeModal" class="edit" data-toggle="modal" onclick = "getId(${data.id})"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+							<a href="#deleteEmployeeModal" class="delete" data-toggle="modal" onclick = "getId(${data.id})"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+						</td>
+                    `
+    tableBody.innerHTML += tableRow;
+
         
-        const btnCell = document.createElement("td");
-        btnCell.innerHTML = `  <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-				                <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-				            `
-                            
-        tableBody.appendChild(tableRow);
-        tableRow.appendChild(dataId);
-        tableRow.appendChild(dataName);
-        tableRow.appendChild(dataEmail);
-        tableRow.appendChild(dataAddress);
-        tableRow.appendChild(dataPhone);
-        tableRow.appendChild(dataCompany);
-        tableRow.appendChild(dataWebsite);
-        tableRow.appendChild(btnCell);
-        
-    });
-}
-
-// Funtion to create element
-function createEle(type, innerText, func) {
-    const element = document.createElement(type);
-    // // element.classList.add(...classList);
-    element.innerText = innerText;
-    // if (type = "button")
-    //     // element.addEventListener("click", func);
-    return element;
-}
+    }); }
 
 
 
@@ -71,49 +146,21 @@ function createEle(type, innerText, func) {
 
 
 
-// function createTable(data) {
-//         const tableRow = createElement("tr", null, null , null);
-//         const dataId = createElement("td", null, data.id, null);
-//         const dataName = createElement("td", null, data.name, null);
-//         const dataEmail = createElement("td", null, data.email, null);
-//         const dataAddress = createElement("td", null, data.address.suite, null);
-//         const dataPhone = createElement("td", null, data.phone, null);
-//         const dataCompany = createElement("td", null, data.company.name, null);
-//         const dataWebsite = createElement("td", null, data.website, null);
-//         document.getElementById("table").appendChild(tableRow);
-//         tableRow.appendChild(dataId);
-//         tableRow.appendChild(dataName);
-//         tableRow.appendChild(dataEmail);
-//         tableRow.appendChild(dataAddress);
-//         tableRow.appendChild(dataPhone);
-//         tableRow.appendChild(dataCompany);
-//         tableRow.appendChild(dataWebsite);
-//     }
 
 
 
-//  getUserData().then((data) => console.log(data));
-// createTable();
 
 
 
-// This function is used to create the elements dynamically
-// This function executes the function getFromLocal and then uses that data to create elements
-// function createList() {
-//     const list = document.getElementById("list");
-//     let taskFromLocal = getFromLocal();    //get data from function getFromlocal and stores in taskFromLocal
-//     // console.log(taskFromLocal);
-//     taskFromLocal.forEach((task) => {
-//       const taskDiv = createElement("div", ["task-div" , "position-relative"], null , null);
-//       const taskElement = createElement("p", ["form-control", "border-0", "list-item", "bg-transparent"], task.description, null);
-//       const editButton = createElement("button", ["btn", "btn-warning", "btn-md" , "ebtn"], "E", null);  //() => editTask(task.id)
-//       const deleteButton = createElement("button", ["btn", "btn-danger", "btn-md" , "dbtn"], "D", () => deleteTask(task.id)); //() => deleteTask(task.id)
-//       taskDiv.appendChild(editButton);
-//       taskDiv.appendChild(deleteButton);
-//       taskDiv.appendChild(taskElement)
-//       list.appendChild(taskDiv);
-//     });
-//   }
+
+
+
+
+
+
+
+
+
 
 
 
