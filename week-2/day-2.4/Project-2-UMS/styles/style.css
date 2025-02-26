@@ -4,6 +4,7 @@ body {
 	background: #f5f5f5;
 	font-family: 'Varela Round', sans-serif;
 	font-size: 18px;
+
 }
 .table-responsive {
     margin: 30px 0;
@@ -223,4 +224,18 @@ table.table .avatar {
 }	
 .modal form label {
 	font-weight: normal;
-}	
+}
+
+.error { 
+	color: red; 
+	font-size: 14px; 
+}
+
+.form-group { 
+	margin-bottom: 15px; 
+}
+
+button:disabled { 
+	background-color: gray; 
+	cursor: not-allowed; 
+}
