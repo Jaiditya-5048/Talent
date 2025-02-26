@@ -1,0 +1,64 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+#main-div {
+    height : 100vh;
+    width: auto;
+    padding: 0%;
+    background-image: linear-gradient(to bottom right, blue, white);
+
+}
+
+
+#card-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    
+}
+
+.list-item {
+    background-color: #DBE2EF;
+    color: #112D4E;
+    font-size: x-large;
+    font-weight: bold;
+    position: relative;
+}
+
+#userInput {
+    font-size: x-large; 
+    color: #112D4E;
+    background-color: #DBE2EF;
+    font-weight: bold;
+    border: #112D4E solid;
+
+}
+
+#input-btn {
+    background-color: #112D4E;
+    border: none;
+}
+
+.delete-btn {
+    background-color: #112D4E;
+    position: absolute;
+    /* padding-left: 80%; */
+    border: none;
+
+}
+
+.ebtn {
+    position: absolute;
+    z-index: 1;
+    margin-left: 85.5%;
+    margin-top: 5px;
+}
+
+.dbtn {
+    position: absolute;
+    z-index: 1;
+    margin-left: 92.5%;
+    margin-top: 5px;
+}
