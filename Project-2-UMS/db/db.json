@@ -7,6 +7,7 @@
         "lastName": "Bansal"
       },
       "email": "jaiditya@gamil.com",
+      "password" : "12345",
       "address": {
         "houseNumber": "1234",
         "area": "sec1234",
@@ -23,7 +24,8 @@
         "firstName": "Awjfeij",
         "lastName": "Wejifj"
       },
-      "email": "sefn@ejf.com",
+      "email": "sefn@gmail.com",
+      "password" : "1234",
       "address": {
         "houseNumber": "aijd",
         "area": "efj",
@@ -41,6 +43,7 @@
         "lastName": "Qwerty"
       },
       "email": "sefn@ejf.com",
+      "password" : "12345",
       "address": {
         "houseNumber": "aijd",
         "area": "efj",
