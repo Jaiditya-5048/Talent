@@ -147,10 +147,10 @@ async function verifyUser (event) {
     const password = document.getElementById("password").value.trim();
     try {
         const userData = await getSingleUser(email); 
-        console.log("Fetched User Data:", userData)
+        // console.log("Fetched User Data:", userData)
 
         if (userData.length === 1) {
-            console.log("User email found:", userData);
+            // console.log("User email found:", userData);
             document.getElementById("emailError").textContent = ""
             $("#passwordGroup").css("display" , "block");
             verifyUserPassword(email , password)
@@ -163,16 +163,31 @@ async function verifyUser (event) {
     
 }
 
+// Funtion to get data from API
+async function getUserData() {
+    try {
+        let response = await fetch(URL);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        return [];
+    }
+}
+
 async function verifyUserPassword(email , password) {
     if(!password) {
         return false;
     } else {
     try {
         const userData = await getSingleUser(email , password);
-        console.log("Fetched User Data:", userData)
+        const allData = await getUserData();
+        // console.log("Fetched User Data:", userData)
     
         if(userData.length === 1) {
-            console.log("User logged in:" + userData);
+            // console.log("User logged in:" , userData);
+            console.log(userData[0].role);
+            console.log(roleFilter(allData));
             document.getElementById("passwordError").textContent = ""
         } else {
             document.getElementById("passwordError").textContent = "Invalid Password";
@@ -183,6 +198,15 @@ async function verifyUserPassword(email , password) {
     }
 }
 
+function roleFilter(userData) {
+    if (userData[0].role = "Admin") {
+        const filterData = userData.filter(userData => userData.role !== "Super_Admin");
+        return userData;
+    }
+    // console.log(filterData);
+    // return filterData;
+}
+
 
 
 // function to get a single user
@@ -191,7 +215,7 @@ async function getSingleUser(email , password = null) {
         let params = { email: email };
         if (password) params.password = password;
 
-        let response = await fetch (URL + "?" + new URLSearchParams(params));
+        let response = await fetch (URL + "?" + new URLSearchParams(params));  //new URLSearchParams(params) ;; params is an object and URLSearchParams is a function that converts the object into valid URL query parameters
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         return await response.json()
     } catch (error) {

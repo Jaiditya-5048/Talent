@@ -176,7 +176,7 @@ async function editUser(id) {
 // This function is used to replace data in database using API
 async function putData(userData) {
     try {
-        debugger
+        // debugger
         const response = await fetch(`${URL}/${userData.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -185,7 +185,7 @@ async function putData(userData) {
 
         if (response.ok) {
             console.log("Updated user successfully!");
-            document.getElementById("userForm").reset(); // Clear form
+            document.getElementById("addUserForm").reset(); // Clear form
             document.getElementById("submitBtn").disabled = true; // Disable submit button again
             loadTable(); // Refresh table
         } else {
@@ -198,26 +198,26 @@ async function putData(userData) {
 
 
 // This function is used to add new user to database using API
-// async function postData(userData) {
-//     try {
-//         const response = await fetch("http://localhost:3000/users", {
-//             method: "POST",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify(userData)
-//         });
+async function postData(userData) {
+    try {
+        const response = await fetch("http://localhost:3000/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userData)
+        });
 
-//         if (response.ok) {
-//             console.log("User added successfully!");
-//             document.getElementById("userForm").reset(); // Clear form
-//             document.getElementById("submitBtn").disabled = true; // Disable submit button again
-//             loadTable(); // Refresh table
-//         } else {
-//             console.error("Failed to add user:", response.status);
-//         }
-//     } catch (error) {
-//         console.error("Error:", error);
-//     }
-// }
+        if (response.ok) {
+            console.log("User added successfully!");
+            document.getElementById("userForm").reset(); // Clear form
+            document.getElementById("submitBtn").disabled = true; // Disable submit button again
+            loadTable(); // Refresh table
+        } else {
+            console.error("Failed to add user:", response.status);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
 
 
 
@@ -234,6 +234,7 @@ function createTable(data) {
 						<td>${data.phone}</td>
                         <td>${data.company}</td>
                         <td>${data.website}</td>
+                        <td>${data.role}</td>
 						<td>
 							<a href="#editEmployeeModal" class="edit" onclick = "editUser(${data.id})"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
 							<a href="#deleteEmployeeModal" class="delete" data-toggle="modal" onclick = "getId(${data.id})"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>

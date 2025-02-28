@@ -61,10 +61,10 @@
         };
 
         putData(userData);
-        debugger
+        // debugger
 
         userId = null;   
-        debugger
+        // debugger
         return btnChange = null;
     }
     
@@ -76,14 +76,14 @@
 async function postData(userData) {
     try {
         const response = await fetch("http://localhost:3000/users", {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData)
         });
 
         if (response.ok) {
             console.log("User added successfully!");
-            document.getElementById("userForm").reset(); // Clear form
+            document.getElementById("addUserForm").reset(); // Clear form
             document.getElementById("submitBtn").disabled = true; // Disable submit button again
             loadTable(); // Refresh table
         } else {

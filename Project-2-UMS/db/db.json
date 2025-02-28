@@ -7,7 +7,7 @@
         "lastName": "Bansal"
       },
       "email": "jaiditya@gamil.com",
-      "password" : "12345",
+      "password": "12345",
       "address": {
         "houseNumber": "1234",
         "area": "sec1234",
@@ -16,7 +16,8 @@
       },
       "phone": "9234567890",
       "company": "talent",
-      "website": "talent.com"
+      "website": "talent.com",
+      "role" : "Super_Admin"
     },
     {
       "id": "1",
@@ -25,7 +26,7 @@
         "lastName": "Wejifj"
       },
       "email": "sefn@gmail.com",
-      "password" : "1234",
+      "password": "1234",
       "address": {
         "houseNumber": "aijd",
         "area": "efj",
@@ -34,25 +35,46 @@
       },
       "phone": "9865569855",
       "company": "efb",
-      "website": "efii.com"
+      "website": "efii.com",
+      "role" : "Admin"
     },
     {
-      "id": "1740517436152.527",
+      "id": "1740709565863.7705",
       "name": {
-        "firstName": "Qwerty",
-        "lastName": "Qwerty"
+        "firstName": "Bharat",
+        "lastName": "Sharma"
       },
-      "email": "sefn@ejf.com",
-      "password" : "12345",
+      "email": "bharat@talent.com",
+      "password": "12345",
       "address": {
-        "houseNumber": "aijd",
-        "area": "efj",
-        "city": "chd",
-        "pin": "797984"
+        "houseNumber": "321",
+        "area": "sec21",
+        "city": "chandigarh",
+        "pin": "160020"
       },
-      "phone": "9865569855",
-      "company": "efb",
-      "website": "efii.com"
+      "phone": "9234567890",
+      "company": "talent",
+      "website": "talent.org",
+      "role" : "Admin"
+    },
+    {
+      "id": "1740711500007.4702",
+      "name": {
+        "firstName": "Karan ikjot",
+        "lastName": "Singh"
+      },
+      "email": "karan@talent.co",
+      "password": "12345",
+      "address": {
+        "houseNumber": "532/f",
+        "area": "45f",
+        "city": "chandigarh",
+        "pin": "160020"
+      },
+      "phone": "7455224443",
+      "company": "talent",
+      "website": "talent.co",
+      "role" : "customer"
     }
   ]
 }
