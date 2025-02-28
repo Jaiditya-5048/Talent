@@ -17,7 +17,7 @@
       "phone": "9234567890",
       "company": "talent",
       "website": "talent.com",
-      "role" : "Super_Admin"
+      "role": "Super_Admin"
     },
     {
       "id": "1",
@@ -36,7 +36,7 @@
       "phone": "9865569855",
       "company": "efb",
       "website": "efii.com",
-      "role" : "Admin"
+      "role": "Admin"
     },
     {
       "id": "1740709565863.7705",
@@ -45,7 +45,7 @@
         "lastName": "Sharma"
       },
       "email": "bharat@talent.com",
-      "password": "12345",
+      "password": "1234",
       "address": {
         "houseNumber": "321",
         "area": "sec21",
@@ -55,7 +55,7 @@
       "phone": "9234567890",
       "company": "talent",
       "website": "talent.org",
-      "role" : "Admin"
+      "role": "Admin"
     },
     {
       "id": "1740711500007.4702",
@@ -64,9 +64,8 @@
         "lastName": "Singh"
       },
       "email": "karan@talent.co",
-      "password": "12345",
       "address": {
-        "houseNumber": "532/f",
+        "houseNumber": "53/f",
         "area": "45f",
         "city": "chandigarh",
         "pin": "160020"
@@ -74,7 +73,7 @@
       "phone": "7455224443",
       "company": "talent",
       "website": "talent.co",
-      "role" : "customer"
+      "role": "Customer"
     }
   ]
 }

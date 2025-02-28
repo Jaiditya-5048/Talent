@@ -26,12 +26,37 @@ async function getUserData() {
 
 // Function to use data from API to create table
 async function loadTable() {
-    let data = await getUserData()
+    roleFilter(userData)
+    const userData = JSON.parse(sessionStorage.getItem("loggedInCustomer"));
+
     let tableBody = document.getElementById("table");
     tableBody.innerHTML = ""; // Clear skeleton loader
+   
     // console.log(data);
-    return createTable(data);
+    return createTable(userData);
 }
+
+
+async function roleFilter(userData) {
+    // const userData = await verifyUserPassword();
+    const allData = await getUserData();
+        
+    if (userData[0].role == "Admin") {                                                  //In case of Admin
+        let filterData = allData.filter(allData => allData.role !== "Super_Admin");
+        return filterData;
+    } else
+    if (userData[0].role == "customer") {                                               //In case of customer
+        
+    } else {                                                                           //In case of Super_Admin
+        return allData;
+        
+    }
+}
+
+
+
+
+
 
 // funtion to get ID
 function getId(id) {
@@ -41,6 +66,11 @@ function getId(id) {
 
 // To change the value of submit button to ADD
 document.getElementById("addUserBtn").addEventListener("click", function(){
+
+
+    const modalHeader = document.getElementById("modalHeader");
+    modalHeader.innerText = "Add Employee"
+
     const submitBtn = document.getElementById("submitBtn");
     submitBtn.value = "ADD";
     return btnChange = true;
@@ -81,8 +111,14 @@ async function getSingleUser(ID) {
 async function editUser(id) {
 
     let userData = await getSingleUser(id);
-    let myModal = new bootstrap.Modal(document.getElementById('addEmployeeModal'));
-    myModal.show();
+   
+        const Modal = new bootstrap.Modal(document.getElementById("addEmployeeModal"), {
+            backdrop: 'static',
+            keyboard: false // Prevent closing with Esc key
+        });
+    
+        Modal.show(); // Show the modal
+
     document.getElementById("firstName").value = userData.name.firstName;
     document.getElementById("lastName").value = userData.name.lastName;
     document.getElementById("email").value = userData.email;
@@ -91,8 +127,14 @@ async function editUser(id) {
     document.getElementById("city").value = userData.address.city;
     document.getElementById("pin").value = userData.address.pin;
     document.getElementById("phone").value = userData.phone;
+    document.getElementById("role").value = userData.role;
+    console.log(userData.role);
     document.getElementById("company").value = userData.company;
     document.getElementById("website").value = userData.website;
+
+
+    const modalHeader = document.getElementById("modalHeader");
+    modalHeader.innerText = "Edit Employee Data"
 
     const submitBtn = document.getElementById("submitBtn");
     submitBtn.value = "EDIT";
@@ -176,7 +218,6 @@ async function editUser(id) {
 // This function is used to replace data in database using API
 async function putData(userData) {
     try {
-        // debugger
         const response = await fetch(`${URL}/${userData.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -236,7 +277,7 @@ function createTable(data) {
                         <td>${data.website}</td>
                         <td>${data.role}</td>
 						<td>
-							<a href="#editEmployeeModal" class="edit" onclick = "editUser(${data.id})"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+							<a href="#editEmployeeModal" class="edit"data-toggle="modal" onclick = "editUser(${data.id})"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
 							<a href="#deleteEmployeeModal" class="delete" data-toggle="modal" onclick = "getId(${data.id})"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
 						</td>
                     `

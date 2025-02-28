@@ -6,7 +6,7 @@ window.onload = () => {
     renderLogin();
 }
 
-function renderLogin(){
+function renderLogin() {
     const CardBody = document.getElementById("CardBody");
     const loginCard = `<div class="card-body">
               <h5 class="login">Login</h5>
@@ -125,42 +125,42 @@ function renderRegister() {
                 </div>
             </div>
         </div>`
-    
+
     CardBody.innerHTML = registerCard;
 }
 
 
-document.getElementById("registerSwitchBtn").addEventListener("click" , function (event) {
+document.getElementById("registerSwitchBtn").addEventListener("click", function (event) {
     event.preventDefault();
     renderRegister();
 })
 
-document.getElementById("loginSwitchBtn").addEventListener("click" , function (event) {
+document.getElementById("loginSwitchBtn").addEventListener("click", function (event) {
     event.preventDefault();
     renderLogin();
 })
 
 // trigger on login button used to very user
-async function verifyUser (event) {
+async function verifyUser(event) {
     event.preventDefault();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
     try {
-        const userData = await getSingleUser(email); 
+        const userData = await getSingleUser(email);
         // console.log("Fetched User Data:", userData)
 
         if (userData.length === 1) {
             // console.log("User email found:", userData);
             document.getElementById("emailError").textContent = ""
-            $("#passwordGroup").css("display" , "block");
-            verifyUserPassword(email , password)
+            $("#passwordGroup").css("display", "block");
+            verifyUserPassword(email, password)
         } else {
             document.getElementById("emailError").textContent = "No user found";
         }
     } catch (error) {
         console.error("Error fetching user data:", error);
     }
-    
+
 }
 
 // Funtion to get data from API
@@ -175,53 +175,44 @@ async function getUserData() {
     }
 }
 
-async function verifyUserPassword(email , password) {
-    if(!password) {
+
+
+
+async function verifyUserPassword(email, password) {
+    if (!password) {
         return false;
     } else {
-    try {
-        const userData = await getSingleUser(email , password);
-        const allData = await getUserData();
-        // console.log("Fetched User Data:", userData)
-    
-        if(userData.length === 1) {
-            // console.log("User logged in:" , userData);
-            console.log(userData[0].role);
-            console.log(roleFilter(allData));
+        try {
+            const userData = await getSingleUser(email, password);
+            if (userData.length === 1) {
+                console.log("User logged in:" , userData[0].email , ", User role:" , userData[0].role);
+                sessionStorage.setItem("loggedInUser", JSON.stringify(userData))
+                window.location.replace('index.html' , '_blank');
             document.getElementById("passwordError").textContent = ""
-        } else {
-            document.getElementById("passwordError").textContent = "Invalid Password";
+            } else {
+                document.getElementById("passwordError").textContent = "Invalid Password";
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
         }
-    }  catch (error) {
-        console.error("Error fetching user data:", error);
     }
-    }
-}
-
-function roleFilter(userData) {
-    if (userData[0].role = "Admin") {
-        const filterData = userData.filter(userData => userData.role !== "Super_Admin");
-        return userData;
-    }
-    // console.log(filterData);
-    // return filterData;
 }
 
 
 
 // function to get a single user
-async function getSingleUser(email , password = null) {
-    try{
+async function getSingleUser(email, password = null) {
+    try {
         let params = { email: email };
         if (password) params.password = password;
 
-        let response = await fetch (URL + "?" + new URLSearchParams(params));  //new URLSearchParams(params) ;; params is an object and URLSearchParams is a function that converts the object into valid URL query parameters
+        let response = await fetch(URL + "?" + new URLSearchParams(params));  //new URLSearchParams(params) ;; params is an object and URLSearchParams is a function that converts the object into valid URL query parameters
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         return await response.json()
     } catch (error) {
         console.error("Error fetching user data:", error);
         return [];
-    }   
+    }
 }
 // fetch('https://example.com?' + new URLSearchParams({
 //     foo: 'value',

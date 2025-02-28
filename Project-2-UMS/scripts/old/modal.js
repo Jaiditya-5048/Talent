@@ -72,6 +72,13 @@
 };
 
 
+
+
+
+
+
+
+
 // This function is used to add new user to database using API
 async function postData(userData) {
     try {
