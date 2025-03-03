@@ -26,31 +26,35 @@ async function getUserData() {
 
 // Function to use data from API to create table
 async function loadTable() {
-    roleFilter(userData)
-    const userData = JSON.parse(sessionStorage.getItem("loggedInCustomer"));
+    
+    const userData = JSON.parse(sessionStorage.getItem("loggedInUser"));
+    const filterData = await roleFilter(userData)
+    console.log(filterData);
 
     let tableBody = document.getElementById("table");
     tableBody.innerHTML = ""; // Clear skeleton loader
    
-    // console.log(data);
-    return createTable(userData);
+    // console.log(userData);
+    return createTable(filterData);
 }
 
 
 async function roleFilter(userData) {
     // const userData = await verifyUserPassword();
     const allData = await getUserData();
+
         
-    if (userData[0].role == "Admin") {                                                  //In case of Admin
+    if (userData[0].role == "Super_Admin") {                                                  //In case of Admin
         let filterData = allData.filter(allData => allData.role !== "Super_Admin");
+
         return filterData;
-    } else
-    if (userData[0].role == "customer") {                                               //In case of customer
+    } else { if (userData[0].role == "customer") {                                               //In case of customer
         
-    } else {                                                                           //In case of Super_Admin
-        return allData;
-        
-    }
+    } else {       
+        return allData;                                                                          //In case of Super_Admin
+       
+              
+    } }
 }
 
 
