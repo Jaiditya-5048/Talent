@@ -1,0 +1,79 @@
+{
+  "users": [
+    {
+      "id": "1740507496555.1956",
+      "name": {
+        "firstName": "Jaiditya",
+        "lastName": "Bansal"
+      },
+      "email": "jaiditya@gamil.com",
+      "password": "12345",
+      "address": {
+        "houseNumber": "1234",
+        "area": "sec1234",
+        "city": "chandigarh",
+        "pin": "160000"
+      },
+      "phone": "9234567890",
+      "company": "talent",
+      "website": "talent.com",
+      "role": "Super_Admin"
+    },
+    {
+      "id": "1",
+      "name": {
+        "firstName": "Awjfeij",
+        "lastName": "Wejifj"
+      },
+      "email": "sefn@gmail.com",
+      "password": "1234",
+      "address": {
+        "houseNumber": "aijd",
+        "area": "efj",
+        "city": "efnm",
+        "pin": "797984"
+      },
+      "phone": "9865569855",
+      "company": "efb",
+      "website": "efii.com",
+      "role": "Admin"
+    },
+    {
+      "id": "1740709565863.7705",
+      "name": {
+        "firstName": "Bharat",
+        "lastName": "Sharma"
+      },
+      "email": "bharat@talent.com",
+      "password": "1234",
+      "address": {
+        "houseNumber": "321",
+        "area": "sec21",
+        "city": "chandigarh",
+        "pin": "160020"
+      },
+      "phone": "9234567890",
+      "company": "talent",
+      "website": "talent.org",
+      "role": "Admin"
+    },
+    {
+      "id": "1740711500007.4702",
+      "name": {
+        "firstName": "Karan ikjot",
+        "lastName": "Singh"
+      },
+      "email": "karan@talent.co",
+      "address": {
+        "houseNumber": "53/f",
+        "area": "45f",
+        "city": "chandigarh",
+        "pin": "160020"
+      },
+      "phone": "7455224443",
+      "company": "talent",
+      "website": "talent.co",
+      "role": "Customer"
+    }
+  ]
+}
