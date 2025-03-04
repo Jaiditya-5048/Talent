@@ -132,7 +132,6 @@ async function editUser(id) {
     document.getElementById("pin").value = userData.address.pin;
     document.getElementById("phone").value = userData.phone;
     document.getElementById("role").value = userData.role;
-    console.log(userData.role);
     document.getElementById("company").value = userData.company;
     document.getElementById("website").value = userData.website;
 
