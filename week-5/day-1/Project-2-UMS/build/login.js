@@ -1,14 +1,20 @@
-import { User } from "./types";
-
-const URL_MAIN:string = "http://localhost:3000/users/"
-
-
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const URL_MAIN = "http://localhost:3000/users/";
 window.onload = () => {
     renderLogin();
-}
-
+};
 function renderLogin() {
-    const CardBody = document.getElementById("CardBody") as HTMLDivElement;
+    const CardBody = document.getElementById("CardBody");
     const loginCard = `<div class="card-body">
               <h5 class="login">Login</h5>
                <form id="loginForm">
@@ -30,14 +36,12 @@ function renderLogin() {
                 </div>
                </form>
                 
-            </div>`
+            </div>`;
     CardBody.innerHTML = loginCard;
 }
-
-
 // funtion to render the registration card
 function renderRegister() {
-    const CardBody = document.getElementById("CardBody") as HTMLDivElement;
+    const CardBody = document.getElementById("CardBody");
     const registerCard = `      
         <div class="container-fluid mt-5">
         <div class="card">
@@ -126,83 +130,81 @@ function renderRegister() {
                     </form>
                 </div>
             </div>
-        </div>`
-
+        </div>`;
     CardBody.innerHTML = registerCard;
 }
-
-(document.getElementById("registerSwitchBtn") as HTMLButtonElement).addEventListener("click", function (event) {
+document.getElementById("registerSwitchBtn").addEventListener("click", function (event) {
     event.preventDefault();
     renderRegister();
 });
-
-(document.getElementById("loginSwitchBtn") as HTMLButtonElement).addEventListener("click", function (event) {
+document.getElementById("loginSwitchBtn").addEventListener("click", function (event) {
     event.preventDefault();
     renderLogin();
 });
-
 // trigger on login button used to very user
-async function verifyUser(event: SubmitEvent) {
-    event.preventDefault();
-    const email = (document.getElementById("email") as HTMLInputElement).value.trim();
-    const password = (document.getElementById("password") as HTMLInputElement).value.trim();
-    try {
-        const userData = await getSingleUser(email);
-        // console.log("Fetched User Data:", userData)
-
-        if (userData.length === 1) {
-            // console.log("User email found:", userData);
-            (document.getElementById("emailError") as HTMLInputElement).textContent = ""
-            $("#passwordGroup").css("display", "block");
-            verifyUserPassword(email, password)
-        } else {
-            (document.getElementById("emailError") as HTMLInputElement).textContent = "No user found";
-        }
-    } catch (error) {
-        console.error("Error fetching user data:", error);
-    }
-
-}
-
-
-
-
-
-
-async function verifyUserPassword(email:string, password: null | string) {
-    if (!password) {
-        return false;
-    } else {
+function verifyUser(event) {
+    return __awaiter(this, void 0, void 0, function* () {
+        event.preventDefault();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
         try {
-            const userData = await getSingleUser(email, password);
+            const userData = yield getSingleUser(email);
+            // console.log("Fetched User Data:", userData)
             if (userData.length === 1) {
-                console.log("User logged in:" , userData[0].email , ", User role:" , userData[0].role);
-                sessionStorage.setItem("loggedInUser", JSON.stringify(userData))
-                window.location.replace('index.html');
-                (document.getElementById("passwordError") as HTMLInputElement).textContent = ""
-            } else {
-                (document.getElementById("passwordError") as HTMLInputElement).textContent = "Invalid Password";
+                // console.log("User email found:", userData);
+                document.getElementById("emailError").textContent = "";
+                $("#passwordGroup").css("display", "block");
+                verifyUserPassword(email, password);
             }
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-            return error
+            else {
+                document.getElementById("emailError").textContent = "No user found";
+            }
         }
-    }
+        catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    });
 }
-
-
-
+function verifyUserPassword(email, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!password) {
+            return false;
+        }
+        else {
+            try {
+                const userData = yield getSingleUser(email, password);
+                if (userData.length === 1) {
+                    console.log("User logged in:", userData[0].email, ", User role:", userData[0].role);
+                    sessionStorage.setItem("loggedInUser", JSON.stringify(userData));
+                    window.location.replace('index.html');
+                    document.getElementById("passwordError").textContent = "";
+                }
+                else {
+                    document.getElementById("passwordError").textContent = "Invalid Password";
+                }
+            }
+            catch (error) {
+                console.error("Error fetching user data:", error);
+                return error;
+            }
+        }
+    });
+}
 // function to get a single user
-async function getSingleUser(email:string , password ?: null | string): Promise<User[] | []> {
-    try {
-        const params: Record<string , string> = { email: email };
-        if (password) params.password = password;
-
-        let response = await fetch(URL + "?" + new URLSearchParams(params));  //new URLSearchParams(params) ;; params is an object and URLSearchParams is a function that converts the object into valid URL query parameters
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        return await response.json()
-    } catch (error) {
-        console.error("Error fetching user data:", error);
-        return [];
-    }
+function getSingleUser(email, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const params = { email: email };
+            if (password)
+                params.password = password;
+            let response = yield fetch(URL + "?" + new URLSearchParams(params)); //new URLSearchParams(params) ;; params is an object and URLSearchParams is a function that converts the object into valid URL query parameters
+            if (!response.ok)
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            return yield response.json();
+        }
+        catch (error) {
+            console.error("Error fetching user data:", error);
+            return [];
+        }
+    });
 }
