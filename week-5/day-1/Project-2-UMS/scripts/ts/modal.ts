@@ -1,6 +1,11 @@
 import {User , Roles, Name, Address} from "./types";
 import { postData , putData } from "./api";
 
+const URL_MAIN:string = "http://localhost:3000/users/"
+
+let btnChange: boolean | null;
+let userId: number | null;
+
 
 // Handle form submission
 // document.getElementById("addUserForm").addEventListener("submit", 
@@ -57,7 +62,7 @@ async function submitForm (event: SubmitEvent) {
     
 
         postData(userData);
-        globalThis.btnChange = null;
+        btnChange = null;
     }
     else{
 

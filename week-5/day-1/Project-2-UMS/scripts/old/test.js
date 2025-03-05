@@ -135,7 +135,6 @@ async function editUser(id) {
     document.getElementById("company").value = userData.company;
     document.getElementById("website").value = userData.website;
 
-
     const modalHeader = document.getElementById("modalHeader");
     modalHeader.innerText = "Edit Employee Data"
 
