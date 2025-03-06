@@ -121,7 +121,7 @@ class UserForm {
         const roleValue = (document.getElementById("roles") as HTMLInputElement).value.trim();
         const role = Object.values(Roles).includes(roleValue as Roles) ? (roleValue as Roles) : Roles.CUSTOMER;
 
-        return new User(
+        const user: User = (
             this.userId ?? Date.now() + Math.random(), // If `userId` is null, create a new ID
             name,
             email,
@@ -132,6 +132,7 @@ class UserForm {
             website,
             role
         );
+        return user
     }
 
     // **Handle Form Submission (Add or Edit)**

@@ -1,12 +1,12 @@
-import {User, Roles } from "./types"
-import { createTable } from "./DOM";
-import bootstrap from "bootstrap";
+// import {User, Roles } from  "./types"
+// import { createTable } from "./DOM";
+// import bootstrap from "bootstrap";
 // import { allDataFunc } from "./api";
 
 const URL_MAIN:string = "http://localhost:3000/users/"
 
 const handleAPI =async ()  => {
-    const response = await callAPI(URL_MAIN,'GET')
+    const response = await callAPI(URL_MAIN,'DELETE' )
     console.log("response from API =>" , response)
 }
 

@@ -4,6 +4,8 @@ $(document).ready(function () {
 });
 
 
+
+
 const URL = "http://localhost:3000/users"
 let btnChange = null;
 let userId;
@@ -44,7 +46,7 @@ async function roleFilter(userData) {
     const allData = await getUserData();
 
         
-    if (userData[0].role == "Super_Admin") {                                                  //In case of Admin
+    if (userData[0].role == "Admin") {                                                  //In case of Admin
         let filterData = allData.filter(allData => allData.role !== "Super_Admin");
 
         return filterData;
@@ -82,6 +84,10 @@ document.getElementById("addUserBtn").addEventListener("click", function(){
 
 // To clear the form in modal when closed using the cross button
 document.getElementById('cancelBtn').addEventListener('click', function () {
+    document.getElementById('addUserForm').reset();
+    resetErrors();
+});
+document.getElementById('crossBtn').addEventListener('click', function () {
     document.getElementById('addUserForm').reset();
     resetErrors();
 });
@@ -218,49 +224,50 @@ async function editUser(id) {
 // });
 
 // This function is used to replace data in database using API
-async function putData(userData) {
-    try {
-        const response = await fetch(`${URL}/${userData.id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(userData)
-        });
+// async function putData(userData) {
+//     try {
+//         const response = await fetch(`${URL}/${userData.id}`, {
+//             method: "PUT",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify(userData)
+//         });
 
-        if (response.ok) {
-            console.log("Updated user successfully!");
-            document.getElementById("addUserForm").reset(); // Clear form
-            document.getElementById("submitBtn").disabled = true; // Disable submit button again
-            loadTable(); // Refresh table
-        } else {
-            console.error("Failed to update user:", response.status);
-        }
-    } catch (error) {
-        console.error("Error:", error);
-    }
-}
+//         if (response.ok) {
+//             console.log("Updated user successfully!");
+//             document.getElementById("addUserForm").reset(); // Clear form
+//             document.getElementById("submitBtn").disabled = true; // Disable submit button again
+//             loadTable(); // Refresh table
+//         } else {
+//             console.error("Failed to update user:", response.status);
+//         }
+//     } catch (error) {
+//         console.error("Error:", error);
+//     }
+// }
 
 
-// This function is used to add new user to database using API
-async function postData(userData) {
-    try {
-        const response = await fetch("http://localhost:3000/users", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(userData)
-        });
 
-        if (response.ok) {
-            console.log("User added successfully!");
-            document.getElementById("userForm").reset(); // Clear form
-            document.getElementById("submitBtn").disabled = true; // Disable submit button again
-            loadTable(); // Refresh table
-        } else {
-            console.error("Failed to add user:", response.status);
-        }
-    } catch (error) {
-        console.error("Error:", error);
-    }
-}
+// // This function is used to add new user to database using API
+// async function postData(userData) {
+//     try {
+//         const response = await fetch("http://localhost:3000/users", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify(userData)
+//         });
+
+//         if (response.ok) {
+//             console.log("User added successfully!");
+//             document.getElementById("userForm").reset(); // Clear form
+//             document.getElementById("submitBtn").disabled = true; // Disable submit button again
+//             loadTable(); // Refresh table
+//         } else {
+//             console.error("Failed to add user:", response.status);
+//         }
+//     } catch (error) {
+//         console.error("Error:", error);
+//     }
+// }
 
 
 

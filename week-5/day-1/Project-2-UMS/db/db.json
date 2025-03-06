@@ -20,25 +20,6 @@
       "role": "Super_Admin"
     },
     {
-      "id": "1",
-      "name": {
-        "firstName": "Awjfeij",
-        "lastName": "Wejifj"
-      },
-      "email": "sefn@gmail.com",
-      "password": "1234",
-      "address": {
-        "houseNumber": "aijd",
-        "area": "efj",
-        "city": "efnm",
-        "pin": "797984"
-      },
-      "phone": "9865569855",
-      "company": "efb",
-      "website": "efii.com",
-      "role": "Admin"
-    },
-    {
       "id": "1740709565863.7705",
       "name": {
         "firstName": "Bharat",
@@ -63,7 +44,7 @@
         "firstName": "Karan ikjot",
         "lastName": "Singh"
       },
-      "email": "karan@talent.co",
+      "email": "karan@talent.com",
       "address": {
         "houseNumber": "53/f",
         "area": "45f",
@@ -73,6 +54,79 @@
       "phone": "7455224443",
       "company": "talent",
       "website": "talent.co",
+      "role": "Customer"
+    },
+    {
+      "id": "1741166968061.0144",
+      "name": {
+        "firstName": "Test",
+        "lastName": "Test"
+      },
+      "email": "test@test.com",
+      "address": {
+        "houseNumber": "797",
+        "area": "89d",
+        "city": "test",
+        "pin": "000000"
+      },
+      "phone": "9000000000",
+      "company": "test",
+      "website": "test.com",
+      "role": "Admin"
+    },
+    {
+      "id": "1",
+      "name": {
+        "firstName": "Awjfeij",
+        "lastName": "Wejifj"
+      },
+      "email": "sefn@gmail.com",
+      "address": {
+        "houseNumber": "aijd",
+        "area": "efj",
+        "city": "efnm",
+        "pin": "797984"
+      },
+      "phone": "9865569855",
+      "company": "ef",
+      "website": "efii.com",
+      "role": "Customer"
+    },
+    {
+      "id": "1741168642690.0374",
+      "name": {
+        "firstName": "Test",
+        "lastName": "Test"
+      },
+      "email": "test1@j.com",
+      "address": {
+        "houseNumber": "12",
+        "area": "23",
+        "city": "dmm",
+        "pin": "787898"
+      },
+      "phone": "9844848444",
+      "company": "svss",
+      "website": "fvrv.com",
+      "role": "Customer"
+    },
+    {
+      "id": "1741171955455.996",
+      "name": {
+        "firstName": "Wed",
+        "lastName": "Dwd"
+      },
+      "email": "dqwd@ef.om",
+      "password": "dada2",
+      "address": {
+        "houseNumber": "addqd",
+        "area": "wdd",
+        "city": "fwd",
+        "pin": "788945"
+      },
+      "phone": "7899555555",
+      "company": "jad",
+      "website": "andwn.com",
       "role": "Customer"
     }
   ]

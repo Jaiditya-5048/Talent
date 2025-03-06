@@ -3,16 +3,17 @@
     async function submitForm (event) {
     event.preventDefault(); // Prevent default form submission
 
-    let firstName = document.getElementById("firstName").value.trim();
-    let lastName = document.getElementById("lastName").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let houseNumber = document.getElementById("houseNumber").value.trim();
-    let area = document.getElementById("area").value.trim();
-    let city = document.getElementById("city").value.trim();
-    let pin = document.getElementById("pin").value.trim();
-    let phone = document.getElementById("phone").value.trim();
-    let company = document.getElementById("company").value.trim();
-    let website = document.getElementById("website").value.trim();
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const houseNumber = document.getElementById("houseNumber").value.trim();
+    const area = document.getElementById("area").value.trim();
+    const city = document.getElementById("city").value.trim();
+    const pin = document.getElementById("pin").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const company = document.getElementById("company").value.trim();
+    const website = document.getElementById("website").value.trim();
+    const role = document.getElementById("role").value;
 
     let userData;
     
@@ -33,7 +34,8 @@
             },
             phone,
             company,
-            website 
+            website,
+            role
         };
     
 
@@ -57,7 +59,8 @@
             },
             phone,
             company,
-            website 
+            website,
+            role
         };
 
         putData(userData);
@@ -73,17 +76,34 @@
 
 
 
+// This function is used to replace data in database using API
+async function putData(userData) {
+    try {
+        const response = await fetch(`${URL}/${userData.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userData)
+        });
 
-
-
-
+        if (response.ok) {
+            console.log("Updated user successfully!");
+            document.getElementById("addUserForm").reset(); // Clear form
+            document.getElementById("submitBtn").disabled = true; // Disable submit button again
+            loadTable(); // Refresh table
+        } else {
+            console.error("Failed to update user:", response.status);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
 
 
 // This function is used to add new user to database using API
 async function postData(userData) {
     try {
         const response = await fetch("http://localhost:3000/users", {
-            method: "PUT",
+            method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData)
         });
@@ -132,6 +152,7 @@ function validateForm() {
 
     if (!firstName) {
         $("#fNameError").text("Name required");
+        // isValid = false;
     } else  if (!nameRegex.test(firstName)) {
         document.getElementById("fNameError").textContent = "Invalid Name (Only letters & spaces allowed)";
         isValid = false;
@@ -139,6 +160,7 @@ function validateForm() {
 
     if (!lastName) {
         $("#lNameError").text("Name required");
+        // isValid = false;
     } else    if (!nameRegex.test(lastName)) {
         document.getElementById("lNameError").textContent = "Invalid Name (Only letters & spaces allowed)";
         isValid = false;
@@ -146,6 +168,7 @@ function validateForm() {
 
     if (!email) {
         $("#emailError").text("Email is required");
+        // isValid = false;
     } else    if (!emailRegex.test(email)) {
         document.getElementById("emailError").textContent = "Invalid Email format (e.g., example@example.com)"
         isValid = false;
@@ -153,6 +176,7 @@ function validateForm() {
 
     if (!houseNumber) {
         $("#houseNumberError").text("House Number is required");
+        // isValid = false;
     } else    if (!houseNumberRegex.test(houseNumber)) {
         document.getElementById("houseNumberError").textContent = "Invalid House Number (only letters, numbers, spaces, #/- allowed )";
         isValid = false;
@@ -160,6 +184,7 @@ function validateForm() {
 
     if (!area) {
         $("#areaError").text("Area/Locality is required");
+        // isValid = false;
     } else    if (!areaRegex.test(area)) {
         document.getElementById("areaError").textContent = "Invalid (only letters, numbers, spaces, ,.- allowed )";
         isValid = false;
@@ -167,13 +192,14 @@ function validateForm() {
     
     if (!city) {
         $("#cityError").text("City is required");
-    } else    if (!cityRegex.test(city)) {
+    // } else    if (!cityRegex.test(city)) {
         document.getElementById("cityError").textContent = "Invalid city name (only letters and spaces allowed)";
         isValid = false;
     }
 
     if (!pin) {
         $("#pinError").text("Pin is required");
+        // isValid = false;
     } else    if (!pinRegex.test(pin)) {
         document.getElementById("pinError").textContent = "Invalid Pincode (6 digits)";
         isValid = false;
@@ -181,6 +207,7 @@ function validateForm() {
 
     if (!phone) {
         $("#phoneError").text("Phone is required");
+        // isValid = false;
     } else    if (!phoneRegex.test(phone)) {
         document.getElementById("phoneError").textContent = "Invalid Phone number";
         isValid = false;
@@ -188,6 +215,7 @@ function validateForm() {
 
     if (!website) {
         $("#websiteError").text("Website is required");
+        // isValid = false;
     } else    if (!websiteRegex.test(website)) {
         document.getElementById("websiteError").textContent = "Invalid Website (e.g., https://example.com)";
         isValid = false;
@@ -195,6 +223,7 @@ function validateForm() {
 
     if (!company) {
         $("#companyError").text("Company is required");
+        // isValid = false;
     } else    if (!companyRegex.test(company)) {
         document.getElementById("companyError").textContent = "Invalid Company Name (Only letters, numbers, &.- allowed)";
         isValid = false;
