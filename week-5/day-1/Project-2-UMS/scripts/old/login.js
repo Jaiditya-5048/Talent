@@ -66,7 +66,7 @@ function renderRegister() {
                     <div class="form-group">
                         <label>Password</label>
                         <input type="password" id="password" class="form-control password" autocomplete="on" required oninput="validateForm()" onblur="validateForm()">
-                        <div id="password" class="text-danger"></div>
+                        <div id="passwordError" class="text-danger"></div>
                     </div>
     
                     <div class="row">
@@ -118,7 +118,7 @@ function renderRegister() {
                             <button type="button" id="cancelBtn" class="btn btn-secondary btn-lg">Cancel</button>
                         </div>
                         <div class="col-md-4" id="submitBtnDiv">
-                            <button type="submit" class="btn btn-success btn-lg" id="submitBtn" disabled onclick="submitForm()">Add</button>
+                            <button type="submit" class="btn btn-success btn-lg" id="submitBtn" disabled onclick="submitLoginForm(event)">Add</button>
                         </div>
                         </div>
                     </form>
@@ -127,6 +127,71 @@ function renderRegister() {
         </div>`
 
     CardBody.innerHTML = registerCard;
+}
+
+function submitLoginForm (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const houseNumber = document.getElementById("houseNumber").value.trim();
+    const area = document.getElementById("area").value.trim();
+    const city = document.getElementById("city").value.trim();
+    const pin = document.getElementById("pin").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const company = document.getElementById("company").value.trim();
+    const website = document.getElementById("website").value.trim();
+    const role = "Customer";
+
+    let userData;
+    
+        userData = { 
+            id : Date.now() + Math.random(),
+            name : {
+                firstName : firstName.charAt(0).toUpperCase() + firstName.slice(1) ,
+                lastName : lastName.charAt(0).toUpperCase() + lastName.slice(1)
+            }, 
+            email,
+            password,
+            address : {
+                houseNumber,
+                area,
+                city,
+                pin
+            },
+            phone,
+            company,
+            website,
+            role
+        };
+        console.log(userData);
+        debugger
+     postLoginData(userData);
+}
+
+// This function is used to add new user to database using API
+async function postLoginData(userData) {
+    debugger
+    try {
+        const response = await fetch("http://localhost:3000/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userData)
+        });
+
+        if (response.ok) {
+            console.log("User added successfully!");
+            document.getElementById("addUserForm").reset(); // Clear form
+            document.getElementById("submitBtn").disabled = true; // Disable submit button again
+            loadTable(); // Refresh table
+        } else {
+            console.error("Failed to add user:", response.status);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
 }
 
 

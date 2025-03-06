@@ -2,7 +2,7 @@
 // import { loadTable } from "./index";
 
 const URL_MAIN:string = "http://localhost:3000/users/"
-type apiMethods = 'GET'|'POST'
+type apiMethods = 'GET'|'POST'|'DELETE'
 
 async function callAPI(endpoint: string, method: apiMethods, body = null): Promise<unknown> {
    return await(await fetch(URL_MAIN, {
@@ -22,7 +22,6 @@ async function allDataFunc() {
         return [];
     }
 } 
-
 
 
 // // function to delete user and update the database using DELETE
