@@ -1,0 +1,56 @@
+* {
+  padding: 0;
+
+  margin: 0;
+}
+
+input {
+  background-color: #d9eafd61 !important;
+  border: solid #D9EAFD !important;
+}
+
+.phone-text{
+  background-color: #D9EAFD !important;
+  border: solid #D9EAFD;
+}
+
+html,
+body {
+  height: 100vh;
+}
+
+#main { 
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  background-color: #3B6790;
+}
+
+
+#register-wrapper {
+  max-width: 45%;
+  max-height: auto;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+  padding: 50px;
+  background-color: #F8FAFC;
+  border-radius: 1rem;
+  color: #000000;
+}
+
+#submit {
+  background-color: #3b6790 !important;
+  color: white;
+  width: 6rem;
+}
+
+#reset {
+  background-color: white !important;
+  color: #3b6790;
+  width: 6rem;
+}
+
+.btn-col {
+  padding-left: 4% !important;
+}
