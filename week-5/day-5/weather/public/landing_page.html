@@ -6,22 +6,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weather Node</title>
   <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="../styles/tailwind/tailwind.css">
 </head>
 
 <body>
-  <div class="nav bg-gray-800">
+  <nav class="nav bg-gray-800">
     <div class="h-18">
       <div>
-        <img class="h-16" src="../resource/logo.png" alt="Weather Node logo">
+        <img class="h-16 ml-8" src="../resource/logo.png" alt="Weather Node logo">
       </div>
     </div>
-  </div>
+  </nav>
 
   <div class="grid grid-cols-2">
-      <div class="bg-amber-800  h-[calc(100vh-72px)] ">
-        <img src="../resource/icon.jpg" alt="">
-      </div>
-      <div class="bg-amber-500 h-[calc(100vh-72px)]"></div>
+    <div class="bg-[#5c90c6] h-[calc(100vh-72px)] flex justify-center items-center">
+      <img class="" src="../resource/freepik__background__28217.png" alt="">
+    </div>
+    <div class=" h-[calc(100vh-72px)] flex flex-col justify-center items-center gap-10">
+      <img class="size-50" src="../resource/seasons_17484830.gif" alt="">
+
+      <P class="text-3xl">Get the Latest <span class="text-[#5c90c6]">Weather</span> info of your City</P>
+
+      <a href="./log.html">
+        <input
+          class="text-white bg-[#5c90c6] h-12 w-100 border-2 border-[#5c90c6] rounded-2xl hover:bg-[#5caafb]"
+          type="button" value="Lets Get Started">
+
+      </a>
+    </div>
 
 
   </div>

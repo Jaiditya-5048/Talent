@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Node</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+  <nav class="nav block bg-gray-800 w-full">
+    <div class="h-18">
+      <div>
+        <img class="h-16 ml-8" src="../resource/logo.png" alt="Weather Node logo">
+      </div>
+    </div>
+  </nav>
+
+  <div class="grid grid-cols-2">
+
+    <div class="bg-[#5c90c6] h-[calc(100vh-72px)] flex justify-center items-center">
+      <img class="" src="../resource/freepik__background__28217.png" alt="">
+    </div>
+
+
+    <div class=" h-[calc(100vh-72px)] flex flex-col justify-center items-center gap-10">
+
+      <div class="p-10 shadow-lg shadow-[#5c90c6] rounded-4xl ">
+
+        <div class="max-w-50% p-2">
+
+          <!-- tab buttons -->
+          <div class="flex justify-center mb-10">
+            <input class="text-[#5c90c6] bg-white h-12 w-30 border-2 border-[#5c90c6]" type="button" value="Login">
+            <input class="text-white bg-[#5c90c6] h-12 w-30 border-2 border-[#5c90c6]" type="button" value="Register">
+          </div>
+
+
+          <!-- form starts here -->
+          <form class=" mx-auto">
+
+            <div class="grid grid-cols-2 mb-5">
+              <div>
+                <label class="block mb-2 text-sm font-medium text-[#28282899]" for="first-name">First Name</label>
+                <input
+                  class=" border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg mr focus:border-[#5c90c6] focus:outline-none block p-2.5"
+                  type="text" id="first-name" placeholder="John" required>
+              </div>
+              <div>
+                <label class="block mb-2 text-sm font-medium text-[#28282899]" for="last-name">Last Name</label>
+                <input
+                  class=" border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg mr focus:border-[#5c90c6] focus:outline-none block p-2.5"
+                  type="text" id="last-name" placeholder="Doe" required>
+              </div>
+            </div>
+
+            <div class="mb-5">
+              <label for="email-register" class="block mb-2 text-sm font-medium text-[#28282899]">Your email</label>
+              <input type="email" id="email-register"
+                class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none block w-full p-2.5"
+                placeholder="name@example.com" required />
+            </div>
+
+            <div class="grid grid-cols-2 mb-5">
+              <div>
+                <label for="password-register" class="block mb-2 text-sm font-medium text-[#28282899]">Password</label>
+                <input type="password" id="password-register"
+                  class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
+                  required placeholder="password" />
+              </div>
+              <div>
+                <label for="confirm-password-register" class="block mb-2 text-sm font-medium text-[#28282899]">Confirm
+                  password</label>
+                <input type="password" id="confirm-password-register"
+                  class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
+                  required placeholder="password" />
+              </div>
+            </div>
+
+            <!-- submit button -->
+            <button type="submit"
+              class="text-white bg-[#5c90c6] h-12 w-100 border-2 border-[#5c90c6] rounded-2xl hover:bg-[#5caafb]">Submit</button>
+        </div>
+        </form>
+
+      </div>
+    </div>
+
+
+  </div>
+
+
+</body>
+
+</html>
