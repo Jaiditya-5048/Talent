@@ -17,7 +17,7 @@
     </div>
   </nav>
 
-  <div class="grid grid-cols-2">
+  <div class="grid md:grid-cols-2 grid-cols-1">
 
     <div class="bg-[#5c90c6] h-[calc(100vh-72px)] flex justify-center items-center">
       <img class="" src="../resource/freepik__background__28217.png" alt="">
@@ -26,7 +26,9 @@
 
     <div class=" h-[calc(100vh-72px)] flex flex-col justify-center items-center gap-10">
 
-      <div class="p-10 shadow-lg shadow-[#5c90c6] rounded-4xl ">
+
+      <!-- main  box of the form starts from here -->
+      <div class="p-10 shadow-lg shadow-[#5c90c6] rounded-4xl min-w-[65%] ">
 
         <div class="max-w-50% p-2">
 
@@ -40,35 +42,45 @@
           <!-- form starts here -->
           <form class=" mx-auto">
 
+            <!-- name row -->
             <div class="grid grid-cols-2 mb-5">
+              <!-- first-name -->
               <div>
                 <label class="block mb-2 text-sm font-medium text-[#28282899]" for="first-name">First Name</label>
                 <input
                   class=" border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg mr focus:border-[#5c90c6] focus:outline-none block p-2.5"
-                  type="text" id="first-name" placeholder="John" required>
+                  type="text" id="first-name" placeholder="John" autocomplete="given-name" required>
               </div>
+
+              <!-- last-name -->
               <div>
                 <label class="block mb-2 text-sm font-medium text-[#28282899]" for="last-name">Last Name</label>
                 <input
                   class=" border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg mr focus:border-[#5c90c6] focus:outline-none block p-2.5"
-                  type="text" id="last-name" placeholder="Doe" required>
+                  type="text" id="last-name" placeholder="Doe" autocomplete="family-name" required>
               </div>
             </div>
 
+            <!-- email -->
             <div class="mb-5">
               <label for="email-register" class="block mb-2 text-sm font-medium text-[#28282899]">Your email</label>
               <input type="email" id="email-register"
-                class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none block w-full p-2.5"
-                placeholder="name@example.com" required />
+                class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none block w-[95.5%] p-2.5"
+                placeholder="name@example.com" autocomplete="email" required />
             </div>
 
-            <div class="grid grid-cols-2 mb-5">
+            <!-- password row -->
+            <div class="grid grid-cols-2 mb-8">
+
+              <!-- new-password -->
               <div>
                 <label for="password-register" class="block mb-2 text-sm font-medium text-[#28282899]">Password</label>
                 <input type="password" id="password-register"
                   class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
-                  required placeholder="password" />
+                  required placeholder="password" autocomplete="new-password" />
               </div>
+
+              <!-- confirm-passwor-register -->
               <div>
                 <label for="confirm-password-register" class="block mb-2 text-sm font-medium text-[#28282899]">Confirm
                   password</label>
@@ -80,7 +92,7 @@
 
             <!-- submit button -->
             <button type="submit"
-              class="text-white bg-[#5c90c6] h-12 w-100 border-2 border-[#5c90c6] rounded-2xl hover:bg-[#5caafb]">Submit</button>
+              class="text-white bg-[#5c90c6] h-12 w-[95.5%] border-2 border-[#5c90c6] rounded-2xl hover:bg-[#5caafb]">Submit</button>
         </div>
         </form>
 

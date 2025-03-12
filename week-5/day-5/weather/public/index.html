@@ -1,11 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Weather Node</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="../styles/index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline:opsz,wght@10..72,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline:opsz,wght@10..72,100..900&display=swap');
+    html {
+      font-size: 16px;
+    }
+  </style>
 </head>
+
 <body>
-  
+  <div class="nav bg-gray-800">
+    <nav class="flex justify-between items-center px-8 py-2 h-18">
+
+      <!-- Logo -->
+      <div class="logo">
+        <img class="h-16" src="../resource/logo.png" alt="company-logo">
+      </div>
+
+      <!-- Centered Search Bar and Wishlist -->
+      <div class="flex items-center gap-2">
+        <div class="search-bar">
+          <input type="text" class="w-100 max-w-[90%] pl-10 pr-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-600 text-sm border
+                 border-slate-200 rounded-md transition duration-300 ease-in-out focus:outline-none focus:border-slate-400 
+                 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Search">
+        </div>
+
+        <button type="button">
+          <!-- <img class="h-8" src="../resource/heart-plain.png" alt="wishlist"> -->
+          <!-- <p class="text-5xl pb-3">🤍</p> -->
+          <p class="text-5xl pb-3">❤️</p>
+        </button>
+      </div>
+
+      <!-- Profile Image -->
+      <div>
+        <img class="h-12" src="../resource/profile.png" alt="profile">
+      </div>
+
+    </nav>
+  </div>
+
+  <div class="h-[calc(100vh-72px)] grid grid-cols-3">
+
+    <div class="bg-amber-400 h-[calc((100vh-72px)*50%)]">
+      <div class="flex flex-col items-center justify-center gap-4">
+        <p class="text-3xl" id="city">chandigarh</p>
+        <P class="text-7xl" id="time">12:00 PM</P>
+        <p class="text-4xl" id="date">Tuseday, 11 mar</p>
+      </div>
+    </div>
+
+    <div class="col-span-2 bg-amber-950 h-[calc((100vh-72px)*50%)]">
+      <div class="grid grid-cols-3">
+        <div class="bg-amber-200 grid grid-cols-1 ">
+          <div>
+            <p class="text-5xl">75 F</p>
+            <p class="text-2xl">Feels like: 22 C</p>
+          </div>
+
+          <div class="grid grid-cols-1 bg-blue-500">
+
+            <div class="grid grid-cols-2">
+              <div class="flex justify-center">
+                <img class="size-10" src="../resource/dashboard/sunrise.png" alt="" srcset="">
+              </div>
+              <div>
+                <p class="text-xl">Sunrise</p>
+                <p class="text-xl">06:37 AM</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 ">
+              <div class="flex justify-center">
+                <img class="size-10" src="../resource/dashboard/sunset.png" alt="" srcset="">
+              </div>
+              <div>
+                <p class="text-xl">Sunset</p>
+                <p class="text-xl">20:37 AM</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="bg-amber-600 flex justify-center items-center">
+          <p class="text-xl">SUNNY</p>
+        </div>
+        <div class="bg-amber-900"></div>
+      </div>
+    </div>
+
+
+
+    <div class="col-span-2 bg-green-900 h-[calc((100vh-72px)*50%)]"></div>
+    <div class="bg-amber-400 h-[calc((100vh-72px)*50%)]"></div>
+  </div>
+
 </body>
+
 </html>
