@@ -4,21 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-</head>
-
-<body>
-
-
-</body>
-
-</html>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weather Node</title>
   <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 </head>
@@ -32,37 +17,52 @@
     </div>
   </nav>
 
-  <div class="grid grid-cols-2">
+    <!-- left col of the page -->
+  <div class="grid md:grid-cols-2 grid-cols-1">
 
+
+    <!-- main picture -->
     <div class="bg-[#5c90c6] h-[calc(100vh-72px)] flex justify-center items-center">
       <img class="" src="../resource/freepik__background__28217.png" alt="">
     </div>
 
 
+
+    <!-- right col of the page -->
     <div class=" h-[calc(100vh-72px)] flex flex-col justify-center items-center gap-10">
 
-      <div class="p-10 shadow-lg shadow-[#5c90c6] rounded-4xl">
-        <p class="block mb-8 text-6xl text-[#28282899] text-center">Login</p>
+      
+      <!-- main box of form -->
+      <div class="p-10 shadow-lg shadow-[#5c90c6] rounded-4xl min-w-[60%] ">
+
+        <!-- login and register buttons -->
+        <div class="flex justify-center mb-10">
+          <input class="text-[#5c90c6] bg-white h-12 w-30 border-2 border-[#5c90c6]" type="button" value="Login">
+          <input class="text-white bg-[#5c90c6] h-12 w-30 border-2 border-[#5c90c6]" type="button" value="Register">
+        </div>
+
+        <!-- form starts here -->
         <form class=" mx-auto">
+
+          <!-- login email -->
           <div class="mb-5">
             <label for="email" class="block mb-2 text-sm font-medium text-[#28282899]">Your email</label>
             <input type="email" id="email"
-              class="bg-[#5c90c6] border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              placeholder="name@example.com" required />
+              class="border-2  border-[#5c90c6] text-[#28282899] text-sm w-full rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5""
+              placeholder="name@example.com" autocomplete="email" required />
           </div>
-          <div class="mb-6">
+
+          <!-- login password -->
+          <div class="mb-10">
             <label for="password" class="block mb-2 text-sm font-medium text-[#28282899]">Your password</label>
             <input type="password" id="password"
-              class="bg-[#5c90c6] border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              required placeholder="password" />
+              class="border-2  border-[#5c90c6] text-[#28282899] text-sm w-full rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
+              required placeholder="password" autocomplete="current-password" />
           </div>
 
-          <div class="mb-4">
-            <a href="./register.html"><span class=" text-lg text-[#5c90c6] hover:animate-pulse antialiased">Register</span></a>
-          </div>
-
+          <!-- login submit button -->
           <button type="submit"
-            class="text-white bg-[#5c90c6] h-12 w-100 border-2 border-[#5c90c6] rounded-2xl hover:bg-[#5caafb]"
+            class="text-white bg-[#5c90c6] h-12 w-[100%] border-2 border-[#5c90c6] rounded-2xl hover:bg-[#5caafb]"
             disabled>Submit</button>
         </form>
 
