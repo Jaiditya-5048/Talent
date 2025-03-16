@@ -1,5 +1,5 @@
 "use strict";
-var _a;
+var _a, _b;
 window.onload = function () {
     var _a, _b;
     (_a = document.getElementById('loginbtn')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', triggerLogin);
@@ -30,23 +30,39 @@ function triggerRegister() {
     domInstance.addClass('login-form', 'hidden');
     domInstance.removeClass('register-form', 'hidden');
 }
-(_a = document.getElementById('form-register-btn')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', registerFormBtn);
-function registerFormBtn(event) {
+//Login-form
+(_a = document.getElementById('form-login-btn')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', loginUser);
+async function loginUser(event) {
     event.preventDefault();
-    const fName = document.getElementById('first-name').value;
-    const lName = document.getElementById('last-name').value;
-    const email = document.getElementById('email-register').value;
-    const password = document.getElementById('password-register').value;
-    const confirmPassword = document.getElementById('confirm-password-register').value;
-    if (password !== confirmPassword) {
-        alert("Passwords do not match");
+    const email = document.getElementById('email-login').value.trim();
+    const password = document.getElementById('password-login').value.trim();
+    const userData = await getSingleUser(email, password);
+    if (userData.length === 0) {
+        console.log('Wrong email or password');
+        alert('Wrong email or password');
     }
+    else {
+        console.log('user logged in successfully');
+        console.log('user: ', userData);
+    }
+}
+// Register-form
+(_b = document.getElementById('form-register-btn')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', registerUser);
+function registerUser(event) {
+    event.preventDefault();
+    const fName = document.getElementById('first-name').value.trim();
+    const lName = document.getElementById('last-name').value.trim();
+    const email = document.getElementById('email-register').value.trim();
+    const password = document.getElementById('password-register').value.trim();
     const userData = {
+        id: Date.now() + Math.random(),
         name: {
-            fName,
-            lName
+            fName: fName.charAt(0).toUpperCase() + fName.slice(1),
+            lName: lName.charAt(0).toUpperCase() + lName.slice(1),
         },
         email,
-        password
+        password,
     };
+    console.log(userData);
+    postData(userData);
 }

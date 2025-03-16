@@ -50,6 +50,7 @@
             <input type="email" id="email-login"
               class="border-2  border-[#5c90c6] text-[#28282899] text-sm w-full rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5""
               placeholder=" name@example.com" autocomplete="email" required />
+              <div id="email-login-error" class="text-red-700 text-xs mt-1"></div>
           </div>
 
           <!-- login password -->
@@ -58,6 +59,7 @@
             <input type="password" id="password-login"
               class="border-2  border-[#5c90c6] text-[#28282899] text-sm w-full rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
               required placeholder="password" autocomplete="current-password" />
+              <div id="password-login-error" class="text-red-700 text-xs mt-1 max-w-sm"></div>
           </div>
 
           <!-- login submit button -->
@@ -83,7 +85,7 @@
               <input
                 class=" border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg mr focus:border-[#5c90c6] focus:outline-none block p-2.5"
                 type="text" id="first-name" placeholder="John" autocomplete="given-name" required>
-                  <div id="first-name-error" class="text-red-700 text-sm"></div>
+                  <div id="first-name-error" class="text-red-700 text-xs mt-1"></div>
             </div>
 
             <!-- last-name -->
@@ -92,7 +94,7 @@
               <input
                 class=" border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg mr focus:border-[#5c90c6] focus:outline-none block p-2.5"
                 type="text" id="last-name" placeholder="Doe" autocomplete="family-name" required>
-                <div id="last-name-error" class="text-red-700 text-sm"></div>
+                <div id="last-name-error" class="text-red-700 text-xs mt-1"></div>
             </div>
           </div>
 
@@ -101,8 +103,8 @@
             <label for="email-register" class="block mb-2 text-sm font-medium text-[#28282899]">Your email</label>
             <input type="email" id="email-register"
               class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none block w-[95.5%] p-2.5"
-              placeholder="name@example.com" autocomplete="email" required />
-              <div id="email-register-error" class="text-red-700 text-sm"></div>
+              placeholder="name@example.com" maxlength="320" autocomplete="email" required />
+              <div id="email-register-error" class="text-red-700 text-xs mt-1"></div>
           </div>
 
           <!-- password row -->
@@ -114,7 +116,7 @@
               <input type="password" id="password-register"
                 class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
                 required placeholder="password" autocomplete="new-password" />
-                <div id="password-register-error" class="text-red-700 text-sm"></div>
+                <div id="password-register-error" class="text-red-700 text-xs mt-1"></div>
             </div>
 
             <!-- confirm-passwor-register -->
@@ -124,7 +126,7 @@
               <input type="password" id="confirm-password-register"
                 class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
                 required placeholder="password" autocomplete="new-password" />
-                <div id="confirm-password-register-error" class="text-red-700 text-sm"></div>
+                <div id="confirm-password-register-error" class="text-red-700 text-xs mt-1"></div>
             </div>
           </div>
 
@@ -143,6 +145,7 @@
   <script src="../build/types.js"></script>
   <script src="../build/dom.js"></script>
   <script src="../build/validations.js"></script>
+  <script src="../build/api.js"></script>
   <script src="../build/login.js"></script>
 </body>
 

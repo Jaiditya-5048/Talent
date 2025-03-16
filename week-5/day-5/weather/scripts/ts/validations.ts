@@ -24,25 +24,80 @@ class FormValidator {
 
     switch (id) {
       case 'first-name':
-        this.errors[id] = value.trim() ? '' : 'First name is required.';
+        if (!value.trim()) {
+          this.errors[id] = 'First name is required.';
+          break;
+        }
+        if (this.validateName(value.trim()) === false) {
+          this.errors[id] = 'Invalid Name';
+          break;
+        }
+        this.errors[id] = '';
         break;
+
       case 'last-name':
-        this.errors[id] = value.trim() ? '' : 'Last name is required.';
+        if (!value.trim()) {
+          this.errors[id] = 'Last name is required.';
+          break;
+        }
+        if (this.validateName(value.trim()) === false) {
+          this.errors[id] = 'Invalid Name';
+          break;
+        }
+        this.errors[id] = '';
         break;
+
       case 'email-login':
-        this.errors[id] = this.validateEmail(value) ? '' : 'Enter a valid email.';
+        if (!value.trim()) {
+          this.errors[id] = 'Email is required.';
+          break;
+        }
+        if (this.validateEmail(value.trim()) === false) {
+          this.errors[id] = 'Invalid Email format (e.g., example@example.com)';
+          break;
+        }
+        this.errors[id] = '';
         break;
+
       case 'email-register':
-        this.errors[id] = this.validateEmail(value) ? '' : 'Enter a valid email.';
+        if (!value.trim()) {
+          this.errors[id] = 'Email is required.';
+          break;
+        }
+        if (this.validateEmail(value.trim()) === false) {
+          this.errors[id] = 'Invalid Email format (e.g., example@example.com)';
+          break;
+        }
+        this.errors[id] = '';
         break;
+
+      //'Password must be between 8 and 64 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., !@#$%^&*()).'
       case 'password-login':
-        this.errors[id] = value.length >= 6 ? '' : 'Password must be at least 6 characters.';
+        if (!value.trim()) {
+          this.errors[id] = 'Password is required';
+          break;
+        }
+        if (this.validatePassword(value.trim()) === false) {
+          this.errors[id] = 'Invalid password';
+          break;
+        }
+        this.errors[id] = '';
         break;
+
       case 'password-register':
-        this.errors[id] = value.length >= 6 ? '' : 'Password must be at least 6 characters.';
+        if (!value.trim()) {
+          this.errors[id] = 'Password is required';
+          break;
+        }
+        if (this.validatePassword(value.trim()) === false) {
+          this.errors[id] = 'Invalid password';
+          break;
+        }
+        this.errors[id] = '';
         break;
+
       case 'confirm-password-register':
-        const password = (document.getElementById('password') as HTMLInputElement)?.value;
+        const password = (document.getElementById('password-register') as HTMLInputElement)?.value;
         this.errors[id] = value === password ? '' : 'Passwords do not match.';
         break;
     }
@@ -51,9 +106,20 @@ class FormValidator {
     this.toggleSubmitButton();
   }
 
+  private validateName(name: string): boolean {
+    const nameRegex = /^[a-zA-Z\s]{2,15}$/;
+    return nameRegex.test(name);
+  }
+
   private validateEmail(email: string): boolean {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
+    const emailRegex = /^[a-zA-Z0-9._%+-]{3,64}@[a-zA-Z0-9.-]{2,255}\.[a-zA-Z]{2,63}$/;
+    return emailRegex.test(email);
+  }
+
+  private validatePassword(password: string): boolean {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?])[A-Za-z\d!@#$%^&*(),.?]{8,64}$/;
+    return passwordRegex.test(password);
   }
 
   private displayErrors() {
@@ -73,5 +139,3 @@ class FormValidator {
     submitBtn.disabled = hasErrors;
   }
 }
-
-

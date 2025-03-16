@@ -1,7 +1,7 @@
 window.onload = function () {
   document.getElementById('loginbtn')?.addEventListener('click', triggerLogin);
-  document.getElementById('registerbtn')?.addEventListener('click', ()=> {
-    triggerRegister()
+  document.getElementById('registerbtn')?.addEventListener('click', () => {
+    triggerRegister();
     new FormValidator('register-form', 'form-register-btn');
   });
 };
@@ -10,7 +10,6 @@ window.onload = function () {
 document.addEventListener('DOMContentLoaded', () => {
   new FormValidator('login-form', 'form-login-btn');
 });
-
 
 function triggerLogin() {
   const domInstance = new Dom();
@@ -36,28 +35,51 @@ function triggerRegister() {
   domInstance.removeClass('register-form', 'hidden');
 }
 
-document.getElementById('form-register-btn')?.addEventListener('click', registerFormBtn);
+//Login-form
+document.getElementById('form-login-btn')?.addEventListener('click', loginUser);
 
-function registerFormBtn(event: Event) {
+async function loginUser(event: Event) {
   event.preventDefault();
-  const fName: string = (document.getElementById('first-name') as HTMLInputElement).value;
-  const lName: string = (document.getElementById('last-name') as HTMLInputElement).value;
-  const email: string = (document.getElementById('email-register') as HTMLInputElement).value;
-  const password: string = (document.getElementById('password-register') as HTMLInputElement).value;
-  const confirmPassword: string = (document.getElementById('confirm-password-register') as HTMLInputElement).value;
 
-  if(password !== confirmPassword) {
-    alert("Passwords do not match")
+  const email: string = (document.getElementById('email-login') as HTMLInputElement).value.trim();
+  const password: string = (
+    document.getElementById('password-login') as HTMLInputElement
+  ).value.trim();
+
+  const userData = await getSingleUser(email, password);
+  if (userData.length === 0) {
+    console.log('Wrong email or password');
+    alert('Wrong email or password');
+  } else {
+    console.log('user logged in successfully');
+    console.log('user: ', userData);
   }
-
-
-  const userData : UserData = {
-    name: {
-      fName,
-      lName
-    },
-    email,
-    password
-  };
 }
 
+// Register-form
+document.getElementById('form-register-btn')?.addEventListener('click', registerUser);
+
+function registerUser(event: Event) {
+  event.preventDefault();
+  const fName: string = (document.getElementById('first-name') as HTMLInputElement).value.trim();
+  const lName: string = (document.getElementById('last-name') as HTMLInputElement).value.trim();
+  const email: string = (
+    document.getElementById('email-register') as HTMLInputElement
+  ).value.trim();
+  const password: string = (
+    document.getElementById('password-register') as HTMLInputElement
+  ).value.trim();
+
+  const userData: UserData = {
+    id: Date.now() + Math.random(),
+    name: {
+      fName: fName.charAt(0).toUpperCase() + fName.slice(1),
+      lName: lName.charAt(0).toUpperCase() + lName.slice(1),
+    },
+    email,
+    password,
+  };
+
+  console.log(userData);
+  postData(userData);
+}
