@@ -17,7 +17,7 @@
     </div>
   </nav>
 
-    <!-- left col of the page -->
+  <!-- left col of the page -->
   <div class="grid md:grid-cols-2 grid-cols-1">
 
 
@@ -31,48 +31,123 @@
     <!-- right col of the page -->
     <div class=" h-[calc(100vh-72px)] flex flex-col justify-center items-center gap-10">
 
-      
+
       <!-- main box of form -->
       <div class="p-10 shadow-lg shadow-[#5c90c6] rounded-4xl min-w-[60%] ">
 
         <!-- login and register buttons -->
         <div class="flex justify-center mb-10">
-          <input class="text-[#5c90c6] bg-white h-12 w-30 border-2 border-[#5c90c6]" type="button" value="Login">
-          <input class="text-white bg-[#5c90c6] h-12 w-30 border-2 border-[#5c90c6]" type="button" value="Register">
+          <input class="  h-12 w-30 border-2 border-[#5c90c6] text-white bg-[#5c90c6]" type="button" value="Login" id="loginbtn">
+          <input class="  h-12 w-30 border-2 border-[#5c90c6] text-[#5c90c6] bg-white" type="button" value="Register" id="registerbtn">
         </div>
 
         <!-- form starts here -->
-        <form class=" mx-auto">
+        <form class=" mx-auto" id="login-form">
 
           <!-- login email -->
           <div class="mb-5">
             <label for="email" class="block mb-2 text-sm font-medium text-[#28282899]">Your email</label>
-            <input type="email" id="email"
+            <input type="email" id="email-login"
               class="border-2  border-[#5c90c6] text-[#28282899] text-sm w-full rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5""
-              placeholder="name@example.com" autocomplete="email" required />
+              placeholder=" name@example.com" autocomplete="email" required />
+              <div id="email-login-error" class="text-red-700 text-xs mt-1"></div>
           </div>
 
           <!-- login password -->
           <div class="mb-10">
             <label for="password" class="block mb-2 text-sm font-medium text-[#28282899]">Your password</label>
-            <input type="password" id="password"
+            <input type="password" id="password-login"
               class="border-2  border-[#5c90c6] text-[#28282899] text-sm w-full rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
               required placeholder="password" autocomplete="current-password" />
+              <div id="password-login-error" class="text-red-700 text-xs mt-1 max-w-sm"></div>
           </div>
 
           <!-- login submit button -->
           <button type="submit"
-            class="text-white bg-[#5c90c6] h-12 w-[100%] border-2 border-[#5c90c6] rounded-2xl hover:bg-[#5caafb]"
+            class="text-white bg-[#5c90c6] h-12 w-[100%] border-2 border-[#5c90c6] rounded-2xl hover:bg-[#5caafb]" id="form-login-btn"
             disabled>Submit</button>
         </form>
 
+
+
+        <!--  -->
+        <!--  -->
+        <!-- register-form -->
+        <!--  -->
+        <!--  -->
+        <form class=" mx-auto hidden" id="register-form">
+
+          <!-- name row -->
+          <div class="grid grid-cols-2 mb-5">
+            <!-- first-name -->
+            <div>
+              <label class="block mb-2 text-sm font-medium text-[#28282899]" for="first-name">First Name</label>
+              <input
+                class=" border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg mr focus:border-[#5c90c6] focus:outline-none block p-2.5"
+                type="text" id="first-name" placeholder="John" autocomplete="given-name" required>
+                  <div id="first-name-error" class="text-red-700 text-xs mt-1"></div>
+            </div>
+
+            <!-- last-name -->
+            <div>
+              <label class="block mb-2 text-sm font-medium text-[#28282899]" for="last-name">Last Name</label>
+              <input
+                class=" border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg mr focus:border-[#5c90c6] focus:outline-none block p-2.5"
+                type="text" id="last-name" placeholder="Doe" autocomplete="family-name" required>
+                <div id="last-name-error" class="text-red-700 text-xs mt-1"></div>
+            </div>
+          </div>
+
+          <!-- email -->
+          <div class="mb-5">
+            <label for="email-register" class="block mb-2 text-sm font-medium text-[#28282899]">Your email</label>
+            <input type="email" id="email-register"
+              class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none block w-[95.5%] p-2.5"
+              placeholder="name@example.com" maxlength="320" autocomplete="email" required />
+              <div id="email-register-error" class="text-red-700 text-xs mt-1"></div>
+          </div>
+
+          <!-- password row -->
+          <div class="grid grid-cols-2 mb-8">
+
+            <!-- new-password -->
+            <div>
+              <label for="password-register" class="block mb-2 text-sm font-medium text-[#28282899]">Password</label>
+              <input type="password" id="password-register"
+                class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
+                required placeholder="password" autocomplete="new-password" />
+                <div id="password-register-error" class="text-red-700 text-xs mt-1"></div>
+            </div>
+
+            <!-- confirm-passwor-register -->
+            <div>
+              <label for="confirm-password-register" class="block mb-2 text-sm font-medium text-[#28282899]">Confirm
+                password</label>
+              <input type="password" id="confirm-password-register"
+                class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
+                required placeholder="password" autocomplete="new-password" />
+                <div id="confirm-password-register-error" class="text-red-700 text-xs mt-1"></div>
+            </div>
+          </div>
+
+          <!-- submit button -->
+          <button type="submit"
+            class="text-white bg-[#5c90c6] h-12 w-[95.5%] border-2 border-[#5c90c6] rounded-2xl hover:bg-[#5caafb]" id="form-register-btn">Submit</button>
       </div>
+      </form>
+
     </div>
+  </div>
 
 
   </div>
 
-
+  <script src="../build/types.js"></script>
+  <script src="../build/dom.js"></script>
+  <script src="../build/validations.js"></script>
+  <script src="../build/api.js"></script>
+  <script src="../build/login.js"></script>
 </body>
+
 
 </html>
