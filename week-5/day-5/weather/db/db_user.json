@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": 1742156092956.7322,
+      "name": {
+        "fName": "Kyle",
+        "lName": "Franklin"
+      },
+      "email": "wynygo@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": 1742156148565.5627,
+      "name": {
+        "fName": "Jai",
+        "lName": "Bansal"
+      },
+      "email": "jai@node.com",
+      "password": "Qwerty123!"
+    }
+  ]
+}

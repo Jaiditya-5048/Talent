@@ -22,7 +22,7 @@ class validations {
         let city = document.getElementById("city").value.trim();
         let pin = document.getElementById("pin").value.trim();
         let phone = document.getElementById("phone").value.trim();
-        let website = document.getElementById("website").value.trim();X
+        let website = document.getElementById("website").value.trim();
         let company = document.getElementById("company").value.trim();
         let submitButton = document.getElementById("submitBtn");
         let nameRegex = /^[a-zA-Z\s]{3,15}$/;

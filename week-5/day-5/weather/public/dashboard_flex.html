@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Node</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="../styles/index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline:opsz,wght@10..72,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline:opsz,wght@10..72,100..900&display=swap');
+
+    html {
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav bg-gray-800">
+    <nav class="flex justify-between items-center px-8 py-2 h-18">
+
+      <!-- Logo -->
+      <div class="logo">
+        <img class="h-16" src="../resource/logo.png" alt="company-logo">
+      </div>
+
+      <!-- Centered Search Bar and Wishlist -->
+      <div class="flex items-center gap-2">
+        <div class="search-bar">
+          <input type="text" class="w-100 max-w-[90%] pl-10 pr-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-600 text-sm border
+                 border-slate-200 rounded-md transition duration-300 ease-in-out focus:outline-none focus:border-slate-400 
+                 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Search">
+        </div>
+
+        <button type="button">
+          <!-- <img class="h-8" src="../resource/heart-plain.png" alt="wishlist"> -->
+          <!-- <p class="text-5xl pb-3">🤍</p> -->
+          <p class="text-5xl pb-3">❤️</p>
+        </button>
+      </div>
+
+      <!-- Profile Image -->
+      <div>
+        <img class="h-12" src="../resource/profile.png" alt="profile">
+      </div>
+
+    </nav>
+  </div>
+
+  <!-- h-[calc(100vh-72px)] -->
+
+  <div class=" flex flex-col gap-3 bg-[#5c90c6] h-[calc(100vh-72px)] ">
+    <div class="flex gap-3 pr-20 pl-20 ">
+
+
+
+      <div
+        class=" flex-1 bg-white flex flex-col items-center justify-center gap-2 rounded-2xl shadow-lg shadow-black">
+        <p class="text-2xl" id="city">chandigarh</p>
+        <P class="text-6xl" id="time">12:00 PM</P>
+        <p class="text-3xl" id="date">Tuseday, 11 mar</p>
+      </div>
+
+
+
+
+
+      <div class="flex-2 bg-white  rounded-2xl shadow-lg shadow-black">
+
+        <div class="grid grid-cols-3">
+
+          <div class=" grid grid-cols-1">
+
+            <div class="flex justify-center items-center">
+
+              <img class="max-h-20" src="../resource/dashboard/temperature.png" alt="">
+
+              <div class="flex flex-col items-center justify-center">
+                <p class="text-3xl">75 F</p>
+                <p class="text-xl">Feels like: 22 C</p>
+              </div>
+
+            </div>
+
+            <div class="grid grid-cols-1">
+
+              <div class="grid grid-cols-2 justify-center items-center">
+                <div class=" flex justify-center">
+                  <img class="size-10" src="../resource/dashboard/sunrise.png" alt="">
+                </div>
+                <div>
+                  <p class="text-xl">Sunrise</p>
+                  <p class="text-xl">06:37 AM</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 justify-center items-center ">
+                <div class="flex justify-center">
+                  <img class="size-12" src="../resource/dashboard/sunset.png" alt="">
+                </div>
+                <div>
+                  <p class="text-xl">Sunset</p>
+                  <p class="text-xl">20:37 AM</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class=" flex flex-col justify-center items-center gap-6">
+            <img class="max-h-30" src="../resource/dashboard/sun.png" alt="">
+            <p class="text-2xl">SUNNY</p>
+          </div>
+
+          <div class="">
+
+            <div class="grid grid-cols-2 h-full">
+
+              <div class="flex flex-col justify-center items-center gap-1 mt-5 mb-5">
+                <img class="max-h-15" src="../resource/dashboard/humidity-1.png" alt="">
+                <p id="humidity">41%</p>
+                <p>Humidity</p>
+              </div>
+              <div class="flex flex-col justify-center items-center gap-1 mt-5 mb-5">
+                <img class="max-h-15" src="../resource/dashboard/wind-1.png" alt="">
+                <p id="wind-speed">2km/h</p>
+                <p>Wind Speed</p>
+              </div>
+              <div class="flex flex-col justify-center items-center gap-1 mt-5 mb-5">
+                <img class="max-h-15" src="../resource/dashboard/pressure.png" alt="">
+                <p id="pressure">997hPa</p>
+                <P>Pressure</P>
+              </div>
+              <div class="flex flex-col justify-center items-center gap-1 mt-5 mb-5">
+                <img class="max-h-15" src="../resource/dashboard/uv.png" alt="">
+                <p id="UV">8</p>
+                <P>UV</P>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+    <div class="flex gap-3 pr-20 pl-20">
+
+
+
+
+
+      <div class="flex-1 bg-white  rounded-2xl shadow-lg shadow-black">
+        <p class="text-center text-2xl mb-4">5 Days Forecast: </p>
+
+        <div class="grid grid-cols-3 place-items-center">
+          <div>
+            <img class="max-h-10" src="../resource/dashboard/cloudy-1.png" alt="">
+          </div>
+          <div>
+            <p>20 C</p>
+          </div>
+          <div>
+            Friday, 1 Sep
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 place-items-center">
+          <div>
+            <img class="max-h-10" src="../resource/dashboard/cloudy-1.png" alt="">
+          </div>
+          <div>
+            <p>20 C</p>
+          </div>
+          <div>
+            Friday, 1 Sep
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 place-items-center">
+          <div>
+            <img class="max-h-10" src="../resource/dashboard/cloudy-1.png" alt="">
+          </div>
+          <div>
+            <p>20 C</p>
+          </div>
+          <div>
+            Friday, 1 Sep
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 place-items-center">
+          <div>
+            <img class="max-h-10" src="../resource/dashboard/cloudy-1.png" alt="">
+          </div>
+          <div>
+            <p>20 C</p>
+          </div>
+          <div>
+            Friday, 1 Sep
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 place-items-center">
+          <div>
+            <img class="max-h-10" src="../resource/dashboard/cloudy-1.png" alt="">
+          </div>
+          <div>
+            <p>20 C</p>
+          </div>
+          <div>
+            Friday, 1 Sep
+          </div>
+        </div>
+
+      </div>
+
+      <div class="flex-2 bg-white rounded-2xl shadow-lg shadow-black pb-2">
+
+        <p class="text-center text-2xl mb-2">Hourly Forecast:</p>
+
+        <div class="grid grid-cols-5 place-items-center">
+
+          <div class="flex flex-col items-center gap-3">
+            <p>120:00</p>
+            <img class="max-h-15 max-w-15" src="../resource/dashboard/sun.png" alt="">
+            <p>26 C</p>
+            <img class="max-h-15 max-w-15" src="../resource/dashboard/wind-1.png" alt="">
+            <p>3km/h</p>
+          </div>
+
+          <div class="flex flex-col items-center gap-3">
+            <p>120:00</p>
+            <img class="max-h-15 max-w-15" src="../resource/dashboard/sun.png" alt="">
+            <p>26 C</p>
+            <img class="max-h-15 max-w-15" src="../resource/dashboard/wind-1.png" alt="">
+            <p>3km/h</p>
+          </div>
+
+          <div class="flex flex-col items-center gap-3">
+            <p>120:00</p>
+            <img class="max-h-15 max-w-15" src="../resource/dashboard/sun.png" alt="">
+            <p>26 C</p>
+            <img class="max-h-15 max-w-15" src="../resource/dashboard/wind-1.png" alt="">
+            <p>3km/h</p>
+          </div>
+
+          <div class="flex flex-col items-center gap-3">
+            <p>120:00</p>
+            <img class="max-h-15 max-w-15" src="../resource/dashboard/sun.png" alt="">
+            <p>26 C</p>
+            <img class="max-h-15 max-w-15" src="../resource/dashboard/wind-1.png" alt="">
+            <p>3km/h</p>
+          </div>
+
+          <div class="flex flex-col items-center gap-3">
+            <p>120:00</p>
+            <img class="max-h-15 max-w-15" src="../resource/dashboard/sun.png" alt="">
+            <p>26 C</p>
+            <img class="max-h-15 max-w-15" src="../resource/dashboard/wind-1.png" alt="">
+            <p>3km/h</p>
+          </div>
+
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+
+
+
+  <!-- <div class="h-[calc(100vh-72px)]">
+    <div class="grid grid-cols-3 h-full"> -->
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+</body>
+
+</html>
