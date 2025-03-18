@@ -1,3 +1,4 @@
+"use strict";
 // function to delete user and update the database using DELETE
 // async function deleteUser(user_id: number, event: SubmitEvent): Promise<void> {
 //     if (event) event.preventDefault(); // Prevent default only if event exists
@@ -15,7 +16,6 @@
 //         console.error("Error deleting user:", error);
 //     }
 // }
-
 // This function is used to replace data in database using API
 // async function putData(userData: User) {
 //     try {
@@ -24,7 +24,6 @@
 //             headers: { "Content-Type": "application/json" },
 //             body: JSON.stringify(userData)
 //         });
-
 //         if (response.ok) {
 //             console.log("Updated user successfully!");
 //             const userForm = document.getElementById("addUserForm") as HTMLFormElement;
@@ -39,59 +38,56 @@
 //         console.error("Error:", error);
 //     }
 // }
-
 // This function is used to add new user to database using API
-async function postData(userData: UserData) {
-  try {
-    const response = await fetch('http://localhost:3000/users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
-    });
-
-    if (response.ok) {
-      const userForm = document.getElementById('register-addUserForm') as HTMLFormElement;
-      userForm.reset();
-      console.log('User registered successfully'); // Clear form
-    } else {
-      console.error('Failed to add user:', response.status);
+async function postData(userData) {
+    try {
+        const response = await fetch('http://localhost:3000/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userData),
+        });
+        if (response.ok) {
+            const userForm = document.getElementById('register-addUserForm');
+            userForm.reset();
+            console.log('User registered successfully'); // Clear form
+        }
+        else {
+            console.error('Failed to add user:', response.status);
+        }
     }
-  } catch (error) {
-    console.error('Error:', error);
-  }
+    catch (error) {
+        console.error('Error:', error);
+    }
 }
-
 // function to get a single user
-async function getSingleUser(email: string, password: string | null = null) {
-  try {
-    let params = {};
-    if (password !== null) {
-      params = { email, password };
-    } else {
-      params = { email };
+async function getSingleUser(email, password = null) {
+    try {
+        let params = {};
+        if (password !== null) {
+            params = { email, password };
+        }
+        else {
+            params = { email };
+        }
+        let response = await fetch('http://localhost:3000/users' + '?' + new URLSearchParams(params)); //new URLSearchParams(params) ;; params is an object and URLSearchParams is a function that converts the object into valid URL query parameters
+        if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        return await response.json();
     }
-
-    let response = await fetch('http://localhost:3000/users' + '?' + new URLSearchParams(params)); //new URLSearchParams(params) ;; params is an object and URLSearchParams is a function that converts the object into valid URL query parameters
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    return [];
-  }
+    catch (error) {
+        console.error('Error fetching user data:', error);
+        return [];
+    }
 }
-
 // http://api.openweathermap.org/geo/1.0/direct?q=chandigarh&limit=5&appid=ac0060d9268737b9a39758878ad38c54
-
 // async function getWeatherData(latitude: number, longitude: number) {
 //   const appid = 'ac0060d9268737b9a39758878ad38c54';
-
 //   try {
 //       const params = new URLSearchParams({
 //         lat: latitude.toString(),
 //         lon: longitude.toString(),
 //         appid: appid,
 //       });
-
 //     let response = await fetch(
 //       'https://api.openweathermap.org/data/2.5/weather?' + params,
 //     );
@@ -102,18 +98,17 @@ async function getSingleUser(email: string, password: string | null = null) {
 //     return [];
 //   }
 // }
-
-async function getCoordinates(name:string) {
-  const appid = 'ac0060d9268737b9a39758878ad38c54';
-
-  try {
-    const params = { name, appid };
-
-    let response = await fetch('http://api.openweathermap.org/geo/1.0/direct?q=' + new URLSearchParams(params));
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    return [];
-  }
+async function getCoordinates(name) {
+    const appid = 'ac0060d9268737b9a39758878ad38c54';
+    try {
+        const params = { name, appid };
+        let response = await fetch('http://api.openweathermap.org/geo/1.0/direct?q=' + new URLSearchParams(params));
+        if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        return await response.json();
+    }
+    catch (error) {
+        console.error('Error fetching user data:', error);
+        return [];
+    }
 }

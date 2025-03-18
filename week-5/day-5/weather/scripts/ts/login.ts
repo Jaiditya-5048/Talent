@@ -48,18 +48,23 @@ async function loginUser(event: Event) {
 
   const userData = await getSingleUser(email, password);
   if (userData.length === 0) {
-    console.log('Wrong email or password');
-    alert('Wrong email or password');
+    showToast('toast-error-login');
   } else {
+    localStorage.setItem('logginUser', JSON.stringify(userData));
+
     console.log('user logged in successfully');
     console.log('user: ', userData);
+
+    window.open('../public/dashboard_flex.html');
+    const loginForm = document.getElementById('login-form') as HTMLFormElement;
+    loginForm.reset();
   }
 }
 
 // Register-form
 document.getElementById('form-register-btn')?.addEventListener('click', registerUser);
 
-function registerUser(event: Event) {
+async function registerUser(event: Event) {
   event.preventDefault();
   const fName: string = (document.getElementById('first-name') as HTMLInputElement).value.trim();
   const lName: string = (document.getElementById('last-name') as HTMLInputElement).value.trim();
@@ -70,16 +75,24 @@ function registerUser(event: Event) {
     document.getElementById('password-register') as HTMLInputElement
   ).value.trim();
 
-  const userData: UserData = {
-    id: Date.now() + Math.random(),
-    name: {
-      fName: fName.charAt(0).toUpperCase() + fName.slice(1),
-      lName: lName.charAt(0).toUpperCase() + lName.slice(1),
-    },
-    email,
-    password,
-  };
+  const apiUserData: UserData[] = await getSingleUser(email);
 
-  console.log(userData);
-  postData(userData);
+  if (apiUserData.length !== 0) {
+    showToast('toast-error-register');
+  } else {
+    const userData: UserData = {
+      id: Date.now() + Math.random(),
+      name: {
+        fName: fName.charAt(0).toUpperCase() + fName.slice(1),
+        lName: lName.charAt(0).toUpperCase() + lName.slice(1),
+      },
+      email,
+      password,
+    };
+
+    console.log(userData);
+    postData(userData);
+  }
 }
+
+

@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weather Node</title>
-  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="icon" type="image/x-icon" href="../resource/logo.png">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="../styles/index.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,9 +60,8 @@
     <div class="flex gap-3 pr-20 pl-20 ">
 
 
-
-      <div
-        class=" flex-1 bg-white flex flex-col items-center justify-center gap-2 rounded-2xl shadow-lg shadow-black">
+      <!-- date and time box -->
+      <div class=" flex-1 bg-white flex flex-col items-center justify-center gap-2 rounded-2xl shadow-lg shadow-black">
         <p class="text-2xl" id="city">chandigarh</p>
         <P class="text-6xl" id="time">12:00 PM</P>
         <p class="text-3xl" id="date">Tuseday, 11 mar</p>
@@ -70,24 +70,26 @@
 
 
 
-
+      <!-- current details box -->
       <div class="flex-2 bg-white  rounded-2xl shadow-lg shadow-black">
 
         <div class="grid grid-cols-3">
 
           <div class=" grid grid-cols-1">
 
+            <!-- current temp box -->
             <div class="flex justify-center items-center">
 
               <img class="max-h-20" src="../resource/dashboard/temperature.png" alt="">
 
               <div class="flex flex-col items-center justify-center">
-                <p class="text-3xl">75 F</p>
-                <p class="text-xl">Feels like: 22 C</p>
+                <p class="text-3xl" id="temp">75 F</p>
+                <p class="text-xl" id="feels-like-temp">Feels like: 22 C</p>
               </div>
 
             </div>
 
+            <!-- sunrise and sunset box -->
             <div class="grid grid-cols-1">
 
               <div class="grid grid-cols-2 justify-center items-center">
@@ -96,7 +98,7 @@
                 </div>
                 <div>
                   <p class="text-xl">Sunrise</p>
-                  <p class="text-xl">06:37 AM</p>
+                  <p class="text-xl" id="sunrise">06:37 AM</p>
                 </div>
               </div>
 
@@ -106,19 +108,21 @@
                 </div>
                 <div>
                   <p class="text-xl">Sunset</p>
-                  <p class="text-xl">20:37 AM</p>
+                  <p class="text-xl" id="sunset">20:37 AM</p>
                 </div>
               </div>
             </div>
           </div>
 
+          <!-- center with image and weather box -->
           <div class=" flex flex-col justify-center items-center gap-6">
             <img class="max-h-30" src="../resource/dashboard/sun.png" alt="">
-            <p class="text-2xl">SUNNY</p>
+            <p class="text-2xl" id="current-weather">SUNNY</p>
           </div>
 
           <div class="">
 
+            <!-- humidity, wind-speed, pressure and UV box -->
             <div class="grid grid-cols-2 h-full">
 
               <div class="flex flex-col justify-center items-center gap-1 mt-5 mb-5">
@@ -158,7 +162,7 @@
 
 
 
-
+      <!-- 5 day forcast box -->
       <div class="flex-1 bg-white  rounded-2xl shadow-lg shadow-black">
         <p class="text-center text-2xl mb-4">5 Days Forecast: </p>
 
@@ -224,6 +228,8 @@
 
       </div>
 
+
+      <!-- hourly forecast box -->
       <div class="flex-2 bg-white rounded-2xl shadow-lg shadow-black pb-2">
 
         <p class="text-center text-2xl mb-2">Hourly Forecast:</p>
@@ -274,30 +280,14 @@
       </div>
 
 
-
-
-
-
-
-
-
     </div>
   </div>
 
-
-
-  <!-- <div class="h-[calc(100vh-72px)]">
-    <div class="grid grid-cols-3 h-full"> -->
-
-
-
-
-
-
-
-  </div>
-
-  </div>
+  <script src="../build/types.js"></script>
+  <script src="../build/dom.js"></script>
+  <script src="../build/validations.js"></script>
+  <script src="../build/api.js"></script>
+  <script src="../build/dashboard.js"></script>
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 1742156092956.7322,
+      "id": "1742156092956.7322",
       "name": {
         "fName": "Kyle",
         "lName": "Franklin"
@@ -10,13 +10,31 @@
       "password": "Pa$$w0rd!"
     },
     {
-      "id": 1742156148565.5627,
+      "id": "1742156148565.5627",
       "name": {
         "fName": "Jai",
         "lName": "Bansal"
       },
       "email": "jai@node.com",
       "password": "Qwerty123!"
+    },
+    {
+      "id": 1742190600047.8806,
+      "name": {
+        "fName": "Tamekah",
+        "lName": "Patel"
+      },
+      "email": "betus@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": 1742195111331.1587,
+      "name": {
+        "fName": "Colleen",
+        "lName": "Duncan"
+      },
+      "email": "jejav@mailinator.com",
+      "password": "Pa$$w0rd!"
     }
   ]
 }

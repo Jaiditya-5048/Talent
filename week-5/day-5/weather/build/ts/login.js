@@ -58,7 +58,7 @@ async function registerUser(event) {
     const email = document.getElementById('email-register').value.trim();
     const password = document.getElementById('password-register').value.trim();
     const apiUserData = await getSingleUser(email);
-    if (apiUserData.length === 1) {
+    if (apiUserData.length !== 0) {
         showToast('toast-error-register');
     }
     else {

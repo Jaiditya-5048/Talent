@@ -14,4 +14,14 @@ class Dom {
 }
 
 
+function showToast(id:string) {
+  const dom = new Dom();
+  dom.removeClass(id, 'hidden');
+
+  // Auto-dismiss after 3 seconds
+  setTimeout(() => {
+    dom.addClass(id, 'hidden');
+  }, 3000);
+}
+
 
