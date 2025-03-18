@@ -60,9 +60,15 @@ async function postData(userData) {
     }
 }
 // function to get a single user
-async function getSingleUser(email, password) {
+async function getSingleUser(email, password = null) {
     try {
-        let params = { email, password };
+        let params = {};
+        if (password !== null) {
+            params = { email, password };
+        }
+        else {
+            params = { email };
+        }
         let response = await fetch('http://localhost:3000/users' + '?' + new URLSearchParams(params)); //new URLSearchParams(params) ;; params is an object and URLSearchParams is a function that converts the object into valid URL query parameters
         if (!response.ok)
             throw new Error(`HTTP error! Status: ${response.status}`);
