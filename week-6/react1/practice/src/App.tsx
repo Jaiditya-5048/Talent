@@ -1,9 +1,6 @@
+import './App.css';
 import Wrapper from './components/Wrapper';
-import './App.css'
-
 function App() {
-  
-
   return (
     <>
       <Wrapper />
@@ -11,4 +8,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
