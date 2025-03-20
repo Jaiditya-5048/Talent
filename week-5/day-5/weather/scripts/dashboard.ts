@@ -43,81 +43,94 @@ async function getLocation(): Promise<{
   });
 }
 
-async function getWeatherData(latitude: number, longitude: number) {
-  const appid = 'ac0060d9268737b9a39758878ad38c54';
-  const units = 'metric'
-
-  try {
-      const params = new URLSearchParams({
-        lat: latitude.toString(),
-        lon: longitude.toString(),
-        appid: appid,
-        units: units
-      });
-
-    let response = await fetch(
-      'https://api.openweathermap.org/data/2.5/weather?' + params,
-    );
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    return [];
-  }
-}
-
-// Function to use the location data
-async function currentLocationData() {
-  
-    const { all_data, time, date, latitude, longitude } = await getLocation();
-    const weatherData = await getWeatherData(latitude , longitude);
-    console.log('data: ' , weatherData);
-    const city : string = weatherData.name;
-
-    fillTimeBox(time, date, city);
-    fillMainBox(weatherData);
-
-    // const city = document.getElementById('city') as HTMLParagraphElement;
-    // city.innerText = weatherData.name;
-
-    // const currentTime = document.getElementById('time') as HTMLParagraphElement;
-    // currentTime.innerText = time;
-
-    // const currentDate = document.getElementById('date') as HTMLParagraphElement;
-    // currentDate.innerText = date;
-
-    // console.log(all_data);
-    // console.log(time);
-    // console.log(date);
-    // console.log(latitude);
-    // console.log(longitude);
+async function fillData() {
+  const { all_data, time, date, latitude, longitude } = await getLocation();
+  const weatherData = await getWeatherData(latitude, longitude);
  
 }
 
-function fillTimeBox(time: string, date:string, city:string) {
+function fillTData(weatherData : WeatherAPIResponse) {
+  []
+}
 
-   const currentTime = document.getElementById('time') as HTMLParagraphElement;
-   currentTime.innerText = time;
 
-   const currentDate = document.getElementById('date') as HTMLParagraphElement;
-   currentDate.innerText = date;
+// Function to use the location data
+async function currentLocationData() {
+  const { all_data, time, date, latitude, longitude } = await getLocation();
+  const weatherData = await getWeatherData(latitude, longitude);
+  console.log('data: ', weatherData);
+  const city: string = weatherData.name;
 
-   const currentcity = document.getElementById('city') as HTMLParagraphElement;
-   currentcity.innerText = city;
+  fillTimeBox(time, date, city);
+  fillMainBox(weatherData);
 
+}
+
+function fillTimeBox(time: string, date: string, city: string) {
+  const currentTime = document.getElementById('time') as HTMLParagraphElement;
+  currentTime.innerText = time;
+
+  const currentDate = document.getElementById('date') as HTMLParagraphElement;
+  currentDate.innerText = date;
+
+  const currentcity = document.getElementById('city') as HTMLParagraphElement;
+  currentcity.innerText = city;
 }
 
 function fillMainBox(weatherData: WeatherData) {
   const currentTemp = document.getElementById('temp') as HTMLParagraphElement;
-  const currentFeelsLikeTemp = document.getElementById('feels-like-temp') as HTMLParagraphElement;
+  // const currentFeelsLikeTemp = document.getElementById('feels-like-temp') as HTMLParagraphElement;
   const currentSunrise = document.getElementById('sunrise') as HTMLParagraphElement;
   const currentSunset = document.getElementById('sunset') as HTMLParagraphElement;
   const currentWeather = document.getElementById('current-weather') as HTMLParagraphElement;
   const currentHumidity = document.getElementById('humidity') as HTMLParagraphElement;
   const currentWindSpeed = document.getElementById('wind-speed') as HTMLParagraphElement;
   const currentPressure = document.getElementById('pressure') as HTMLParagraphElement;
-  const currentUV = document.getElementById('UV') as HTMLParagraphElement;
+  // const currentUV = document.getElementById('UV') as HTMLParagraphElement;
 
-  currentTemp.innerText = weatherData.main.temp.toString();
-  currentFeelsLikeTemp.innerHTML = weatherData.main.feels_like.toString()
+  const formatDateTime = (
+    timestamp: number,
+    timezoneOffset: number,
+  ): { time: string; date: string } => {
+    const localDate = new Date((timestamp + timezoneOffset) * 1000);
+
+    return {
+      time: localDate.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      }),
+      date: localDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+    };
+  };
+
+  const { temp, feels_like, humidity, pressure } = weatherData.main;
+  const [{ main: weatherMain, description, icon }] = weatherData.weather;
+  const { speed } = weatherData.wind;
+  const { sunrise, sunset } = weatherData.sys;
+  const { timezone } = weatherData;
+
+  const timezoneOffset = 1; //############check the offset it cusing error############
+  //  weatherData.timezone;
+
+  currentTemp.innerText = `${Math.floor(temp)}\u00B0C`;
+  // currentFeelsLikeTemp.innerText = feels_like.toString();
+  currentSunrise.innerText = formatDateTime(sunrise, timezoneOffset).time;
+  currentSunset.innerText = formatDateTime(sunset, timezoneOffset).time;
+  currentWeather.innerText = weatherMain;
+  currentHumidity.innerText = `${Math.floor(humidity)}%`;
+  currentWindSpeed.innerText = `${Math.floor(speed)} km/h`;
+  currentPressure.innerText = `${Math.floor(pressure)} hPa`;
+  // currentUV.innerText =
 }
+
+// function fillHourlyBox (weatherDataHourly) {
+
+// }
+
+

@@ -8,10 +8,10 @@ function saveToLocal(tasks: listItem) {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-function add() {
+function Add() {
   const [input, setInput] = useState('');
 
-  const Add = (e: React.FormEvent) => {
+  const addTask = (e: React.FormEvent) => {
     e.preventDefault();
     const task = {
       id: Math.floor(Math.random() * 100),
@@ -22,8 +22,8 @@ function add() {
   };
 
   const handleOnInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const LiveInupt = event.target.value;
-    setInput(Liveinput);
+    const liveInupt = event.target.value;
+    setInput(liveInupt);
   };
   return (
     <form onSubmit={Add}>

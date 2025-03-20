@@ -32,7 +32,7 @@ function Wrapper() {
         <div className='todo-item' key={item.id}>
           <p> {item.description}</p>
         </div>
-      ))}
+      ))} 
     </div>
   );
 }
