@@ -1,3 +1,70 @@
+async function getWeatherData(latitude: number, longitude: number,): Promise<WeatherAPIResponse | []> {
+  const appid = 'ac0060d9268737b9a39758878ad38c54';
+  const units = 'metric';
+  const exclude = 'minutely';
+
+  try {
+    const params = new URLSearchParams({
+      lat: latitude.toString(),
+      lon: longitude.toString(),
+      appid: appid,
+      units: units,
+      exclude: exclude,
+    });
+
+    let response = await fetch('https://api.openweathermap.org/data/3.0/onecall?' + params);
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return [];
+  }
+}
+
+//api.openweathermap.org/geo/1.0/reverse?lat={lat}&lon={lon}&limit={limit}&appid={API key}
+
+async function getCoordinates(name: string) {
+  const appid = 'ac0060d9268737b9a39758878ad38c54';
+
+  try {
+    const params = { name, appid };
+
+    let response = await fetch(
+      'http://api.openweathermap.org/geo/1.0/direct?q=' + new URLSearchParams(params),
+    );
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return [];
+  }
+}
+
+async function getCityName(latitude:latitude , longitude:longitude) : Promise<ReverseGeoAPIResponse | []> {
+  const appid = 'ac0060d9268737b9a39758878ad38c54';
+  const limit = '1'
+
+  try {
+     const params = new URLSearchParams({
+      lat: latitude.toString(),
+      lon: longitude.toString(),
+      limit: limit,
+      appid: appid,
+    });
+
+    let response = await fetch(
+      'http://api.openweathermap.org/geo/1.0/reverse?' + params,
+    );
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return [];
+  }
+}
+
+
+
 // function to delete user and update the database using DELETE
 // async function deleteUser(user_id: number, event: SubmitEvent): Promise<void> {
 //     if (event) event.preventDefault(); // Prevent default only if event exists
@@ -103,17 +170,26 @@ async function getSingleUser(email: string, password: string | null = null) {
 //   }
 // }
 
-async function getCoordinates(name:string) {
-  const appid = 'ac0060d9268737b9a39758878ad38c54';
 
-  try {
-    const params = { name, appid };
 
-    let response = await fetch('http://api.openweathermap.org/geo/1.0/direct?q=' + new URLSearchParams(params));
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    return [];
-  }
-}
+
+// async function getWeatherData(latitude: number, longitude: number) {
+//   const appid = 'ac0060d9268737b9a39758878ad38c54';
+//   const units = 'metric';
+
+//   try {
+//     const params = new URLSearchParams({
+//       lat: latitude.toString(),
+//       lon: longitude.toString(),
+//       appid: appid,
+//       units: units,
+//     });
+
+//     let response = await fetch('https://api.openweathermap.org/data/2.5/weather?' + params);
+//     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+//     return await response.json();
+//   } catch (error) {
+//     console.error('Error fetching user data:', error);
+//     return [];
+//   }
+// }

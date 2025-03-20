@@ -42,7 +42,7 @@ async function getWeatherData(latitude, longitude) {
             lat: latitude.toString(),
             lon: longitude.toString(),
             appid: appid,
-            units: units
+            units: units,
         });
         let response = await fetch('https://api.openweathermap.org/data/2.5/weather?' + params);
         if (!response.ok)
@@ -84,14 +84,44 @@ function fillTimeBox(time, date, city) {
 }
 function fillMainBox(weatherData) {
     const currentTemp = document.getElementById('temp');
-    const currentFeelsLikeTemp = document.getElementById('feels-like-temp');
+    // const currentFeelsLikeTemp = document.getElementById('feels-like-temp') as HTMLParagraphElement;
     const currentSunrise = document.getElementById('sunrise');
     const currentSunset = document.getElementById('sunset');
     const currentWeather = document.getElementById('current-weather');
     const currentHumidity = document.getElementById('humidity');
     const currentWindSpeed = document.getElementById('wind-speed');
     const currentPressure = document.getElementById('pressure');
-    const currentUV = document.getElementById('UV');
-    currentTemp.innerText = weatherData.main.temp.toString();
-    currentFeelsLikeTemp.innerHTML = weatherData.main.feels_like.toString();
+    // const currentUV = document.getElementById('UV') as HTMLParagraphElement;
+    const formatDateTime = (timestamp, timezoneOffset) => {
+        const localDate = new Date((timestamp + timezoneOffset) * 1000);
+        return {
+            time: localDate.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+            }),
+            date: localDate.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            }),
+        };
+    };
+    const { temp, feels_like, humidity, pressure } = weatherData.main;
+    const [{ main: weatherMain, description, icon }] = weatherData.weather;
+    const { speed } = weatherData.wind;
+    const { sunrise, sunset } = weatherData.sys;
+    const { timezone } = weatherData;
+    const timezoneOffset = 1; //############check the offset it cusing error############
+    //  weatherData.timezone;
+    currentTemp.innerText = `${Math.floor(temp)}\u00B0C`;
+    // currentFeelsLikeTemp.innerText = feels_like.toString();
+    currentSunrise.innerText = formatDateTime(sunrise, timezoneOffset).time;
+    currentSunset.innerText = formatDateTime(sunset, timezoneOffset).time;
+    currentWeather.innerText = weatherMain;
+    currentHumidity.innerText = `${Math.floor(humidity)}%`;
+    currentWindSpeed.innerText = `${Math.floor(speed)} km/h`;
+    currentPressure.innerText = `${Math.floor(pressure)} hPa`;
+    // currentUV.innerText =
 }
