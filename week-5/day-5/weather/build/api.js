@@ -1,4 +1,64 @@
 "use strict";
+async function getWeatherData(latitude, longitude) {
+    const appid = 'ac0060d9268737b9a39758878ad38c54';
+    const units = 'metric';
+    const exclude = 'minutely';
+    try {
+        const params = new URLSearchParams({
+            lat: latitude.toString(),
+            lon: longitude.toString(),
+            appid: appid,
+            units: units,
+            exclude: exclude,
+        });
+        let response = await fetch('https://api.openweathermap.org/data/3.0/onecall?' + params);
+        if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        return await response.json();
+    }
+    catch (error) {
+        console.error('Error fetching user data:', error);
+        // return {};
+    }
+}
+//api.openweathermap.org/geo/1.0/reverse?lat={lat}&lon={lon}&limit={limit}&appid={API key}
+async function getCoordinates(name) {
+    const appid = 'ac0060d9268737b9a39758878ad38c54';
+    try {
+        const params = new URLSearchParams({
+            limit: '1',
+            appid: appid,
+        });
+        let response = await fetch('http://api.openweathermap.org/geo/1.0/direct?q=' + name + "&" + params);
+        if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        return await response.json();
+    }
+    catch (error) {
+        console.error('Error fetching user data:', error);
+        // return ;
+    }
+}
+async function getCityName(latitude, longitude) {
+    const appid = 'ac0060d9268737b9a39758878ad38c54';
+    const limit = '1';
+    try {
+        const params = new URLSearchParams({
+            lat: latitude.toString(),
+            lon: longitude.toString(),
+            limit: limit,
+            appid: appid,
+        });
+        let response = await fetch('http://api.openweathermap.org/geo/1.0/reverse?' + params);
+        if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        return await response.json();
+    }
+    catch (error) {
+        console.error('Error fetching user data:', error);
+        return [];
+    }
+}
 // function to delete user and update the database using DELETE
 // async function deleteUser(user_id: number, event: SubmitEvent): Promise<void> {
 //     if (event) event.preventDefault(); // Prevent default only if event exists
@@ -79,21 +139,40 @@ async function getSingleUser(email, password = null) {
         return [];
     }
 }
-// async function verifyUser(event:Event) {
-//     event.preventDefault();
-//     const email = document.getElementById("email").value.trim() as HTMLInputElement;
-//     const password = document.getElementById("password").value.trim();
-//     try {
-//         const userData = await getSingleUser(email);
-//         // console.log("Fetched User Data:", userData)
-//         if (userData.length === 1) {
-//             // console.log("User email found:", userData);
-//             document.getElementById("emailError").textContent = ""
-//             $("#passwordGroup").css("display", "block");
-//             verifyUserPassword(email, password)
-//         } else {
-//             document.getElementById("emailError").textContent = "No user found";
-//         }
-//     } catch (error) {
-//         console.error("Error fetching user data:", error);
-//     }
+// http://api.openweathermap.org/geo/1.0/direct?q=chandigarh&limit=5&appid=ac0060d9268737b9a39758878ad38c54
+// async function getWeatherData(latitude: number, longitude: number) {
+//   const appid = 'ac0060d9268737b9a39758878ad38c54';
+//   try {
+//       const params = new URLSearchParams({
+//         lat: latitude.toString(),
+//         lon: longitude.toString(),
+//         appid: appid,
+//       });
+//     let response = await fetch(
+//       'https://api.openweathermap.org/data/2.5/weather?' + params,
+//     );
+//     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+//     return await response.json();
+//   } catch (error) {
+//     console.error('Error fetching user data:', error);
+//     return [];
+//   }
+// }
+// async function getWeatherData(latitude: number, longitude: number) {
+//   const appid = 'ac0060d9268737b9a39758878ad38c54';
+//   const units = 'metric';
+//   try {
+//     const params = new URLSearchParams({
+//       lat: latitude.toString(),
+//       lon: longitude.toString(),
+//       appid: appid,
+//       units: units,
+//     });
+//     let response = await fetch('https://api.openweathermap.org/data/2.5/weather?' + params);
+//     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+//     return await response.json();
+//   } catch (error) {
+//     console.error('Error fetching user data:', error);
+//     return [];
+//   }
+// }

@@ -1,9 +1,7 @@
 "use strict";
-var _a, _b;
 window.onload = function () {
-    var _a, _b;
-    (_a = document.getElementById('loginbtn')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', triggerLogin);
-    (_b = document.getElementById('registerbtn')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => {
+    document.getElementById('loginbtn')?.addEventListener('click', triggerLogin);
+    document.getElementById('registerbtn')?.addEventListener('click', () => {
         triggerRegister();
         new FormValidator('register-form', 'form-register-btn');
     });
@@ -31,7 +29,7 @@ function triggerRegister() {
     domInstance.removeClass('register-form', 'hidden');
 }
 //Login-form
-(_a = document.getElementById('form-login-btn')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', loginUser);
+document.getElementById('form-login-btn')?.addEventListener('click', loginUser);
 async function loginUser(event) {
     event.preventDefault();
     const email = document.getElementById('email-login').value.trim();
@@ -50,7 +48,7 @@ async function loginUser(event) {
     }
 }
 // Register-form
-(_b = document.getElementById('form-register-btn')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', registerUser);
+document.getElementById('form-register-btn')?.addEventListener('click', registerUser);
 async function registerUser(event) {
     event.preventDefault();
     const fName = document.getElementById('first-name').value.trim();
@@ -58,7 +56,7 @@ async function registerUser(event) {
     const email = document.getElementById('email-register').value.trim();
     const password = document.getElementById('password-register').value.trim();
     const apiUserData = await getSingleUser(email);
-    if (apiUserData.length === 1) {
+    if (apiUserData.length !== 0) {
         showToast('toast-error-register');
     }
     else {

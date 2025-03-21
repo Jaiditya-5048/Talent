@@ -1,7 +1,9 @@
 "use strict";
 class FormValidator {
+    errors = {};
+    formId;
+    submitBtnId;
     constructor(formId, submitBtnId) {
-        this.errors = {};
         this.formId = formId;
         this.submitBtnId = submitBtnId;
         this.attachEventListeners();
@@ -16,7 +18,6 @@ class FormValidator {
         });
     }
     validateField(input) {
-        var _a;
         const { id, value } = input;
         switch (id) {
             case 'first-name':
@@ -87,7 +88,7 @@ class FormValidator {
                 this.errors[id] = '';
                 break;
             case 'confirm-password-register':
-                const password = (_a = document.getElementById('password-register')) === null || _a === void 0 ? void 0 : _a.value;
+                const password = document.getElementById('password-register')?.value;
                 this.errors[id] = value === password ? '' : 'Passwords do not match.';
                 break;
         }

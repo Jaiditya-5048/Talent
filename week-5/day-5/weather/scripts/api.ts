@@ -1,4 +1,7 @@
-async function getWeatherData(latitude: number, longitude: number,): Promise<WeatherAPIResponse | []> {
+async function getWeatherData(
+  latitude: number,
+  longitude: number,
+): Promise<WeatherAPIResponse | undefined> {
   const appid = 'ac0060d9268737b9a39758878ad38c54';
   const units = 'metric';
   const exclude = 'minutely';
@@ -17,44 +20,46 @@ async function getWeatherData(latitude: number, longitude: number,): Promise<Wea
     return await response.json();
   } catch (error) {
     console.error('Error fetching user data:', error);
-    return [];
+    // return {};
   }
 }
 
 //api.openweathermap.org/geo/1.0/reverse?lat={lat}&lon={lon}&limit={limit}&appid={API key}
 
-async function getCoordinates(name: string) {
+async function getCoordinates(name: string): Promise<GeoAPIResponse | undefined> {
   const appid = 'ac0060d9268737b9a39758878ad38c54';
 
   try {
-    const params = { name, appid };
+    const params = new URLSearchParams({ 
+      limit: '1',
+      appid: appid,
+    });
 
-    let response = await fetch(
-      'http://api.openweathermap.org/geo/1.0/direct?q=' + new URLSearchParams(params),
-    );
+    let response = await fetch('http://api.openweathermap.org/geo/1.0/direct?q=' + name + "&" + params);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     return await response.json();
   } catch (error) {
     console.error('Error fetching user data:', error);
-    return [];
+    // return ;
   }
 }
 
-async function getCityName(latitude:latitude , longitude:longitude) : Promise<ReverseGeoAPIResponse | []> {
+async function getCityName(
+  latitude: latitude,
+  longitude: longitude,
+): Promise<ReverseGeoAPIResponse | []> {
   const appid = 'ac0060d9268737b9a39758878ad38c54';
-  const limit = '1'
+  const limit = '1';
 
   try {
-     const params = new URLSearchParams({
+    const params = new URLSearchParams({
       lat: latitude.toString(),
       lon: longitude.toString(),
       limit: limit,
       appid: appid,
     });
 
-    let response = await fetch(
-      'http://api.openweathermap.org/geo/1.0/reverse?' + params,
-    );
+    let response = await fetch('http://api.openweathermap.org/geo/1.0/reverse?' + params);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     return await response.json();
   } catch (error) {
@@ -62,8 +67,6 @@ async function getCityName(latitude:latitude , longitude:longitude) : Promise<Re
     return [];
   }
 }
-
-
 
 // function to delete user and update the database using DELETE
 // async function deleteUser(user_id: number, event: SubmitEvent): Promise<void> {
@@ -169,9 +172,6 @@ async function getSingleUser(email: string, password: string | null = null) {
 //     return [];
 //   }
 // }
-
-
-
 
 // async function getWeatherData(latitude: number, longitude: number) {
 //   const appid = 'ac0060d9268737b9a39758878ad38c54';
