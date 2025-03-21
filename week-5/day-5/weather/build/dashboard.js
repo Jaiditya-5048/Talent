@@ -1,8 +1,8 @@
 "use strict";
 window.onload = function () {
     const loggedInUser = JSON.parse(localStorage.getItem('logginUser'));
-    console.log(loggedInUser);
-    currentLocationData();
+    // console.log(loggedInUser);
+    fillData();
 };
 async function getLocation() {
     return new Promise((resolve, reject) => {
@@ -34,54 +34,84 @@ async function getLocation() {
         }
     });
 }
-async function getWeatherData(latitude, longitude) {
-    const appid = 'ac0060d9268737b9a39758878ad38c54';
-    const units = 'metric';
-    try {
-        const params = new URLSearchParams({
-            lat: latitude.toString(),
-            lon: longitude.toString(),
-            appid: appid,
-            units: units,
-        });
-        let response = await fetch('https://api.openweathermap.org/data/2.5/weather?' + params);
-        if (!response.ok)
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        return await response.json();
-    }
-    catch (error) {
-        console.error('Error fetching user data:', error);
-        return [];
-    }
+function formatDateTime(timestamp, timezoneOffset) {
+    const localDate = new Date((timestamp + timezoneOffset) * 1000);
+    return {
+        time: localDate.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+        }),
+        date: localDate.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        }),
+    };
 }
-// Function to use the location data
-async function currentLocationData() {
+async function fillData() {
     const { all_data, time, date, latitude, longitude } = await getLocation();
     const weatherData = await getWeatherData(latitude, longitude);
-    console.log('data: ', weatherData);
-    const city = weatherData.name;
-    fillTimeBox(time, date, city);
-    fillMainBox(weatherData);
-    // const city = document.getElementById('city') as HTMLParagraphElement;
-    // city.innerText = weatherData.name;
-    // const currentTime = document.getElementById('time') as HTMLParagraphElement;
-    // currentTime.innerText = time;
-    // const currentDate = document.getElementById('date') as HTMLParagraphElement;
-    // currentDate.innerText = date;
-    // console.log(all_data);
-    // console.log(time);
-    // console.log(date);
-    // console.log(latitude);
-    // console.log(longitude);
+    const cityData = await getCityName(latitude, longitude);
+    const timezoneOffset = 1;
+    if (weatherData === undefined) {
+        console.log('error fetching weather Data');
+    }
+    else {
+        const { current } = weatherData;
+        const { time, date } = formatDateTime(current.dt, timezoneOffset);
+        fillDateAndTimeBox(cityData, time, date);
+        fillMainBox(weatherData);
+        fillHourlyBox(weatherData);
+        fillFiveDaysBox(weatherData);
+    }
 }
-function fillTimeBox(time, date, city) {
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+document.getElementById('search-bar')?.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter' &&
+        document.getElementById('search-bar').value.trim().length > 0) {
+        serachBar();
+    }
+});
+async function serachBar() {
+    const serachBar = document.getElementById('search-bar');
+    const serachBarInput = serachBar.value.trim();
+    const coordinates = await getCoordinates(serachBarInput);
+    const timezoneOffset = 1;
+    if (coordinates === undefined) {
+        console.log('error fetching coordinates Data');
+    }
+    else {
+        const [{ lat, lon }] = coordinates;
+        const weatherData = await getWeatherData(lat, lon);
+        const cityData = await getCityName(lat, lon);
+        console.log(weatherData);
+        if (weatherData === undefined) {
+            console.log('error fetching weather Data');
+        }
+        else {
+            const { current } = weatherData;
+            const { time, date } = formatDateTime(current.dt, timezoneOffset);
+            fillDateAndTimeBox(cityData, time, date);
+            fillMainBox(weatherData);
+            fillHourlyBox(weatherData);
+            fillFiveDaysBox(weatherData);
+        }
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//Funtion to fill first(1) left box. date, time and city box
+function fillDateAndTimeBox(cityData, time, date) {
     const currentTime = document.getElementById('time');
-    currentTime.innerText = time;
     const currentDate = document.getElementById('date');
-    currentDate.innerText = date;
     const currentcity = document.getElementById('city');
-    currentcity.innerText = city;
+    const cityName = cityData.at(0)?.name ?? 'Unknown';
+    currentTime.innerText = time;
+    currentDate.innerText = date;
+    currentcity.innerText = cityName;
 }
+//Funtion to fill (2) main box with all the weather details
 function fillMainBox(weatherData) {
     const currentTemp = document.getElementById('temp');
     // const currentFeelsLikeTemp = document.getElementById('feels-like-temp') as HTMLParagraphElement;
@@ -91,7 +121,7 @@ function fillMainBox(weatherData) {
     const currentHumidity = document.getElementById('humidity');
     const currentWindSpeed = document.getElementById('wind-speed');
     const currentPressure = document.getElementById('pressure');
-    // const currentUV = document.getElementById('UV') as HTMLParagraphElement;
+    const currentUV = document.getElementById('UV');
     const formatDateTime = (timestamp, timezoneOffset) => {
         const localDate = new Date((timestamp + timezoneOffset) * 1000);
         return {
@@ -108,20 +138,78 @@ function fillMainBox(weatherData) {
             }),
         };
     };
-    const { temp, feels_like, humidity, pressure } = weatherData.main;
-    const [{ main: weatherMain, description, icon }] = weatherData.weather;
-    const { speed } = weatherData.wind;
-    const { sunrise, sunset } = weatherData.sys;
-    const { timezone } = weatherData;
+    const { current } = weatherData;
     const timezoneOffset = 1; //############check the offset it cusing error############
     //  weatherData.timezone;
-    currentTemp.innerText = `${Math.floor(temp)}\u00B0C`;
+    currentTemp.innerText = `${Math.floor(current.temp)}\u00B0C`;
     // currentFeelsLikeTemp.innerText = feels_like.toString();
-    currentSunrise.innerText = formatDateTime(sunrise, timezoneOffset).time;
-    currentSunset.innerText = formatDateTime(sunset, timezoneOffset).time;
-    currentWeather.innerText = weatherMain;
-    currentHumidity.innerText = `${Math.floor(humidity)}%`;
-    currentWindSpeed.innerText = `${Math.floor(speed)} km/h`;
-    currentPressure.innerText = `${Math.floor(pressure)} hPa`;
-    // currentUV.innerText =
+    currentSunrise.innerText = formatDateTime(current.sunrise, timezoneOffset).time;
+    currentSunset.innerText = formatDateTime(current.sunset, timezoneOffset).time;
+    currentWeather.innerText = current.weather[0].main;
+    currentHumidity.innerText = `${Math.floor(current.humidity)} %`;
+    currentWindSpeed.innerText = `${Math.floor(current.wind_speed)} km/h`;
+    currentPressure.innerText = `${Math.floor(current.pressure)} hPa`;
+    currentUV.innerText = `${Math.floor(current.uvi)} hPa`;
+}
+//Funtion to fill (3) hourly Box
+function fillHourlyBox(weatherData) {
+    const { hourly } = weatherData;
+    const hourlyFiltered = hourly.slice(1, 6);
+    // console.log(hourlyFiltered);
+    const formatTime = (timestamp) => {
+        const localDate = new Date(timestamp * 1000);
+        return {
+            time: localDate.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+            }),
+        };
+    };
+    const hourlyDiv = document.getElementById('hourly-div');
+    hourlyDiv.innerHTML = " ";
+    hourlyFiltered.forEach((hourlyFiltered) => {
+        const hourlyDivCell = `  <div class="flex flex-col items-center gap-3">
+            <p>${formatTime(hourlyFiltered.dt).time}</p>
+            <img class="max-h-12 max-w-12" src="../resource/dashboard/sun.png" alt="">
+            <p>${hourlyFiltered.temp}</p>
+            <img class="max-h-12 max-w-12" src="../resource/dashboard/wind-1.png" alt="">
+            <p>${hourlyFiltered.wind_speed} km/h</p>
+          </div>`;
+        hourlyDiv.innerHTML += hourlyDivCell;
+    });
+}
+////Funtion to fill (4) five day Box
+function fillFiveDaysBox(weatherData) {
+    const { daily } = weatherData;
+    const dailyFiltered = daily.slice(1, 6);
+    // console.log(dailyFiltered);
+    const formatDate = (timestamp) => {
+        const localDate = new Date(timestamp * 1000);
+        return {
+            date: localDate.toLocaleDateString('en-US', {
+                weekday: 'long',
+                // year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+            }),
+        };
+    };
+    const dailyDiv = document.getElementById('daily-div');
+    dailyDiv.innerHTML = " ";
+    dailyFiltered.forEach((dailyFiltered) => {
+        const hourlyDivCell = ` 
+          <div class="grid grid-cols-3 place-items-center">
+            <div>
+              <img class="max-h-10" src="../resource/dashboard/cloudy-1.png" alt="">
+            </div>
+            <div>
+              <p>${dailyFiltered.temp.day}</p>
+            </div>
+            <div>
+              ${formatDate(dailyFiltered.dt).date}
+            </div>
+          </div>`;
+        dailyDiv.innerHTML += hourlyDivCell;
+    });
 }

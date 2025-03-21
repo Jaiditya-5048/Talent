@@ -16,7 +16,7 @@ type UserData = {
   password: string;
 };
 
-// type WeatherData {
+// type WeatherData = {
 //   main: {
 //     temp: number;
 //     feels_like: number;
@@ -135,7 +135,16 @@ type ReverseGeoAPIResponse = {
   lat: number;
   lon: number;
   country: string;
-};
+}[];
+
+type GeoAPIResponse = {
+  name: string;
+  lat: number;
+  lon: number;
+  country: string;
+  state?: string; // Optional in case some responses don't have it
+}[];
+
 
 
 
