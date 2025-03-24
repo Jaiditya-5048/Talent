@@ -1,22 +1,39 @@
 {
   "users": [
     {
-      "id": 1742156092956.7322,
+      "id": "d68a",
+      "user_id": 1742691532628,
       "name": {
-        "fName": "Kyle",
-        "lName": "Franklin"
-      },
-      "email": "wynygo@mailinator.com",
-      "password": "Pa$$w0rd!"
-    },
-    {
-      "id": 1742156148565.5627,
-      "name": {
-        "fName": "Jai",
+        "fName": "Jaiditya",
         "lName": "Bansal"
       },
       "email": "jai@node.com",
-      "password": "Qwerty123!"
+      "password": "Qwerty@123"
+    },
+    {
+      "id": "71f6",
+      "user_id": 1742726277559,
+      "name": {
+        "fName": "Larissa",
+        "lName": "Rosa"
+      },
+      "email": "wawagap@mailinator.com",
+      "password": "Pa$$w0rd!"
+    }
+  ],
+  "whishlist": [
+    {
+      "id": "1742691532628",
+      "fav_locations": [
+        "Chandigarh",
+        "Ludhiana",
+        "Sahibzada Ajit Singh Nagar District"
+      ]
+    },
+    {
+      "id": "f57d",
+      "user_id": 1742726277559,
+      "fav_locations": []
     }
   ]
 }

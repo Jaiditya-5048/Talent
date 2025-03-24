@@ -1,0 +1,13 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.todo-item {
+  display: flex;
+  padding-left: 5%;
+  margin: 15px;
+  background-color: grey;
+}

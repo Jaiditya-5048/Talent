@@ -46,40 +46,61 @@ async function loginUser(event: Event) {
     document.getElementById('password-login') as HTMLInputElement
   ).value.trim();
 
-  const userData = await getSingleUser(email, password);
-  if (userData.length === 0) {
-    console.log('Wrong email or password');
-    alert('Wrong email or password');
+  const userData: UserData[] | null = await getSingleUser(email, password);
+  if(userData === null){console.log("error fetching data")}
+  else{
+  if (Object.keys(userData).length === 0) {
+    showToast('toast-error-login');
   } else {
+    const loggedInUser = { user_id: userData[0].user_id, fName: userData[0].name.fName , loginFlag: true };
+    localStorage.setItem('logginUser', JSON.stringify(loggedInUser));
+
     console.log('user logged in successfully');
-    console.log('user: ', userData);
+    console.log('user: ', loggedInUser);
+
+    window.open('../public/dashboard_flex.html');
+    const loginForm = document.getElementById('login-form') as HTMLFormElement;
+    loginForm.reset();
   }
+}
 }
 
 // Register-form
 document.getElementById('form-register-btn')?.addEventListener('click', registerUser);
 
-function registerUser(event: Event) {
+async function registerUser(event: Event) {
   event.preventDefault();
   const fName: string = (document.getElementById('first-name') as HTMLInputElement).value.trim();
   const lName: string = (document.getElementById('last-name') as HTMLInputElement).value.trim();
-  const email: string = (
-    document.getElementById('email-register') as HTMLInputElement
-  ).value.trim();
-  const password: string = (
-    document.getElementById('password-register') as HTMLInputElement
-  ).value.trim();
+  const email: string = (document.getElementById('email-register') as HTMLInputElement).value.trim();
+  const password: string = (document.getElementById('password-register') as HTMLInputElement).value.trim();
 
-  const userData: UserData = {
-    id: Date.now() + Math.random(),
-    name: {
-      fName: fName.charAt(0).toUpperCase() + fName.slice(1),
-      lName: lName.charAt(0).toUpperCase() + lName.slice(1),
-    },
-    email,
-    password,
-  };
+  const userData: UserData[] | null = await getSingleUser(email);
+  if (userData === null) {
+    console.log('error fetching data');
+  }else{
 
-  console.log(userData);
-  postData(userData);
+  if (userData.length !== 0) {
+    showToast('toast-error-register');
+  } else {
+    const userData: UserData = {
+      user_id: Math.floor(Date.now() + Math.random()),
+      name: {
+        fName: fName.charAt(0).toUpperCase() + fName.slice(1),
+        lName: lName.charAt(0).toUpperCase() + lName.slice(1),
+      },
+      email,
+      password,
+    };
+
+    const userWishlist: ApiWhishlist = {
+      user_id: userData.user_id,
+      fav_locations: [],
+    } 
+
+    console.log(userData);
+    postData(userData);
+    postWishlist(userWishlist);
+  }
+}
 }
