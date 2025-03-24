@@ -1,8 +1,14 @@
-type all_data = GeolocationPosition 
-type time = string 
-type date = string 
-type latitude = number 
-type longitude = number 
+type all_data = GeolocationPosition;
+type time = string;
+type date = string;
+type latitude = number;
+type longitude = number;
+
+type loggedInUser = { 
+  user_id: string; 
+  fName: string; 
+  loginFlag: boolean 
+};
 
 type Name = {
   fName: string;
@@ -10,10 +16,23 @@ type Name = {
 };
 
 type UserData = {
-  id: number;
+  user_id: number;
   name: Name;
   email: string;
   password: string;
+};
+
+type WorldTimeAPIResponse = {
+  timezone: string;
+  datetime: string;
+  date: string;
+  year: string;
+  month: string;
+  day: string;
+  hour: string;
+  minute: string;
+  second: string;
+  day_of_week: string;
 };
 
 // type WeatherData = {
@@ -31,7 +50,7 @@ type UserData = {
 // }
 
 // interface WeatherDataHourly {
-//   list: WeatherData[]; 
+//   list: WeatherData[];
 //   country: string;
 //   population: number;
 //   timezone: number;
@@ -145,19 +164,10 @@ type GeoAPIResponse = {
   state?: string; // Optional in case some responses don't have it
 }[];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+type ApiWhishlist = {
+  user_id: number;
+  fav_locations: string[];
+};
 
 // type Weather = {
 //   id: number;
@@ -165,7 +175,6 @@ type GeoAPIResponse = {
 //   description: string;
 //   icon: string;
 // };
-  
 
 // type Current = {
 //   dt: number;
@@ -185,7 +194,6 @@ type GeoAPIResponse = {
 //   weather: Weather[];
 // };
 
-
 // // type LocationData = {
 // //   lat: number;
 // //   lon: number;
@@ -201,9 +209,8 @@ type GeoAPIResponse = {
 //   current : Current;
 //   hourly: Current[];
 //   daily:
-  
-// }
 
+// }
 
 // type Temperature = {
 //   day: number;

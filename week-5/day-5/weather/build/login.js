@@ -35,16 +35,22 @@ async function loginUser(event) {
     const email = document.getElementById('email-login').value.trim();
     const password = document.getElementById('password-login').value.trim();
     const userData = await getSingleUser(email, password);
-    if (userData.length === 0) {
-        showToast('toast-error-login');
+    if (userData === null) {
+        console.log("error fetching data");
     }
     else {
-        localStorage.setItem('logginUser', JSON.stringify(userData));
-        console.log('user logged in successfully');
-        console.log('user: ', userData);
-        window.open('../public/dashboard_flex.html');
-        const loginForm = document.getElementById('login-form');
-        loginForm.reset();
+        if (Object.keys(userData).length === 0) {
+            showToast('toast-error-login');
+        }
+        else {
+            const loggedInUser = { user_id: userData[0].user_id, fName: userData[0].name.fName, loginFlag: true };
+            localStorage.setItem('logginUser', JSON.stringify(loggedInUser));
+            console.log('user logged in successfully');
+            console.log('user: ', loggedInUser);
+            window.open('../public/dashboard_flex.html');
+            const loginForm = document.getElementById('login-form');
+            loginForm.reset();
+        }
     }
 }
 // Register-form
@@ -55,21 +61,31 @@ async function registerUser(event) {
     const lName = document.getElementById('last-name').value.trim();
     const email = document.getElementById('email-register').value.trim();
     const password = document.getElementById('password-register').value.trim();
-    const apiUserData = await getSingleUser(email);
-    if (apiUserData.length !== 0) {
-        showToast('toast-error-register');
+    const userData = await getSingleUser(email);
+    if (userData === null) {
+        console.log('error fetching data');
     }
     else {
-        const userData = {
-            id: Date.now() + Math.random(),
-            name: {
-                fName: fName.charAt(0).toUpperCase() + fName.slice(1),
-                lName: lName.charAt(0).toUpperCase() + lName.slice(1),
-            },
-            email,
-            password,
-        };
-        console.log(userData);
-        postData(userData);
+        if (userData.length !== 0) {
+            showToast('toast-error-register');
+        }
+        else {
+            const userData = {
+                user_id: Math.floor(Date.now() + Math.random()),
+                name: {
+                    fName: fName.charAt(0).toUpperCase() + fName.slice(1),
+                    lName: lName.charAt(0).toUpperCase() + lName.slice(1),
+                },
+                email,
+                password,
+            };
+            const userWishlist = {
+                user_id: userData.user_id,
+                fav_locations: [],
+            };
+            console.log(userData);
+            postData(userData);
+            postWishlist(userWishlist);
+        }
     }
 }
