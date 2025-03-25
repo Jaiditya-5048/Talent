@@ -30,12 +30,14 @@ async function getCoordinates(name: string): Promise<GeoAPIResponse | undefined>
   const appid = 'ac0060d9268737b9a39758878ad38c54';
 
   try {
-    const params = new URLSearchParams({ 
+    const params = new URLSearchParams({
       limit: '1',
       appid: appid,
     });
 
-    let response = await fetch('http://api.openweathermap.org/geo/1.0/direct?q=' + name + "&" + params);
+    let response = await fetch(
+      'http://api.openweathermap.org/geo/1.0/direct?q=' + name + '&' + params,
+    );
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     return await response.json();
   } catch (error) {
@@ -72,43 +74,35 @@ async function getDateAndTime(
   latitude: latitude,
   longitude: longitude,
 ): Promise<WorldTimeAPIResponse | undefined> {
-
-
   try {
     const params = new URLSearchParams({
       lat: latitude.toString(),
       lon: longitude.toString(),
     });
 
-     let response = await fetch('https://api.api-ninjas.com/v1/worldtime?' + params, {
-       headers: {
-         'X-Api-Key': '/8Nnl2f5zM8wsfzvzF8RbA==vwveDTwyOi55OXIU',
-       },
-     });
+    let response = await fetch('https://api.api-ninjas.com/v1/worldtime?' + params, {
+      headers: {
+        'X-Api-Key': '/8Nnl2f5zM8wsfzvzF8RbA==vwveDTwyOi55OXIU',
+      },
+    });
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     return await response.json();
   } catch (error) {
     console.error('Error fetching user data:', error);
-    ;
   }
 }
 
-async function getWhishlistAPI(user_id:string) : Promise< ApiWhishlist | null> {
+async function getWhishlistAPI(user_id: string): Promise<ApiWhishlist | null> {
   const id = user_id.toString();
-    try {
-      
-      let response = await fetch(
-        `http://localhost:3000/whishlist/${id}`,
-      ); 
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      return null;
-    }
-  
+  try {
+    let response = await fetch(`http://localhost:3000/whishlist/${id}`);
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return null;
+  }
 }
-
 
 // Function to send whishlist data
 async function postWishlist(whishlist: ApiWhishlist) {
@@ -131,12 +125,12 @@ async function postWishlist(whishlist: ApiWhishlist) {
 //Function to replace whishlist data
 async function replaceWishlist(user_id: string, whishlist: ApiWhishlist): Promise<void> {
   const id = user_id.toString();
-  
+
   try {
     // const params = new URLSearchParams({
     //   user_id: user_id,
     // });
-    const response = await fetch(`http://localhost:3000/whishlist/${id}` , {
+    const response = await fetch(`http://localhost:3000/whishlist/${id}`, {
       method: 'PUT', // Use PUT to replace the entire object
       headers: {
         'Content-Type': 'application/json',
@@ -178,7 +172,9 @@ async function postData(userData: UserData) {
 }
 
 // function to get a single user
-async function getSingleUser(params: { email: string; password?: string } | { user_id: string },): Promise<UserData[] | null> {
+async function getSingleUser(
+  params: { email: string; password?: string } | { id: string },
+): Promise<UserData[] | null> {
   try {
     let queryParams = new URLSearchParams(params as Record<string, string>).toString();
 
@@ -193,46 +189,56 @@ async function getSingleUser(params: { email: string; password?: string } | { us
   }
 }
 
-
-
 // function to delete user and update the database using DELETE
 async function deleteUser(user_id: string): Promise<void> {
-    try {
-        let responseUser = await fetch(`http://localhost:3000/users/${user_id}` , { method: "DELETE" });
-        let responseWishlist = await fetch(`http://localhost:3000/whishlist/${user_id}`, {
-          method: 'DELETE',
-        });
-        if (responseUser.ok && responseWishlist.ok) {
-            console.log(`User with ID ${user_id} deleted successfully.`);
-        } else {
-            console.error(`Failed to delete user: ${responseUser.status} , ${responseWishlist.status}`);
-        }
-    } catch (error) {
-        console.error("Error deleting user:", error);
+  try {
+    let responseUser = await fetch(`http://localhost:3000/users/${user_id}`, { method: 'DELETE' });
+    debugger;
+    if (responseUser.ok) {
+      console.log(`User with ID ${user_id} deleted successfully.`);
+    } else {
+      console.error(`Failed to delete user: ${responseUser.status}`);
     }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+  }
+}
+
+async function deleteUserWishlist(user_id: string): Promise<void> {
+  try {
+    let responseWishlist = await fetch(`http://localhost:3000/whishlist/${user_id}`, {
+      method: 'DELETE',
+    });
+    debugger;
+    if (responseWishlist.ok) {
+      console.log(`User with ID ${user_id} deleted successfully.`);
+    } else {
+      console.error(`Failed to delete user:${responseWishlist.status}`);
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+  }
 }
 
 // This function is used to replace data in database using API
-async function updateUserData(userData: UserData[]) {
-    try {
-        const response = await fetch(`http://localhost:3000/users/${userData[0].id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(userData),
-        });
+async function updateUserData(userData: UserData) {
+  try {
+    const response = await fetch(`http://localhost:3000/users/${userData.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
 
-        if (response.ok) {
-            console.log("Updated user successfully!");
-            // const userForm = document.getElementById("addUserForm") as HTMLFormElement;
-        
-        } else {
-            console.error("Failed to update user:", response.status);
-        }
-    } catch (error) {
-        console.error("Error:", error);
+    if (response.ok) {
+      console.log('Updated user successfully!');
+      // const userForm = document.getElementById("addUserForm") as HTMLFormElement;
+    } else {
+      console.error('Failed to update user:', response.status);
     }
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
-
 
 // http://api.openweathermap.org/geo/1.0/direct?q=chandigarh&limit=5&appid=ac0060d9268737b9a39758878ad38c54
 

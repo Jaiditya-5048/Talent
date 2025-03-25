@@ -80,7 +80,7 @@ async function registerUser(event) {
         }
         else {
             const userData = {
-                id: Math.floor(Date.now() + Math.random()),
+                id: (Math.floor(Date.now() + Math.random())).toString(),
                 name: {
                     fName: fName.charAt(0).toUpperCase() + fName.slice(1),
                     lName: lName.charAt(0).toUpperCase() + lName.slice(1),

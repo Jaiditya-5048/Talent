@@ -29,7 +29,7 @@ async function getCoordinates(name) {
             limit: '1',
             appid: appid,
         });
-        let response = await fetch('http://api.openweathermap.org/geo/1.0/direct?q=' + name + "&" + params);
+        let response = await fetch('http://api.openweathermap.org/geo/1.0/direct?q=' + name + '&' + params);
         if (!response.ok)
             throw new Error(`HTTP error! Status: ${response.status}`);
         return await response.json();
@@ -76,7 +76,6 @@ async function getDateAndTime(latitude, longitude) {
     }
     catch (error) {
         console.error('Error fetching user data:', error);
-        ;
     }
 }
 async function getWhishlistAPI(user_id) {
@@ -174,39 +173,54 @@ async function getSingleUser(params) {
 // function to delete user and update the database using DELETE
 async function deleteUser(user_id) {
     try {
-        let responseUser = await fetch(`http://localhost:3000/users/${user_id}`, { method: "DELETE" });
-        let responseWishlist = await fetch(`http://localhost:3000/whishlist/${user_id}`, {
-            method: 'DELETE',
-        });
-        if (responseUser.ok && responseWishlist.ok) {
+        let responseUser = await fetch(`http://localhost:3000/users/${user_id}`, { method: 'DELETE' });
+        debugger;
+        if (responseUser.ok) {
             console.log(`User with ID ${user_id} deleted successfully.`);
         }
         else {
-            console.error(`Failed to delete user: ${responseUser.status} , ${responseWishlist.status}`);
+            console.error(`Failed to delete user: ${responseUser.status}`);
         }
     }
     catch (error) {
-        console.error("Error deleting user:", error);
+        console.error('Error deleting user:', error);
+    }
+}
+async function deleteUserWishlist(user_id) {
+    try {
+        let responseWishlist = await fetch(`http://localhost:3000/whishlist/${user_id}`, {
+            method: 'DELETE',
+        });
+        debugger;
+        if (responseWishlist.ok) {
+            console.log(`User with ID ${user_id} deleted successfully.`);
+        }
+        else {
+            console.error(`Failed to delete user:${responseWishlist.status}`);
+        }
+    }
+    catch (error) {
+        console.error('Error deleting user:', error);
     }
 }
 // This function is used to replace data in database using API
 async function updateUserData(userData) {
     try {
-        const response = await fetch(`http://localhost:3000/users/${userData[0].id}`, {
+        const response = await fetch(`http://localhost:3000/users/${userData.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(userData),
         });
         if (response.ok) {
-            console.log("Updated user successfully!");
+            console.log('Updated user successfully!');
             // const userForm = document.getElementById("addUserForm") as HTMLFormElement;
         }
         else {
-            console.error("Failed to update user:", response.status);
+            console.error('Failed to update user:', response.status);
         }
     }
     catch (error) {
-        console.error("Error:", error);
+        console.error('Error:', error);
     }
 }
 // http://api.openweathermap.org/geo/1.0/direct?q=chandigarh&limit=5&appid=ac0060d9268737b9a39758878ad38c54

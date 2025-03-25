@@ -96,6 +96,30 @@ class FormValidator {
         this.errors[id] = '';
         break;
 
+      case 'old-password-confirm':
+        if (!value.trim()) {
+          this.errors[id] = 'Password is required';
+          break;
+        }
+        if (this.validatePassword(value.trim()) === false) {
+          this.errors[id] = 'Invalid password';
+          break;
+        }
+        this.errors[id] = '';
+        break;
+
+      case 'password-change':
+        if (!value.trim()) {
+          this.errors[id] = 'Password is required';
+          break;
+        }
+        if (this.validatePassword(value.trim()) === false) {
+          this.errors[id] = 'Invalid password';
+          break;
+        }
+        this.errors[id] = '';
+        break;
+
       case 'confirm-password-register':
         const password = (document.getElementById('password-register') as HTMLInputElement)?.value;
         this.errors[id] = value === password ? '' : 'Passwords do not match.';

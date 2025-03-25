@@ -104,17 +104,19 @@ document.addEventListener('DOMContentLoaded', () => {
         location.reload(); // Perform logout logic here
     });
     //Profile functionality
-    profileBtn?.addEventListener('click', () => {
+    profileBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
         editProfile();
-        location.reload(); // Perform logout logic here
+        // location.reload(); // Perform logout logic here
     });
 });
 //profile functionality
 async function editProfile() {
+    new FormValidator('edit-form', 'form-edit-btn');
     const loggedInUser = JSON.parse(localStorage.getItem('logginUser') || 'null');
     if (loggedInUser === null)
         return;
-    const userData = await getSingleUser({ user_id: loggedInUser.user_id.toString() });
+    const userData = await getSingleUser({ id: loggedInUser.user_id.toString() });
     if (userData === null)
         return;
     const fNameTag = document.getElementById('first-name');
@@ -130,15 +132,20 @@ async function editProfile() {
         if (oldPasswordTag.value.trim() !== userData[0].password) {
             showToast('toast-error-edit');
         }
-        {
+        else {
             userData[0].password = newPasswordTag.value.trim();
+            const userObj = userData[0];
+            console.log(userObj);
+            updateUserData(userObj);
         }
-        updateUserData(userData);
     });
     document.getElementById('form-delete-btn')?.addEventListener('click', (e) => {
         e.preventDefault();
+        ;
         deleteUser(loggedInUser.user_id);
+        deleteUserWishlist(loggedInUser.user_id);
         localStorage.clear();
+        location.reload();
     });
 }
 // Event listener on heart button for whishlist functionality

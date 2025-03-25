@@ -386,7 +386,9 @@
         </div>
 
         <div class="p-4 md:p-5">
-          <form class=" mx-auto " id="register-form">
+          
+          <!-- form starts here -->
+          <form class=" mx-auto " id="edit-form">
 
             <!-- toast message -->
             <div class="hidden" id="toast-error-edit">
@@ -445,7 +447,7 @@
               <div>
                 <label for="old-password-confirm" class="block mb-2 text-sm font-medium text-[#28282899]">Old Password
                   <span class="text-red-700">*</span></label>
-                <input type="password" id="old-password"
+                <input type="password" id="old-password-confirm"
                   class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
                   required placeholder="" autocomplete="password" />
                 <div id="old-password-confirm-error" class="text-red-700 text-xs mt-1"></div>
@@ -458,12 +460,12 @@
                 <input type="password" id="password-change"
                   class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
                   required placeholder="" autocomplete="new-password" />
-                <div id="password-register-error" class="text-red-700 text-xs mt-1"></div>
+                <div id="password-change-error" class="text-red-700 text-xs mt-1"></div>
               </div>
 
             </div>
 
-            <!-- submit button -->
+            <!-- submit button --> 
             <div class="flex gap-3">
               <button type="button"
                 class="text-white bg-red-600 h-12 w-[50%] border-2 border-red-600 rounded-2xl hover:bg-red-800"

@@ -98,7 +98,7 @@ async function registerUser(event: Event) {
     showToast('toast-error-register');
   } else {
     const userData: UserData = {
-      id: Math.floor(Date.now() + Math.random()),
+      id: (Math.floor(Date.now() + Math.random())).toString(),
       name: {
         fName: fName.charAt(0).toUpperCase() + fName.slice(1),
         lName: lName.charAt(0).toUpperCase() + lName.slice(1),

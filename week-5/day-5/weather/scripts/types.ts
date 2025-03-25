@@ -16,7 +16,7 @@ type Name = {
 };
 
 type UserData = {
-  id: number;
+  id: string;
   name: Name;
   email: string;
   password: string;
