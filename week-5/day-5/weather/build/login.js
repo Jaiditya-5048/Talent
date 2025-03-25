@@ -1,11 +1,20 @@
 "use strict";
 window.onload = function () {
-    document.getElementById('loginbtn')?.addEventListener('click', triggerLogin);
-    document.getElementById('registerbtn')?.addEventListener('click', () => {
-        triggerRegister();
-        new FormValidator('register-form', 'form-register-btn');
-    });
+    loginLoad();
 };
+function loginLoad() {
+    const loggedInUser = JSON.parse(localStorage.getItem('logginUser') || 'null');
+    if (loggedInUser === null) {
+        document.getElementById('loginbtn')?.addEventListener('click', triggerLogin);
+        document.getElementById('registerbtn')?.addEventListener('click', () => {
+            triggerRegister();
+            new FormValidator('register-form', 'form-register-btn');
+        });
+    }
+    else {
+        window.open('../public/dashboard_flex.html', '_self');
+    }
+}
 // Vlaidation class for login
 document.addEventListener('DOMContentLoaded', () => {
     new FormValidator('login-form', 'form-login-btn');
@@ -34,7 +43,7 @@ async function loginUser(event) {
     event.preventDefault();
     const email = document.getElementById('email-login').value.trim();
     const password = document.getElementById('password-login').value.trim();
-    const userData = await getSingleUser(email, password);
+    const userData = await getSingleUser({ email: email, password: password });
     if (userData === null) {
         console.log("error fetching data");
     }
@@ -43,11 +52,11 @@ async function loginUser(event) {
             showToast('toast-error-login');
         }
         else {
-            const loggedInUser = { user_id: userData[0].user_id, fName: userData[0].name.fName, loginFlag: true };
+            const loggedInUser = { user_id: userData[0].id, fName: userData[0].name.fName, loginFlag: true };
             localStorage.setItem('logginUser', JSON.stringify(loggedInUser));
             console.log('user logged in successfully');
             console.log('user: ', loggedInUser);
-            window.open('../public/dashboard_flex.html');
+            window.open('../public/dashboard_flex.html', '_self');
             const loginForm = document.getElementById('login-form');
             loginForm.reset();
         }
@@ -61,7 +70,7 @@ async function registerUser(event) {
     const lName = document.getElementById('last-name').value.trim();
     const email = document.getElementById('email-register').value.trim();
     const password = document.getElementById('password-register').value.trim();
-    const userData = await getSingleUser(email);
+    const userData = await getSingleUser({ email: email });
     if (userData === null) {
         console.log('error fetching data');
     }
@@ -71,7 +80,7 @@ async function registerUser(event) {
         }
         else {
             const userData = {
-                user_id: Math.floor(Date.now() + Math.random()),
+                id: Math.floor(Date.now() + Math.random()),
                 name: {
                     fName: fName.charAt(0).toUpperCase() + fName.slice(1),
                     lName: lName.charAt(0).toUpperCase() + lName.slice(1),
@@ -80,7 +89,7 @@ async function registerUser(event) {
                 password,
             };
             const userWishlist = {
-                user_id: userData.user_id,
+                id: (userData.id).toString(),
                 fav_locations: [],
             };
             console.log(userData);

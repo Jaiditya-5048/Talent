@@ -1,11 +1,20 @@
 window.onload = function () {
   load();
+  // editProfile();
 };
 
+// Function to load website on startup
 async function load() {
+  const dom = new Dom();
+  dom.removeClass('loader-wrapper', 'hidden fade-out');
+  dom.addClass('loader-wrapper', 'fade-in');
+
   const loggedInUser: loggedInUser | null = JSON.parse(
     localStorage.getItem('logginUser') || 'null',
   );
+
+  (document.getElementById('profile-icon-text') as HTMLParagraphElement).innerText =
+    loggedInUser?.fName?.charAt(0) ?? '';
 
   if (loggedInUser === null) {
     window.location.href = '../public/log.html';
@@ -13,13 +22,154 @@ async function load() {
     await fillData();
     const location: string =
       (document.getElementById('city') as HTMLParagraphElement)?.textContent ?? 'Unknown';
-
     const whishlistClass = new Whishlist(loggedInUser.user_id, location);
-
     whishlistClass.checkHeartColor();
   }
+  dom.removeClass('loader-wrapper', 'fade-in');
+  dom.addClass('loader-wrapper', 'hidden fade-out');
 }
 
+//nav bar drop down functionality
+document.addEventListener('DOMContentLoaded', () => {
+  const menuBtn = document.getElementById('menu-btn') as HTMLElement | null;
+  const dropdownMenu = document.getElementById('dropdown-menu') as HTMLElement | null;
+  const favCitiesList = document.getElementById('fav-cities') as HTMLElement | null;
+  const logoutBtn = document.getElementById('logout-btn') as HTMLElement | null;
+  const profileBtn = document.getElementById('profile-btn') as HTMLElement | null;
+  const favBtn = document.getElementById('fav-btn') as HTMLElement | null;
+
+  if (!menuBtn || !dropdownMenu || !favCitiesList || !profileBtn || !favBtn) return;
+
+  const loggedInUser: loggedInUser | null = JSON.parse(
+    localStorage.getItem('logginUser') || 'null',
+  );
+
+  async function getCityData(user_id: string): Promise<string[]> {
+    const cityList = await getWhishlistAPI(user_id);
+    return cityList ? cityList.fav_locations : [];
+  }
+
+  // Populate Favourites Dropdown
+  async function loadFavouriteCities(): Promise<void> {
+    if (loggedInUser === null) return;
+
+    const favCitiesList = document.getElementById('fav-cities');
+    if (!favCitiesList) return;
+
+    const favouriteCities = await getCityData(loggedInUser.user_id);
+    if(favouriteCities.length === 0){favouriteCities.push('Chandigarh')}
+    favCitiesList.innerHTML = ''; // Clear previous items
+
+    favouriteCities.forEach((city: string) => {
+      const li = document.createElement('li');
+      li.className =
+        'flex justify-between items-center px-3 py-1 text-gray-700 hover:bg-gray-100 cursor-pointer ';
+
+      // City Name
+      const citySpan = document.createElement('span');
+      citySpan.textContent = city;
+
+      // Remove Button
+      const removeBtn = document.createElement('button');
+      removeBtn.innerHTML = '<i class="fas fa-trash"></i>'; // Font Awesome Trash Icon
+      removeBtn.className =
+        'ml-2 px-2 py-1 text-sm text-red-500  rounded cursor-pointer transition-all';
+      removeBtn.onclick = () => removeCity(city);
+
+      // Append elements
+      li.appendChild(citySpan);
+      li.appendChild(removeBtn);
+      favCitiesList.appendChild(li);
+    });
+  }
+
+  // Function to Remove City
+  async function removeCity(city: string): Promise<void> {
+    if (loggedInUser === null) return;
+    const whishlistClass = new Whishlist(loggedInUser.user_id, city);
+    const whishlist = await getWhishlistAPI(loggedInUser.user_id);
+    if (whishlist === null) return;
+    const updatedLocationArr =
+      whishlist?.fav_locations?.filter((location: string) => location !== city) ?? [];
+    updatedLocationArr.sort();
+    whishlist.fav_locations = updatedLocationArr;
+    await replaceWishlist(loggedInUser.user_id, whishlist);
+  
+    whishlistClass.checkHeartColor();
+    loadFavouriteCities();
+  }
+
+  // Toggle dropdown on click
+  menuBtn.addEventListener('click', () => {
+    dropdownMenu.classList.toggle('hidden');
+    loadFavouriteCities(); // Refresh fav cities when opening
+  });
+
+  // Hide dropdown when clicking outside
+  document.addEventListener('click', (event: MouseEvent) => {
+    if (
+      menuBtn &&
+      favBtn &&
+      !menuBtn.contains(event.target as Node) &&
+      !favBtn.contains(event.target as Node)
+    ) {
+      dropdownMenu.classList.add('hidden');
+    }
+  });
+
+  // Logout functionality
+  logoutBtn?.addEventListener('click', () => {
+    localStorage.clear();
+    location.reload(); // Perform logout logic here
+  });
+
+  //Profile functionality
+  profileBtn?.addEventListener('click', () => {
+    editProfile();
+    location.reload(); // Perform logout logic here
+  });
+});
+
+//profile functionality
+async function editProfile() {
+  const loggedInUser: loggedInUser | null = JSON.parse(
+    localStorage.getItem('logginUser') || 'null',
+  );
+  if (loggedInUser === null) return;
+  const userData : UserData[] | null = await getSingleUser({user_id : loggedInUser.user_id.toString()});
+
+  if(userData === null)return;
+
+  const fNameTag = document.getElementById('first-name') as HTMLInputElement;
+  const lNameTag = document.getElementById('last-name') as HTMLInputElement;
+  const emailTag = document.getElementById('email-edit') as HTMLInputElement;
+  const oldPasswordTag = document.getElementById('old-password') as HTMLInputElement;
+  const newPasswordTag = document.getElementById('password-change') as HTMLInputElement;
+
+  fNameTag.value = userData[0].name.fName;
+  lNameTag.value = userData[0].name.lName;
+  emailTag.value = userData[0].email;
+
+  document.getElementById('form-edit-btn')?.addEventListener('click' , (e) => {
+    e.preventDefault();
+    
+    if(oldPasswordTag.value.trim() !== userData[0].password){
+      showToast('toast-error-edit');
+    }{
+      userData[0].password = newPasswordTag.value.trim();
+    }
+    updateUserData(userData);
+  })
+
+  document.getElementById('form-delete-btn')?.addEventListener('click' , (e) => {
+    e.preventDefault();
+    deleteUser(loggedInUser.user_id);
+    localStorage.clear();
+  });
+
+}
+
+// Event listener on heart button for whishlist functionality
 document.getElementById('wishlist-btn')?.addEventListener('click', (e) => {
   e.preventDefault();
   const location: string =
@@ -28,7 +178,7 @@ document.getElementById('wishlist-btn')?.addEventListener('click', (e) => {
   const loggedInUser: loggedInUser | null = JSON.parse(
     localStorage.getItem('logginUser') || 'null',
   );
-  if (loggedInUser !== null){
+  if (loggedInUser !== null) {
     const whishlistClass = new Whishlist(loggedInUser.user_id, location);
     whishlistClass.handleWhishlistBtn(e);
   }
@@ -85,12 +235,11 @@ async function fillData() {
     fillMainBox(weatherData);
     fillHourlyBox(weatherData);
     fillFiveDaysBox(weatherData);
-
-
   }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+// cearch bar funtionality
 
 document.getElementById('search-bar')?.addEventListener('keypress', (event: KeyboardEvent) => {
   if (
@@ -110,6 +259,9 @@ document.getElementById('search-form')?.addEventListener('submit', (event: Submi
 });
 
 async function serachBar() {
+  const dom = new Dom();
+  dom.removeClass('loader-wrapper', 'hidden fade-out');
+  dom.addClass('loader-wrapper', 'fade-in');
   const serachBar = document.getElementById('search-bar') as HTMLInputElement;
   const serachBarInput = serachBar.value.trim();
   const coordinates = await getCoordinates(serachBarInput);
@@ -145,6 +297,8 @@ async function serachBar() {
       }
     }
   }
+  dom.removeClass('loader-wrapper', 'fade-in');
+  dom.addClass('loader-wrapper', 'hidden fade-out');
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -270,7 +424,7 @@ function fillFiveDaysBox(weatherData: WeatherAPIResponse) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-// whish-list code
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // window.FlashMessage.success('Logged Out Successfully', { type: 'success', timeout: 200000 });

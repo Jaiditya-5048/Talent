@@ -1,9 +1,16 @@
 "use strict";
 window.onload = function () {
     load();
+    // editProfile();
 };
+// Function to load website on startup
 async function load() {
+    const dom = new Dom();
+    dom.removeClass('loader-wrapper', 'hidden fade-out');
+    dom.addClass('loader-wrapper', 'fade-in');
     const loggedInUser = JSON.parse(localStorage.getItem('logginUser') || 'null');
+    document.getElementById('profile-icon-text').innerText =
+        loggedInUser?.fName?.charAt(0) ?? '';
     if (loggedInUser === null) {
         window.location.href = '../public/log.html';
     }
@@ -13,7 +20,128 @@ async function load() {
         const whishlistClass = new Whishlist(loggedInUser.user_id, location);
         whishlistClass.checkHeartColor();
     }
+    dom.removeClass('loader-wrapper', 'fade-in');
+    dom.addClass('loader-wrapper', 'hidden fade-out');
 }
+//nav bar drop down functionality
+document.addEventListener('DOMContentLoaded', () => {
+    const menuBtn = document.getElementById('menu-btn');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    const favCitiesList = document.getElementById('fav-cities');
+    const logoutBtn = document.getElementById('logout-btn');
+    const profileBtn = document.getElementById('profile-btn');
+    const favBtn = document.getElementById('fav-btn');
+    if (!menuBtn || !dropdownMenu || !favCitiesList || !profileBtn || !favBtn)
+        return;
+    const loggedInUser = JSON.parse(localStorage.getItem('logginUser') || 'null');
+    async function getCityData(user_id) {
+        const cityList = await getWhishlistAPI(user_id);
+        return cityList ? cityList.fav_locations : [];
+    }
+    // Populate Favourites Dropdown
+    async function loadFavouriteCities() {
+        if (loggedInUser === null)
+            return;
+        const favCitiesList = document.getElementById('fav-cities');
+        if (!favCitiesList)
+            return;
+        const favouriteCities = await getCityData(loggedInUser.user_id);
+        if (favouriteCities.length === 0) {
+            favouriteCities.push('Chandigarh');
+        }
+        favCitiesList.innerHTML = ''; // Clear previous items
+        favouriteCities.forEach((city) => {
+            const li = document.createElement('li');
+            li.className =
+                'flex justify-between items-center px-3 py-1 text-gray-700 hover:bg-gray-100 cursor-pointer ';
+            // City Name
+            const citySpan = document.createElement('span');
+            citySpan.textContent = city;
+            // Remove Button
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '<i class="fas fa-trash"></i>'; // Font Awesome Trash Icon
+            removeBtn.className =
+                'ml-2 px-2 py-1 text-sm text-red-500  rounded cursor-pointer transition-all';
+            removeBtn.onclick = () => removeCity(city);
+            // Append elements
+            li.appendChild(citySpan);
+            li.appendChild(removeBtn);
+            favCitiesList.appendChild(li);
+        });
+    }
+    // Function to Remove City
+    async function removeCity(city) {
+        if (loggedInUser === null)
+            return;
+        const whishlistClass = new Whishlist(loggedInUser.user_id, city);
+        const whishlist = await getWhishlistAPI(loggedInUser.user_id);
+        if (whishlist === null)
+            return;
+        const updatedLocationArr = whishlist?.fav_locations?.filter((location) => location !== city) ?? [];
+        updatedLocationArr.sort();
+        whishlist.fav_locations = updatedLocationArr;
+        await replaceWishlist(loggedInUser.user_id, whishlist);
+        whishlistClass.checkHeartColor();
+        loadFavouriteCities();
+    }
+    // Toggle dropdown on click
+    menuBtn.addEventListener('click', () => {
+        dropdownMenu.classList.toggle('hidden');
+        loadFavouriteCities(); // Refresh fav cities when opening
+    });
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', (event) => {
+        if (menuBtn &&
+            favBtn &&
+            !menuBtn.contains(event.target) &&
+            !favBtn.contains(event.target)) {
+            dropdownMenu.classList.add('hidden');
+        }
+    });
+    // Logout functionality
+    logoutBtn?.addEventListener('click', () => {
+        localStorage.clear();
+        location.reload(); // Perform logout logic here
+    });
+    //Profile functionality
+    profileBtn?.addEventListener('click', () => {
+        editProfile();
+        location.reload(); // Perform logout logic here
+    });
+});
+//profile functionality
+async function editProfile() {
+    const loggedInUser = JSON.parse(localStorage.getItem('logginUser') || 'null');
+    if (loggedInUser === null)
+        return;
+    const userData = await getSingleUser({ user_id: loggedInUser.user_id.toString() });
+    if (userData === null)
+        return;
+    const fNameTag = document.getElementById('first-name');
+    const lNameTag = document.getElementById('last-name');
+    const emailTag = document.getElementById('email-edit');
+    const oldPasswordTag = document.getElementById('old-password');
+    const newPasswordTag = document.getElementById('password-change');
+    fNameTag.value = userData[0].name.fName;
+    lNameTag.value = userData[0].name.lName;
+    emailTag.value = userData[0].email;
+    document.getElementById('form-edit-btn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (oldPasswordTag.value.trim() !== userData[0].password) {
+            showToast('toast-error-edit');
+        }
+        {
+            userData[0].password = newPasswordTag.value.trim();
+        }
+        updateUserData(userData);
+    });
+    document.getElementById('form-delete-btn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        deleteUser(loggedInUser.user_id);
+        localStorage.clear();
+    });
+}
+// Event listener on heart button for whishlist functionality
 document.getElementById('wishlist-btn')?.addEventListener('click', (e) => {
     e.preventDefault();
     const location = document.getElementById('city')?.textContent ?? 'Unknown';
@@ -68,6 +196,7 @@ async function fillData() {
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+// cearch bar funtionality
 document.getElementById('search-bar')?.addEventListener('keypress', (event) => {
     if (event.key === 'Enter' &&
         document.getElementById('search-bar').value.trim().length > 0) {
@@ -82,6 +211,9 @@ document.getElementById('search-form')?.addEventListener('submit', (event) => {
     }
 });
 async function serachBar() {
+    const dom = new Dom();
+    dom.removeClass('loader-wrapper', 'hidden fade-out');
+    dom.addClass('loader-wrapper', 'fade-in');
     const serachBar = document.getElementById('search-bar');
     const serachBarInput = serachBar.value.trim();
     const coordinates = await getCoordinates(serachBarInput);
@@ -113,6 +245,8 @@ async function serachBar() {
             }
         }
     }
+    dom.removeClass('loader-wrapper', 'fade-in');
+    dom.addClass('loader-wrapper', 'hidden fade-out');
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////
 function UTCformat(timestamp, offset) {
@@ -219,6 +353,5 @@ function fillFiveDaysBox(weatherData) {
     });
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////
-// whish-list code
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // window.FlashMessage.success('Logged Out Successfully', { type: 'success', timeout: 200000 });

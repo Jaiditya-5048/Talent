@@ -1,10 +1,24 @@
 window.onload = function () {
-  document.getElementById('loginbtn')?.addEventListener('click', triggerLogin);
-  document.getElementById('registerbtn')?.addEventListener('click', () => {
-    triggerRegister();
-    new FormValidator('register-form', 'form-register-btn');
-  });
+ loginLoad();
 };
+
+function loginLoad(){
+
+  const loggedInUser: loggedInUser | null = JSON.parse(
+    localStorage.getItem('logginUser') || 'null',
+  );
+  if(loggedInUser === null) {
+
+    document.getElementById('loginbtn')?.addEventListener('click', triggerLogin);
+    document.getElementById('registerbtn')?.addEventListener('click', () => {
+      triggerRegister();
+      new FormValidator('register-form', 'form-register-btn');
+    });
+  } else {
+        window.open('../public/dashboard_flex.html', '_self');
+
+  }
+}
 
 // Vlaidation class for login
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,19 +60,19 @@ async function loginUser(event: Event) {
     document.getElementById('password-login') as HTMLInputElement
   ).value.trim();
 
-  const userData: UserData[] | null = await getSingleUser(email, password);
+  const userData: UserData[] | null = await getSingleUser({email: email, password:password});
   if(userData === null){console.log("error fetching data")}
   else{
   if (Object.keys(userData).length === 0) {
     showToast('toast-error-login');
   } else {
-    const loggedInUser = { user_id: userData[0].user_id, fName: userData[0].name.fName , loginFlag: true };
+    const loggedInUser = { user_id: userData[0].id, fName: userData[0].name.fName , loginFlag: true };
     localStorage.setItem('logginUser', JSON.stringify(loggedInUser));
 
     console.log('user logged in successfully');
     console.log('user: ', loggedInUser);
 
-    window.open('../public/dashboard_flex.html');
+    window.open('../public/dashboard_flex.html', '_self');
     const loginForm = document.getElementById('login-form') as HTMLFormElement;
     loginForm.reset();
   }
@@ -75,7 +89,7 @@ async function registerUser(event: Event) {
   const email: string = (document.getElementById('email-register') as HTMLInputElement).value.trim();
   const password: string = (document.getElementById('password-register') as HTMLInputElement).value.trim();
 
-  const userData: UserData[] | null = await getSingleUser(email);
+  const userData: UserData[] | null = await getSingleUser({email : email});
   if (userData === null) {
     console.log('error fetching data');
   }else{
@@ -84,7 +98,7 @@ async function registerUser(event: Event) {
     showToast('toast-error-register');
   } else {
     const userData: UserData = {
-      user_id: Math.floor(Date.now() + Math.random()),
+      id: Math.floor(Date.now() + Math.random()),
       name: {
         fName: fName.charAt(0).toUpperCase() + fName.slice(1),
         lName: lName.charAt(0).toUpperCase() + lName.slice(1),
@@ -94,7 +108,7 @@ async function registerUser(event: Event) {
     };
 
     const userWishlist: ApiWhishlist = {
-      user_id: userData.user_id,
+      id: (userData.id).toString(),
       fav_locations: [],
     } 
 
