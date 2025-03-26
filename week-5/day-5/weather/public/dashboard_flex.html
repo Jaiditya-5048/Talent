@@ -13,6 +13,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline:opsz,wght@10..72,100..900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline:opsz,wght@10..72,100..900&display=swap');
 
@@ -33,11 +36,6 @@
 
       <!-- Centered Search Bar and Wishlist -->
 
-      <!-- <div class="search-bar">
-          <input type="text" class="w-100 max-w-[90%] pl-10 pr-3 py-2 bg-transparent placeholder:text-slate-400 text-white text-sm border
-                 border-slate-200 rounded-md transition duration-300 ease-in-out focus:outline-none focus:border-slate-400 
-                 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Search" id="search-bar">
-        </div> -->
 
 
       <form class="flex items-center max-w-sm mx-auto min-w-100" id="search-form">
@@ -71,8 +69,10 @@
       <!-- <p class="text-5xl pb-3">🤍</p> -->
 
 
-      <!-- Profile Image -->
       <div class="flex gap-5">
+
+        <!-- whishlist button -->
+
         <button type="button" id="wishlist-btn" class="">
           <p class="hidden" id="fav_btn_flag">false</p>
           <svg id="heartIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -81,11 +81,56 @@
               d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
         </button>
-        <img class="h-12" src="../resource/profile.png" alt="profile">
+
+        <!-- Profile menu -->
+        <div class="relative inline-block">
+          <!-- Profile Icon -->
+          <button id="menu-btn" class="p-2 size-12 rounded-full bg-[#5c90c6]  hover:bg-gray-300 ">
+            <!-- <svg class="size-8 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2a5 5 0 1 1-5 5 5 5 0 0 1 5-5zm0 14c-4.42 0-8 2.15-8 4.5V22h16v-1.5c0-2.35-3.58-4.5-8-4.5z" />
+            </svg> -->
+            <p class=" text-2xl text-white " id="profile-icon-text"></p>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div id="dropdown-menu" class="absolute right-0 mt-2 w-30 bg-white rounded-lg shadow-lg hidden">
+            <ul>
+              <!-- profile button -->
+              <li id="profile-btn" class="px-4 py-2 cursor-pointer hover:bg-gray-100 hover:rounded-t-lg"
+                data-modal-target="authentication-modal" data-modal-show="authentication-modal">
+                Profile
+              </li>
+              <!-- Favourites -->
+              <li id="fav-btn" class="px-4 py-2 cursor-pointer hover:bg-gray-100 relative group">
+                Favourites
+                <div id="fav-dropdown"
+                  class="absolute right-full top-0 w-40 bg-white shadow-md rounded-lg group-hover:block hidden">
+                  <ul id="fav-cities" class="p-2">
+
+                    <!-- cities append here -->
+                  </ul>
+                </div>
+              </li>
+
+              <!-- Logout -->
+              <li id="logout-btn" class="px-4 py-2 cursor-pointer hover:bg-gray-100 hover:rounded-b-lg">Logout</li>
+            </ul>
+          </div>
+        </div>
+
       </div>
 
     </nav>
   </div>
+
+  <!-- loader for the website -->
+  <div id="loader-wrapper"
+    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-500 opacity-50">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+  </div>
+
+
+
 
   <!-- h-[calc(100vh-72px)] -->
 
@@ -129,7 +174,7 @@
                 <div class=" flex justify-center">
                   <img class="size-10" src="../resource/dashboard/sunrise.png" alt="">
                 </div>
-                <div>
+                <div class="">
                   <p class="text-xl">Sunrise</p>
                   <p class="text-xl" id="sunrise"></p>
                 </div>
@@ -320,10 +365,131 @@
     </div>
   </div>
 
+  <div div id="authentication-modal" tabindex="-1" aria-hidden="true"
+    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full bg-opacity-10">
+      <div class="relative bg-white rounded-lg shadow-sm">
+
+        <div class="flex items-center justify-between p-4 md:p-5 bg-[#5c90c6]  rounded-t ">
+          <h3 class="text-xl font-semibold text-white">
+            User Profile
+          </h3>
+          <button type="button"
+            class="end-2.5 text-white bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+            data-modal-hide="authentication-modal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+
+        <div class="p-4 md:p-5">
+          
+          <!-- form starts here -->
+          <form class=" mx-auto " id="edit-form">
+
+            <!-- toast message -->
+            <div class="hidden" id="toast-error-edit">
+              <div id="toast-message"
+                class="relative flex items-center w-full  p-4 mb-4 text-white bg-[#5c90c6] rounded-lg shadow-sm z-10 "
+                role="alert">
+                <div class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-red-500 rounded-lg">
+                  <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path
+                      d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+                  </svg>
+                  <span class="sr-only">Error icon</span>
+                </div>
+                <div class="ms-3 text-sm font-normal">Incorrect current password</div>
+              </div>
+            </div>
+
+            <!-- name row -->
+            <div class="grid grid-cols-2 mb-5">
+              <!-- first-name -->
+              <div>
+                <label class="block mb-2 text-sm font-medium text-[#28282899]" for="first-name">First Name <span
+                    class="text-red-700">*</span></label>
+                <input
+                  class=" border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg mr focus:border-[#5c90c6] focus:outline-none block p-2.5"
+                  type="text" id="first-name" placeholder="John" autocomplete="given-name" required>
+                <div id="first-name-error" class="text-red-700 text-xs mt-1"></div>
+              </div>
+
+              <!-- last-name -->
+              <div>
+                <label class="block mb-2 text-sm font-medium text-[#28282899]" for="last-name">Last Name <span
+                    class="text-red-700">*</span></label>
+                <input
+                  class=" border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg mr focus:border-[#5c90c6] focus:outline-none block p-2.5"
+                  type="text" id="last-name" placeholder="Doe" autocomplete="family-name" required>
+                <div id="last-name-error" class="text-red-700 text-xs mt-1"></div>
+              </div>
+            </div>
+
+            <!-- email -->
+            <div class="mb-5">
+              <label for="email-edit" class="block mb-2 text-sm font-medium text-[#28282899]">Your email <span
+                  class="text-red-700">*</span></label>
+              <input type="email" id="email-edit"
+                class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none block w-[95.5%] p-2.5"
+                placeholder="name@example.com" maxlength="320" autocomplete="email" disabled />
+              <div id="email-register-error" class="text-red-700 text-xs mt-1"></div>
+            </div>
+
+            <!-- password row -->
+            <div class="grid grid-cols-2 mb-8">
+
+              <!--old-password-confirm -->
+              <div>
+                <label for="old-password-confirm" class="block mb-2 text-sm font-medium text-[#28282899]">Old Password
+                  <span class="text-red-700">*</span></label>
+                <input type="password" id="old-password-confirm"
+                  class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
+                  required placeholder="" autocomplete="password" />
+                <div id="old-password-confirm-error" class="text-red-700 text-xs mt-1"></div>
+              </div>
+
+              <!-- new-password -->
+              <div>
+                <label for="password-register" class="block mb-2 text-sm font-medium text-[#28282899]">New Password <span
+                    class="text-red-700">*</span></label>
+                <input type="password" id="password-change"
+                  class="border-2  border-[#5c90c6] text-[#28282899] text-sm rounded-lg focus:border-[#5c90c6] focus:outline-none p-2.5"
+                  required placeholder="" autocomplete="new-password" />
+                <div id="password-change-error" class="text-red-700 text-xs mt-1"></div>
+              </div>
+
+            </div>
+
+            <!-- submit button --> 
+            <div class="flex gap-3">
+              <button type="button"
+                class="text-white bg-red-600 h-12 w-[50%] border-2 border-red-600 rounded-2xl hover:bg-red-800"
+                id="form-delete-btn" >Delete</button>
+              <button type="submit"
+                class="text-white bg-[#5c90c6] h-12 w-[50%] border-2 border-[#5c90c6] rounded-2xl hover:bg-[#5caafb]"
+                id="form-edit-btn" >Edit</button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+    <p>
+  </div>
+
+
+  </p>
   <script src="../build/types.js"></script>
   <script src="../build/dom.js"></script>
   <script src="../build/validations.js"></script>
   <script src="../build/api.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
   <script src="../build/dashboard.js"></script>
 </body>
 

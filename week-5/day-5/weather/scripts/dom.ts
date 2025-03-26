@@ -46,12 +46,9 @@ class Whishlist {
   async checkHeartColor() {
     const whishlist = await getWhishlistAPI(this.user_id);
     const pTagFlag = document.getElementById('fav_btn_flag') as HTMLParagraphElement;
-   
 
-    if (whishlist === null){
-      
-
-    }else {
+    if (whishlist === null) {
+    } else {
       console.log(whishlist);
       if (whishlist.fav_locations.includes(this.locationName)) {
         this.changeColorToRed();
@@ -60,28 +57,26 @@ class Whishlist {
         this.changeColorTowhite();
         pTagFlag.innerHTML = 'false';
       }
-  }}
-
+    }
+  }
 
   async handleWhishlistBtn(e: Event) {
-    console.log(e)
+    console.log(e);
     e.preventDefault();
     const whishlist = await getWhishlistAPI(this.user_id);
-    console.log('whishlist origin :' , whishlist)
+    console.log('whishlist origin :', whishlist);
     if (whishlist !== null) {
       const pTagFlag = document.getElementById('fav_btn_flag') as HTMLParagraphElement;
       const pTagFlagValue = pTagFlag.textContent;
       if (pTagFlagValue === 'true') {
-        debugger
         const updatedLocationArr =
           whishlist?.fav_locations?.filter((location: string) => location !== this.locationName) ??
           [];
         updatedLocationArr.sort();
-        console.log(updatedLocationArr);
+
         whishlist.fav_locations = updatedLocationArr;
-        console.log(whishlist)
-        debugger
-        pTagFlag.textContent = 'false'
+
+        pTagFlag.textContent = 'false';
         replaceWishlist(this.user_id, whishlist);
 
         this.changeColorTowhite();
@@ -91,19 +86,26 @@ class Whishlist {
         // Object.defineProperty(whishlist, 'fav_locations', { value: whishlist });
         // replaceWishlist(this.user_id, whishlist);
         // this.changeColorToRed();
-        const locationArr = whishlist.fav_locations
-        debugger
+        const locationArr = whishlist.fav_locations;
+
         // console.log('locationArr' , locationArr);
         whishlist.fav_locations.push(this.locationName);
-         whishlist.fav_locations.sort();
-         console.log(whishlist)
-         debugger
-         pTagFlag.textContent = 'true';
-         replaceWishlist(this.user_id, whishlist);
-         this.changeColorToRed();
-
-        
+        whishlist.fav_locations.sort();
+        console.log(whishlist);
+        pTagFlag.textContent = 'true';
+        replaceWishlist(this.user_id, whishlist);
+        this.changeColorToRed();
       }
     }
   }
+
+  // async removeCity(city:string) {
+  //   const whishlist = await getWhishlistAPI(this.user_id);
+  //   if (whishlist === null) return ;
+  //   const updatedLocationArr =
+  //     whishlist?.fav_locations?.filter((location: string) => location !== this.locationName) ?? [];
+  //   updatedLocationArr.sort();
+  //   replaceWishlist(this.user_id, whishlist);
+  //   this.checkHeartColor();
+  // }
 }
