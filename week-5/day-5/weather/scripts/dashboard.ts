@@ -149,7 +149,7 @@ async function editProfile() {
   const fNameTag = document.getElementById('first-name') as HTMLInputElement;
   const lNameTag = document.getElementById('last-name') as HTMLInputElement;
   const emailTag = document.getElementById('email-edit') as HTMLInputElement;
-  const oldPasswordTag = document.getElementById('old-password') as HTMLInputElement;
+  const oldPasswordTag = document.getElementById('old-password-confirm') as HTMLInputElement;
   const newPasswordTag = document.getElementById('password-change') as HTMLInputElement;
   
 

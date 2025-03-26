@@ -17,18 +17,30 @@
       },
       "email": "huruhifed@mailinator.com",
       "password": "Pa$$w0rd!"
+    },
+    {
+      "id": "1742887527783",
+      "name": {
+        "fName": "Tara",
+        "lName": "Bender"
+      },
+      "email": "wapyriq@mailinator.com",
+      "password": "Pa$$w0rd!"
     }
   ],
   "whishlist": [
     {
       "id": "1742842483101",
       "fav_locations": [
-        "Chandigarh",
         "London"
       ]
     },
     {
       "id": "1742863219303",
+      "fav_locations": []
+    },
+    {
+      "id": "1742887527783",
       "fav_locations": []
     }
   ]
