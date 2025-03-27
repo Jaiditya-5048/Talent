@@ -26,6 +26,42 @@
       },
       "email": "wapyriq@mailinator.com",
       "password": "Pa$$w0rd!"
+    },
+    {
+      "id": "1742984394382",
+      "name": {
+        "fName": "Octavia",
+        "lName": "Kidd"
+      },
+      "email": "pejakoma@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": "1742984492850",
+      "name": {
+        "fName": "Jai",
+        "lName": "Bansal"
+      },
+      "email": "test@test.com",
+      "password": "Test@123"
+    },
+    {
+      "id": "1742984513548",
+      "name": {
+        "fName": "Jai",
+        "lName": "Bansal"
+      },
+      "email": "tessst@test.com",
+      "password": "Test@123"
+    },
+    {
+      "id": "1742984529968",
+      "name": {
+        "fName": "Jai",
+        "lName": "Bansal"
+      },
+      "email": "tests@test.com",
+      "password": "Test@123"
     }
   ],
   "whishlist": [
@@ -41,6 +77,22 @@
     },
     {
       "id": "1742887527783",
+      "fav_locations": []
+    },
+    {
+      "id": "1742984394382",
+      "fav_locations": []
+    },
+    {
+      "id": "1742984492850",
+      "fav_locations": []
+    },
+    {
+      "id": "1742984513548",
+      "fav_locations": []
+    },
+    {
+      "id": "1742984529968",
       "fav_locations": []
     }
   ]
