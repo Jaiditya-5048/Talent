@@ -1,17 +1,15 @@
-import { useState } from 'react'
-import product_card from './components/product_card'
-import SignUp from './components/sign_up'
-import './App.css'
+// import LandingPage  from './pages/landing_page';
+import './App.css';
+import ProductPage from './pages/ProductPage';
 
 function App() {
-  const [count, setCount] = useState(0)
+   
 
   return (
     <>
-      <SignUp />
-        
+      <ProductPage />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

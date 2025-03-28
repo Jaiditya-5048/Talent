@@ -62,6 +62,18 @@
       },
       "email": "tests@test.com",
       "password": "Test@123"
+    },
+    {
+      "id": "1743059970928",
+      "name": "jai",
+      "email": "jai@test.com",
+      "password": "Jitdxrk@TNa8H"
+    },
+    {
+      "id": "1743060005487",
+      "name": "jai",
+      "email": "jai@test8.com",
+      "password": "Jitdxrk@TNa8H"
     }
   ],
   "whishlist": [
