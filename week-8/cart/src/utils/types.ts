@@ -12,6 +12,8 @@ export type CardData = {
   description: string;
   category: string;
   price: number;
+  discountPercentage: number;
+  rating: number
   brand: string;
   images: [string];
   thumbnail: string;

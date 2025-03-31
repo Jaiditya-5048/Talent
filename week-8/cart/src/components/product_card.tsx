@@ -32,7 +32,7 @@ interface ProductCardProps {
 // };
 const ProductCard: React.FC<ProductCardProps> = ({ CardData }) => {
   return (
-    <div className='lg:w-1/4 md:w-1/2 p-4 w-full'>
+    <div className=' p-4 w-full'>
       <div className='  pl-2 pb-3 hover:shadow-lg bg-white rounded-md'>
         <div className='h-48 rounded overflow-hidden'>
           <img

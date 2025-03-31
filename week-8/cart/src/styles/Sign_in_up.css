@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-html {
+.html-bg {
   padding: 0;
   margin: 0;
   background-image: url(../../public/assets/digitalforest.jpg);

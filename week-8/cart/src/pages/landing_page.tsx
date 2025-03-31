@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getProductData } from '../utils/api';
 import { CardData, ApiResponseProductData } from '../utils/types';
 import Nav from '../components/nav';
 import ProductCard from '../components/product_card';
 import Footer from '../components/footer';
+import '../styles/Landing.css'
 
 function LandingPage() {
   const [cardData, setCardData] = useState<CardData[] | null>(null);
@@ -27,22 +29,29 @@ function LandingPage() {
 
 
   return (
-        <>
+    <>
       <Nav />
       {isLoading ? (
         // ✅ Show loading page while fetching data
-        <div className="flex justify-center items-center h-screen">
-          <p className="text-lg font-semibold">Loading...</p>
+        <div className='flex justify-center items-center h-screen'>
+          <p className='text-lg font-semibold'>Loading...</p>
         </div>
       ) : (
         // ✅ Show content only after data is loaded
         <div>
-          <section className="text-gray-600 body-font">
-            <div className="container px-5 py-24 mx-auto">
-              <div className="flex flex-wrap p-2">
+          <section className='text-gray-600 body-font'>
+            <div className='container px-5 py-24 mx-auto'>
+              <div className='flex flex-wrap p-2'>
                 {cardData && cardData.length > 0 ? (
                   cardData.map((item) => (
-                    <ProductCard key={item.id} CardData={item} />
+                    <Link
+                      to={`/product/${item.id}`}
+                      state={{ product: item }} // ✅ Pass data via state
+                      key={item.id}
+                      className='w-full lg:w-1/4 md:w-1/2 p-2'
+                    >
+                      <ProductCard CardData={item} />
+                    </Link>
                   ))
                 ) : (
                   <p>No products available</p>
@@ -54,7 +63,6 @@ function LandingPage() {
         </div>
       )}
     </>
-
   );
 }
 
