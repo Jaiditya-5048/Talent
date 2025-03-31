@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Login from "../components/login"
-import Register from "../components/Register"
-import '../styles/Sign_in_up.css'
+import Sup from "../components/Sup";
+import Sin from "../components/Sin";
+import '../styles/Auth.css'
 
 
 const Auth = () => {
@@ -13,14 +13,16 @@ const Auth = () => {
         <div className='flip-card-inner'>
           {/* Sign In */}
           <div className='flip-card-front'>
-            <Login onFlip={() => setIsFlipped(true)} />
+            <Sin onFlip={() => setIsFlipped(true)} />
           </div>
           {/* Sign Up */}
           <div className='flip-card-back'>
-            <Register onFlip={() => setIsFlipped(false)} />
+            <Sup onFlip={() => setIsFlipped(false)} />
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+export default Auth;
