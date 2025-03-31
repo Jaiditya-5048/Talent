@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 let ID
 
 // let user = [{
@@ -6,6 +7,9 @@ let ID
 // }]
 
 
+=======
+let deleteId = null
+>>>>>>> Stashed changes
 
 
 $(document).ready(function () {
@@ -138,6 +142,7 @@ function createTable(data) {
     tableBody.innerHTML += tableRow;
 
         
+<<<<<<< Updated upstream
     }); }
 
 
@@ -148,11 +153,55 @@ function createTable(data) {
 
 
 
+=======
+        const btnCell = document.createElement("td");
+        btnCell.innerHTML = `  <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+				                <a href="#deleteEmployeeModal" class="delete" data-toggle="modal" onclick = "delmodal(element.id)" ><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+				            `
+                            
+        tableBody.appendChild(tableRow);
+        tableRow.appendChild(dataId);
+        tableRow.appendChild(dataName);
+        tableRow.appendChild(dataEmail);
+        tableRow.appendChild(dataAddress);
+        tableRow.appendChild(dataPhone);
+        tableRow.appendChild(dataCompany);
+        tableRow.appendChild(dataWebsite);
+        tableRow.appendChild(btnCell);
+        
+    });
+}
+
+// Funtion to create element
+function createEle(type, innerText, func) {
+    const element = document.createElement(type);
+    // // element.classList.add(...classList);
+    element.innerText = innerText;
+    // if (type = "button")
+    //     // element.addEventListener("click", func);
+    return element;
+}
+>>>>>>> Stashed changes
+
+
+function delmodal(id) {
+    document.
+    deleteId = id
+    return console.log(deleteId);   
+}
 
 
 
+(event) => {
+    const inp = event.target.value
 
+    )
 
+// ^ should be with it and $ should be ending
+regex = new RegExp('^[A-Za-b]{3,50}$')
+
+// is-invlaid class bootstrap class read about it imp d-none 
+// if else for validation remove add class 
 
 
 
