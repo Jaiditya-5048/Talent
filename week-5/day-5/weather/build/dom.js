@@ -61,14 +61,10 @@ class Whishlist {
             const pTagFlag = document.getElementById('fav_btn_flag');
             const pTagFlagValue = pTagFlag.textContent;
             if (pTagFlagValue === 'true') {
-                debugger;
                 const updatedLocationArr = whishlist?.fav_locations?.filter((location) => location !== this.locationName) ??
                     [];
                 updatedLocationArr.sort();
-                console.log(updatedLocationArr);
                 whishlist.fav_locations = updatedLocationArr;
-                console.log(whishlist);
-                debugger;
                 pTagFlag.textContent = 'false';
                 replaceWishlist(this.user_id, whishlist);
                 this.changeColorTowhite();
@@ -80,12 +76,10 @@ class Whishlist {
                 // replaceWishlist(this.user_id, whishlist);
                 // this.changeColorToRed();
                 const locationArr = whishlist.fav_locations;
-                debugger;
                 // console.log('locationArr' , locationArr);
                 whishlist.fav_locations.push(this.locationName);
                 whishlist.fav_locations.sort();
                 console.log(whishlist);
-                debugger;
                 pTagFlag.textContent = 'true';
                 replaceWishlist(this.user_id, whishlist);
                 this.changeColorToRed();

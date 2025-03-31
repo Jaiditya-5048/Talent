@@ -16,7 +16,7 @@ type Name = {
 };
 
 type UserData = {
-  user_id: number;
+  id: string;
   name: Name;
   email: string;
   password: string;
@@ -165,7 +165,7 @@ type GeoAPIResponse = {
 }[];
 
 type ApiWhishlist = {
-  user_id: number;
+  id: string;
   fav_locations: string[];
 };
 
