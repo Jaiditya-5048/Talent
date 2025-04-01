@@ -32,12 +32,12 @@ function LandingPage() {
     <>
       <Nav />
       {isLoading ? (
-        // ✅ Show loading page while fetching data
+       
         <div className='flex justify-center items-center h-screen'>
           <p className='text-lg font-semibold'>Loading...</p>
         </div>
       ) : (
-        // ✅ Show content only after data is loaded
+      
         <div>
           <section className='text-gray-600 body-font'>
             <div className='container px-5 py-24 mx-auto'>
@@ -46,7 +46,7 @@ function LandingPage() {
                   cardData.map((item) => (
                     <Link
                       to={`/product/${item.id}`}
-                      state={{ product: item }} // ✅ Pass data via state
+                      state={{ product: item }}
                       key={item.id}
                       className='w-full lg:w-1/4 md:w-1/2 p-2'
                     >
