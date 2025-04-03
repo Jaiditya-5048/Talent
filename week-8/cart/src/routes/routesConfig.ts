@@ -4,4 +4,5 @@ export const ROUTES = {
   SIGN_UP: '/signup',
   PRODUCT: '/product/:id',
   CART: '/cart',
+  AUTH: '/Auth'
 };

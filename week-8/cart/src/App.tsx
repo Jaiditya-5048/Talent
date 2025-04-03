@@ -7,16 +7,18 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Nav from './components/nav';
 import { CartProvider } from './components/CartContext';
+import Cart_page from './pages/Cart_page';
 
 const AppRoutes: React.FC = () => {
   return (
     <CartProvider>
       <Router>
-        <Nav />
+        {/* <Nav /> */}
         <Routes>
           <Route path='/' element={<LandingPage />} />
           <Route path='/product/:id' element={<ProductPage />} />
           {/* <Route path='/cart' element={<CartPage />} /> */}
+          <Route path='/Cart' element={<Cart_page />} />
           <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
         </Routes>

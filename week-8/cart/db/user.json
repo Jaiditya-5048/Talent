@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "id": "d364",
+      "first_Name": "Suki",
+      "email": "xexomasak@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": "06ff",
+      "first_Name": "Emily",
+      "email": "kydyhane@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": "c635",
+      "first_Name": "Leilani",
+      "email": "kydyhane@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": "65a9",
+      "first_Name": "Blair",
+      "email": "junywato@mailinator.com",
+      "password": "Pa$$w0rd!"
+    }
+  ]
+}
