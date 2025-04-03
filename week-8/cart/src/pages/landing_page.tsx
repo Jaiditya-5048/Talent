@@ -6,6 +6,7 @@ import Nav from '../components/nav';
 import ProductCard from '../components/product_card';
 import Footer from '../components/footer';
 import '../styles/Landing.css'
+import Cart from '../components/Cart';
 
 function LandingPage() {
   const [cardData, setCardData] = useState<CardData[] | null>(null);
@@ -27,10 +28,12 @@ function LandingPage() {
    fetchData();
  }, []);
 
+ 
 
   return (
     <>
       <Nav />
+      {/* <Cart /> */}
       {isLoading ? (
        
         <div className='flex justify-center items-center h-screen'>

@@ -1,9 +1,11 @@
 // import React from 'react'
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [values, setValues] = useState<{ [key: string]: string }>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isDisabled, setDisabled] = useState(true);
   function getInput(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
     console.log(e);
@@ -35,7 +37,16 @@ function Login() {
     }
 
     setErrors(newErrors);
+      if (!newErrors.email && !newErrors.password && values.email && values.password) {
+        setDisabled(false);
+      } else {
+        setDisabled(true);
+      }
   }
+  const navigate = useNavigate();
+  const clickHandler = () => navigate('/signup');
+  function handleSignIn(){
+    console.log("clicked")}
   return (
     <>
       <section className='text-gray-60 0 body-font'>
@@ -92,15 +103,19 @@ function Login() {
               <p className='text-red-600 text-sm pt-1'>{errors.password}</p>
             </div>
             <button
+              type='submit'
+              disabled={isDisabled}
               className={`text-[#f9ead3] bg-[#03132c] cursor-pointer border-0 py-2 px-8 mt-2 focus:outline-none hover:bg-[#03132cda] rounded text-lg
-                   ${errors.email || errors.password ? 'opacity-50 cursor-not-allowed' : ''}`}
-              disabled={errors.email || errors.password ? true : false}
+                   ${isDisabled === true ? 'opacity-50 cursor-not-allowed' : ''}`}
+              onClick={handleSignIn}
             >
               Sign In
             </button>
             <p className='text-xs text-[#f9ead3] mt-3 self-center'>
               Don'T have an account?{' '}
-              <span className='text-[#03132c] underline cursor-pointer'>Sign Up</span>
+              <button type='button' onClick={clickHandler}>
+                <span className='text-[#03132c] underline cursor-pointer flip-btn'>Sign Up</span>
+              </button>
             </p>
           </div>
         </div>

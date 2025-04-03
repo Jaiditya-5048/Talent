@@ -5,7 +5,7 @@ const Cart: React.FC = () => {
   const { cart, removeFromCart } = useCart();
 
   return (
-    <div className='fixed top-0 right-0 w-64 h-full bg-white shadow-lg p-4'>
+    <div className='fixed top-0 right-0 w-64 h-full bg-green-400 shadow-lg p-4'>
       <h2 className='text-lg font-bold'>🛒 Cart</h2>
       {cart.length === 0 ? (
         <p>Your cart is empty.</p>

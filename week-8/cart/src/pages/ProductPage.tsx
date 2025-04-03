@@ -1,5 +1,5 @@
-import { useLocation, useParams } from 'react-router-dom'; //useParams
-import { useState, useEffect   } from 'react';
+import { useLocation } from 'react-router-dom'; //useParams
+import { useState   } from 'react';
 import Nav from '../components/nav';
 import Footer from '../components/footer';
 import { CardData } from '../utils/types';
@@ -30,16 +30,18 @@ function ProductPage() {
 
   const { addToCart } = useCart();
 
-  const { id } = useParams();           // Get product ID from URL
+  // const { id } = useParams();           // Get product ID from URL
   const location = useLocation();
   const product: CardData | undefined = location.state?.product; // Retrieve passed data
+  console.log(location);
+  
 
   if (!product) {
     return <p>Product not found</p>; // Handle case where data isn't passed
   }
   return (
     <>
-      <Nav />
+      {/* <Nav /> */}
       <Cart />
       <section className='text-gray-600 body-font overflow-hidden'>
         <div className='container px-5 py-24 mx-auto'>
@@ -75,9 +77,9 @@ function ProductPage() {
                   <svg
                     fill='currentColor'
                     stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     className='w-4 h-4 text-indigo-500'
                     viewBox='0 0 24 24'
                   >
@@ -86,9 +88,9 @@ function ProductPage() {
                   <svg
                     fill='currentColor'
                     stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     className='w-4 h-4 text-indigo-500'
                     viewBox='0 0 24 24'
                   >
@@ -97,9 +99,9 @@ function ProductPage() {
                   <svg
                     fill='currentColor'
                     stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     className='w-4 h-4 text-indigo-500'
                     viewBox='0 0 24 24'
                   >
@@ -108,9 +110,9 @@ function ProductPage() {
                   <svg
                     fill='currentColor'
                     stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     className='w-4 h-4 text-indigo-500'
                     viewBox='0 0 24 24'
                   >
@@ -119,9 +121,9 @@ function ProductPage() {
                   <svg
                     fill='none'
                     stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     className='w-4 h-4 text-indigo-500'
                     viewBox='0 0 24 24'
                   >
