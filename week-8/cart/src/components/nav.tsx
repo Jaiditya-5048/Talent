@@ -1,4 +1,5 @@
 // import React from 'react'
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
@@ -14,15 +15,15 @@ export default function Nav() {
           <div className='md:ml-auto flex flex-wrap items-center text-base justify-center'>
             {/* <a className='mr-5 hover:text-gray-900'>First Link</a>
             <a className='mr-5 hover:text-gray-900'>Second Link</a>*/}
-            <a className='mr-5 hover:text-gray-900'>
+            <Link to="/cart" className='mr-5 hover:text-gray-900'>
               <FontAwesomeIcon icon={faCartShopping} className='text-2xl mr-4' />
-            </a>
+            </Link>
             {/* profile drop-down */}
             <Menu>
               <MenuButton className=' hover:text-gray-900'>
                 <FontAwesomeIcon icon={faUser} className='text-2xl mr-8' />
               </MenuButton>
-
+              
               <MenuItems
                 transition
                 anchor='bottom end'

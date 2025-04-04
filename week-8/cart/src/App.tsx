@@ -13,7 +13,7 @@ const AppRoutes: React.FC = () => {
   return (
     <CartProvider>
       <Router>
-        {/* <Nav /> */}
+        <Nav />
         <Routes>
           <Route path='/' element={<LandingPage />} />
           <Route path='/product/:id' element={<ProductPage />} />
