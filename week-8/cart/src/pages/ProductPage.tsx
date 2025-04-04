@@ -4,7 +4,7 @@ import Nav from '../components/nav';
 import Footer from '../components/footer';
 import { CardData } from '../utils/types';
 import { useCart } from '../components/CartContext';
-import Cart from '../components/Cart'; // Import Cart
+
 
 function ProductPage() {
   // const [imageData, setImageData] = useState<ImageData[] | null>(null);
@@ -28,12 +28,12 @@ function ProductPage() {
 
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  const { addToCart } = useCart();
+  const {cart, addToCart, addQuantity, subtractQuantity } = useCart();
 
   // const { id } = useParams();           // Get product ID from URL
   const location = useLocation();
   const product: CardData | undefined = location.state?.product; // Retrieve passed data
-  console.log(location);
+
   
 
   if (!product) {
@@ -41,8 +41,7 @@ function ProductPage() {
   }
   return (
     <>
-      {/* <Nav /> */}
-      <Cart />
+      <Nav />
       <section className='text-gray-600 body-font overflow-hidden'>
         <div className='container px-5 py-24 mx-auto'>
           <div className='lg:w-4/5 mx-auto flex flex-wrap'>
@@ -55,7 +54,6 @@ function ProductPage() {
                 </div>
               )}
 
-              {/* ✅ Product Image */}
               <img
                 alt='ecommerce'
                 className={`object-cover object-center rounded transition-opacity duration-500 ${
@@ -140,12 +138,77 @@ function ProductPage() {
                 <span className='title-font font-medium text-2xl text-gray-900'>
                   ${product.price}
                 </span>
-                <button
-                  className='flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
-                  onClick={() => addToCart(product)}
-                >
-                  Add to Cart
-                </button>
+                {cart.find((item) => item.id === product.id) === undefined ? (
+                  <button
+                    className='flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
+                    onClick={() => addToCart(product)}
+                  >
+                    Add to Cart
+                  </button>
+                ) : (
+                  <div className='flex ml-auto'>
+                    <form className='max-w-xs mx-auto'>
+                      <div className='relative flex items-center max-w-[8rem]'>
+                        <button
+                          onClick={() => subtractQuantity(product)}
+                          type='button'
+                          id='decrement-button'
+                          data-input-counter-decrement='quantity-input'
+                          className='bg-gray-100 hover:bg-gray-500 rounded-s-lg p-3 h-11 focus:outline-none'
+                        >
+                          <svg
+                            className='w-3 h-3 text-gray-900'
+                            aria-hidden='true'
+                            xmlns='http://www.w3.org/2000/svg'
+                            fill='none'
+                            viewBox='0 0 18 2'
+                          >
+                            <path
+                              stroke='currentColor'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              strokeWidth='2'
+                              d='M1 1h16'
+                            />
+                          </svg>
+                        </button>
+                        <input
+                          type='text'
+                          value={cart.find((item) => item.id === product.id)?.quantity}
+                          id='quantity-input'
+                          data-input-counter
+                          aria-describedby='helper-text-explanation'
+                          className='bg-gray-100 h-11 text-center text-gray-900 text-sm focus:outline-0 block w-full py-2.5'
+                          placeholder=''
+                          disabled
+                        />
+                        <button
+                          onClick={() => addQuantity(product)}
+                          type='button'
+                          id='increment-button'
+                          data-input-counter-increment='quantity-input'
+                          className='bg-gray-100 hover:bg-gray-500  rounded-e-lg p-3 h-11  focus:outline-none'
+                        >
+                          <svg
+                            className='w-3 h-3 text-gray-900 '
+                            aria-hidden='true'
+                            xmlns='http://www.w3.org/2000/svg'
+                            fill='none'
+                            viewBox='0 0 18 18'
+                          >
+                            <path
+                              stroke='currentColor'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              strokeWidth='2'
+                              d='M9 1v16M1 9h16'
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
               </div>
             </div>
           </div>

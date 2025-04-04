@@ -17,6 +17,7 @@ export type CardData = {
   brand: string;
   images: [string];
   thumbnail: string;
+  quantity: number;
   reviews: review[];
 };
 
@@ -33,3 +34,11 @@ export type UserData = {
   email: string;
   password: string;
 };
+
+export interface Product {
+  id: number;
+  title: string;
+  price: number;
+  quantity: number;
+  images: string[];
+}
