@@ -1,86 +1,64 @@
-type listItem = {
-  id: number;
-  description: string;
-  isCompleted: boolean;
-};
+import { useEffect, useState } from 'react';
+import { postData, updateData } from '../utils/api';
+import { AddProps, ListItem } from '../utils/type';
 
-function saveToLocal(tasks: listItem) {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-
-function Add() {
+function Add({ onTaskAdded, editingTask, setEditingTask }: AddProps) {
   const [input, setInput] = useState('');
+  const [isEmpty, setEmpty] = useState(false);
 
-  const addTask = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (editingTask) {
+      setInput(editingTask.description);
+    }
+  }, [editingTask]);
+
+  const handleSubmission = async (e: React.FormEvent) => {
     e.preventDefault();
-    const task = {
-      id: Math.floor(Math.random() * 100),
-      description: input,
-    };
-    saveToLocal(input);
-    setInput('');
+    if (input.trim() === "" ) {
+      setEmpty(true);
+      setTimeout(() => setEmpty(false), 300);
+    } else {
+      if (editingTask) {
+        const updatedTask = {
+          ...editingTask,
+          description: input,
+        };
+        await updateData(updatedTask); // <-- defined in your API utils
+        setEditingTask(null);
+      } else {
+        const task: ListItem = {
+          id: Math.floor(Math.random() * 100).toString(),
+          description: input,
+          isCompleted: false,
+        };
+        await postData(task);
+      }
+
+      setInput('');
+      onTaskAdded();
+    }
   };
 
   const handleOnInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const liveInupt = event.target.value;
-    setInput(liveInupt);
+    setInput(event.target.value);
   };
+
   return (
-    <form onSubmit={Add}>
-      <input type='text' id='task-input' value={input} onChange={handleOnInput} />
-      <button className='add-btn' type='submit'>
-        ADD
-      </button>
+    <form onSubmit={handleSubmission}>
+      <div className={isEmpty ? 'input-group mb-3 shake' : 'input-group mb-3'}>
+        <input
+          type='text'
+          className='form-control border-3'
+          placeholder='Enter a task'
+          value={input}
+          onChange={handleOnInput}
+        />
+        <button className='btn btn-outline-secondary' type='submit'>
+          {editingTask ? 'Update' : 'ADD'}
+        </button>
+      </div>
     </form>
   );
 }
 
-export default add;
-
-// import React, { useState } from 'react';
-// import { listItem } from './Wrapper';
-// type PropTypes = {
-//   addItemToList: (item: listItem) => void;
-// };
-// function AddItemForm(props: PropTypes) {
-//   const { addItemToList } = props;
-//   // const [input, setInput] = useState('');
-
-//   const handleSubmit = (e: React.FormEvent) => {
-//     console.log(e.target);
-
-//     const form = e.target as HTMLFormElement
-//     const inputElement = form[0] as HTMLInputElement
-//     const input = inputElement.value
-//     e.preventDefault();
-//     const item = {
-//       id: Math.floor(Math.random() * 1000),
-//       description: input,
-//       isCompleted: false,
-//     };
-//     addItemToList(item);
-//     inputElement.value = "";
-
-//   };
-//   // const handleOnInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//   //   const inputValue = event.target.value;
-//   //   setInput(inputValue);
-//   // };
-//   return (
-//     <form className='todo-form' onSubmit={handleSubmit}>
-//       <input
-//         // value={input}
-//         type='text'
-//         placeholder='Add a task'
-//         className='todo-input'
-//         id="input"
-//         // onChange={(e) => handleOnInputChange(e)}
-//       />
-//       <button className='todo-btn' type='submit'>
-//         Add
-//       </button>
-//     </form>
-//   );
-// }
-
-// export default AddItemForm;
+export default Add;
