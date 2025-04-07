@@ -1,92 +1,48 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom'; //useParams
+import { useState } from 'react';
 import Nav from '../components/nav';
 import Footer from '../components/footer';
 import { CardData } from '../utils/types';
 import { useCart } from '../components/CartContext';
-import Cart from '../components/Cart'; // Import Cart
-
-// const product: CardData = {
-//   id: 1,
-//   title: 'Essence Mascara Lash Princess',
-//   description:
-//     'The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects. Achieve dramatic lashes with this long-lasting and cruelty-free formula.',
-//   category: 'beauty',
-//   price: 9.99,
-//   discountPercentage: 7.17,
-//   rating: 4.94,
-//   stock: 5,
-//   tags: ['beauty', 'mascara'],
-//   brand: 'Essence',
-//   sku: 'RCH45Q1A',
-//   weight: 2,
-//   dimensions: {
-//     width: 23.17,
-//     height: 14.43,
-//     depth: 28.01,
-//   },
-//   warrantyInformation: '1 month warranty',
-//   shippingInformation: 'Ships in 1 month',
-//   availabilityStatus: 'Low Stock',
-//   reviews: [
-//     {
-//       rating: 2,
-//       comment: 'Very unhappy with my purchase!',
-//       date: '2024-05-23T08:56:21.618Z',
-//       reviewerName: 'John Doe',
-//       reviewerEmail: 'john.doe@x.dummyjson.com',
-//     },
-//     {
-//       rating: 2,
-//       comment: 'Not as described!',
-//       date: '2024-05-23T08:56:21.618Z',
-//       reviewerName: 'Nolan Gonzalez',
-//       reviewerEmail: 'nolan.gonzalez@x.dummyjson.com',
-//     },
-//     {
-//       rating: 5,
-//       comment: 'Very satisfied!',
-//       date: '2024-05-23T08:56:21.618Z',
-//       reviewerName: 'Scarlett Wright',
-//       reviewerEmail: 'scarlett.wright@x.dummyjson.com',
-//     },
-//   ],
-//   returnPolicy: '30 days return policy',
-//   minimumOrderQuantity: 24,
-//   meta: {
-//     createdAt: '2024-05-23T08:56:21.618Z',
-//     updatedAt: '2024-05-23T08:56:21.618Z',
-//     barcode: '9164035109868',
-//     qrCode: 'https://assets.dummyjson.com/public/qr-code.png',
-//   },
-//   images: [
-//     'https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/1.png',
-//   ],
-//   thumbnail:
-//     'https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png',
-// };
 
 function ProductPage() {
-  const { addToCart } = useCart();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
-  const { id } = useParams(); // Get product ID from URL
+  const { cart, addToCart, addQuantity, subtractQuantity } = useCart();
+
+  // const { id } = useParams();           // Get product ID from URL
   const location = useLocation();
   const product: CardData | undefined = location.state?.product; // Retrieve passed data
 
-    if (!product) {
-      return <p>Product not found</p>; // Handle case where data isn't passed
-    }
+  if (!product) {
+    return <p>Product not found</p>; // Handle case where data isn't passed
+  }
   return (
     <>
       <Nav />
-      <Cart />
       <section className='text-gray-600 body-font overflow-hidden'>
         <div className='container px-5 py-24 mx-auto'>
           <div className='lg:w-4/5 mx-auto flex flex-wrap'>
-            <img
-              alt='ecommerce'
-              className='lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded'
-              src={product.images[0]}
-            />
+            {/* ✅ Image Wrapper */}
+            <div className='relative lg:w-1/2 w-full lg:h-auto h-64'>
+              {/* 🔵 Loader (Shows until image loads) */}
+              {!imageLoaded && (
+                <div className='absolute inset-0 flex justify-center items-center bg-gray-200'>
+                  <div className='animate-spin rounded-full h-10 w-10 border-t-2 border-blue-500'></div>
+                </div>
+              )}
+
+              <img
+                alt='ecommerce'
+                className={`object-cover object-center rounded transition-opacity duration-500 ${
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                src={product.images[0]}
+                onLoad={() => setImageLoaded(true)}
+                onError={() => setImageLoaded(true)} // In case of error, remove loader
+              />
+            </div>
+
             <div className='lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0'>
               <h2 className='text-sm title-font text-gray-500 tracking-widest'>{product.brand}</h2>
               <h1 className='text-gray-900 text-3xl title-font font-medium mb-1'>
@@ -97,9 +53,9 @@ function ProductPage() {
                   <svg
                     fill='currentColor'
                     stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     className='w-4 h-4 text-indigo-500'
                     viewBox='0 0 24 24'
                   >
@@ -108,9 +64,9 @@ function ProductPage() {
                   <svg
                     fill='currentColor'
                     stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     className='w-4 h-4 text-indigo-500'
                     viewBox='0 0 24 24'
                   >
@@ -119,9 +75,9 @@ function ProductPage() {
                   <svg
                     fill='currentColor'
                     stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     className='w-4 h-4 text-indigo-500'
                     viewBox='0 0 24 24'
                   >
@@ -130,9 +86,9 @@ function ProductPage() {
                   <svg
                     fill='currentColor'
                     stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     className='w-4 h-4 text-indigo-500'
                     viewBox='0 0 24 24'
                   >
@@ -141,9 +97,9 @@ function ProductPage() {
                   <svg
                     fill='none'
                     stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     className='w-4 h-4 text-indigo-500'
                     viewBox='0 0 24 24'
                   >
@@ -160,12 +116,77 @@ function ProductPage() {
                 <span className='title-font font-medium text-2xl text-gray-900'>
                   ${product.price}
                 </span>
-                <button
-                  className='flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
-                  onClick={() => addToCart(product)}
-                >
-                  Add to Cart
-                </button>
+                {cart.find((item) => item.id === product.id) === undefined ? (
+                  <button
+                    className='flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
+                    onClick={() => addToCart(product)}
+                  >
+                    Add to Cart
+                  </button>
+                ) : (
+                  <div className='flex ml-auto'>
+                    <form className='max-w-xs mx-auto'>
+                      <div className='relative flex items-center max-w-[8rem]'>
+                        <button
+                          onClick={() => subtractQuantity(product)}
+                          type='button'
+                          id='decrement-button'
+                          data-input-counter-decrement='quantity-input'
+                          className='bg-gray-100 hover:bg-gray-500 rounded-s-lg p-3 h-11 focus:outline-none'
+                        >
+                          <svg
+                            className='w-3 h-3 text-gray-900'
+                            aria-hidden='true'
+                            xmlns='http://www.w3.org/2000/svg'
+                            fill='none'
+                            viewBox='0 0 18 2'
+                          >
+                            <path
+                              stroke='currentColor'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              strokeWidth='2'
+                              d='M1 1h16'
+                            />
+                          </svg>
+                        </button>
+                        <input
+                          type='text'
+                          value={cart.find((item) => item.id === product.id)?.quantity}
+                          id='quantity-input'
+                          data-input-counter
+                          aria-describedby='helper-text-explanation'
+                          className='bg-gray-100 h-11 text-center text-gray-900 text-sm focus:outline-0 block w-full py-2.5'
+                          placeholder=''
+                          disabled
+                        />
+                        <button
+                          onClick={() => addQuantity(product)}
+                          type='button'
+                          id='increment-button'
+                          data-input-counter-increment='quantity-input'
+                          className='bg-gray-100 hover:bg-gray-500  rounded-e-lg p-3 h-11  focus:outline-none'
+                        >
+                          <svg
+                            className='w-3 h-3 text-gray-900 '
+                            aria-hidden='true'
+                            xmlns='http://www.w3.org/2000/svg'
+                            fill='none'
+                            viewBox='0 0 18 18'
+                          >
+                            <path
+                              stroke='currentColor'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              strokeWidth='2'
+                              d='M9 1v16M1 9h16'
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -177,38 +198,3 @@ function ProductPage() {
 }
 
 export default ProductPage;
-
-{
-  /* <div className='flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5'>
-                <div className='flex'>
-                  <span className='mr-3'>Color</span>
-                  <button className='border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none'></button>
-                  <button className='border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none'></button>
-                  <button className='border-2 border-gray-300 ml-1 bg-indigo-500 rounded-full w-6 h-6 focus:outline-none'></button>
-                </div>
-                <div className='flex ml-6 items-center'>
-                  <span className='mr-3'>Size</span>
-                  <div className='relative'>
-                    <select className='rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10'>
-                      <option>SM</option>
-                      <option>M</option>
-                      <option>L</option>
-                      <option>XL</option>
-                    </select>
-                    <span className='absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center'>
-                      <svg
-                        fill='none'
-                        stroke='currentColor'
-                        stroke-linecap='round'
-                        stroke-linejoin='round'
-                        stroke-width='2'
-                        className='w-4 h-4'
-                        viewBox='0 0 24 24'
-                      >
-                        <path d='M6 9l6 6 6-6'></path>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-              </div> */
-}

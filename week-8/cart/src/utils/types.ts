@@ -17,6 +17,7 @@ export type CardData = {
   brand: string;
   images: [string];
   thumbnail: string;
+  quantity: number;
   reviews: review[];
 };
 
@@ -28,8 +29,22 @@ export type ApiResponseProductData = {
 };
 
 export type UserData = {
-  fName: string;
-  lName: string;
+  first_Name: string;
+  last_Name: string;
   email: string;
   password: string;
 };
+
+export interface Product {
+  id: number;
+  title: string;
+  price: number;
+  quantity: number;
+  images: string[];
+}
+
+export type ApiCart = {
+  id:string;
+  email: string;
+  cart: Product[]
+}
