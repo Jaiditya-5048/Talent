@@ -42,3 +42,9 @@ export interface Product {
   quantity: number;
   images: string[];
 }
+
+export type ApiCart = {
+  id:string;
+  email: string;
+  cart: Product[]
+}

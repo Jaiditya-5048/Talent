@@ -3,12 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCart } from './CartContext';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../utils/types';
+import { Link } from 'react-router-dom';
 
 const Cart: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const { cart, removeFromCart, addQuantity, subtractQuantity } = useCart();
 
-  // Recalculate total price whenever the cart changes
+  // calculate total price whenever the cart changes
   useEffect(() => {
     const newTotalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     setTotalPrice(newTotalPrice);
@@ -52,7 +53,9 @@ const Cart: React.FC = () => {
             cart.map((item) => (
               <div key={item.id} className='grid grid-cols-5 border-b p-5 '>
                 <div className='flex justify-between items-center'>
-                  <img src={item.images[0]} alt={item.title} className='w-10 h-10' />
+                  <Link to={'/product/' + item.id} state={{ product: item }}>
+                    <img src={item.images[0]} alt={item.title} className='w-10 h-10' />
+                  </Link>
                   <div className='flex-1 ml-2'>
                     <p className='text-sm'>{item.title}</p>
                   </div>
@@ -97,7 +100,7 @@ const Cart: React.FC = () => {
                         disabled
                       />
                       <button
-                        onClick={() => handleAdd(item)} 
+                        onClick={() => handleAdd(item)}
                         type='button'
                         id='increment-button'
                         data-input-counter-increment='quantity-input'

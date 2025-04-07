@@ -1,40 +1,18 @@
 import { useLocation } from 'react-router-dom'; //useParams
-import { useState   } from 'react';
+import { useState } from 'react';
 import Nav from '../components/nav';
 import Footer from '../components/footer';
 import { CardData } from '../utils/types';
 import { useCart } from '../components/CartContext';
 
-
 function ProductPage() {
-  // const [imageData, setImageData] = useState<ImageData[] | null>(null);
-  // const [isLoading, setIsLoading] = useState(true);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data: ApiResponseProductData | null = await getProductData();
-  //       setImageData(data !== null ? data.products : []);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //       setCardData([]);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  const {cart, addToCart, addQuantity, subtractQuantity } = useCart();
+  const { cart, addToCart, addQuantity, subtractQuantity } = useCart();
 
   // const { id } = useParams();           // Get product ID from URL
   const location = useLocation();
   const product: CardData | undefined = location.state?.product; // Retrieve passed data
-
-  
 
   if (!product) {
     return <p>Product not found</p>; // Handle case where data isn't passed

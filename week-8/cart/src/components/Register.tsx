@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getSingleUser, postData } from '../utils/api';
+import { getSingleUser, postCartData, postData } from '../utils/api';
 import { UserData } from '../utils/types';
 
 function Register() {
@@ -87,15 +87,17 @@ function Register() {
   async function handleSignUp(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     const userData: UserData = {
-      first_Name: values.first_name,
-      last_Name: values.last_Name,
+      first_Name: values.first_name.charAt(0).toUpperCase() + values.first_name.slice(1),
+      last_Name: values.last_name.charAt(0).toUpperCase() + values.last_name.slice(1),
       email: values.email,
-      password: values.new_password
+      password: values.new_password,
     };
     const emailCheck = await getSingleUser({email: values.email});
     if(emailCheck === null) {console.log('error fetching data');
     } else {
     if(emailCheck.length !== 0) {
+      setErrors({ email: 'Please enter a new Email'});
+      setDisabled(true);
       setIsActive(true);
       console.log("before time out: ", isActive);
       
@@ -103,15 +105,22 @@ function Register() {
       setIsActive(false)
     }, 3000) 
   console.log(isActive);
-  debugger;
+ 
   } else{
+    const cartData = {
+      id: userData.email,
+      cart: []
+    }
     postData(userData);
+    postCartData(cartData)
     setValues(({}));
-    debugger;
+ 
     navigate('/signin');
     }
 }
   }
+    
+    const clickHandler = () => navigate('/signin');
   console.log(errors);
   return (
     <>
@@ -288,6 +297,12 @@ function Register() {
                 Sign Up
               </button>
             </form>
+            <p className='text-xs text-[#f9ead3] mt-3 self-center'>
+              Already have an account?{' '}
+              <button type='button' onClick={clickHandler}>
+                <span className='text-[#03132c] underline cursor-pointer flip-btn'> Sign In</span>
+              </button>
+            </p>
           </div>
         </div>
       </section>
