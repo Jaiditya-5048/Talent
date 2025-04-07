@@ -1,13 +1,47 @@
+/* @import "tailwindcss"; */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
 #root {
+  display: flex;
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  
 }
+body{
+  background-color: black;
+}
+
+.todo-wrapper > p {
+  color: aqua;
+  display: none;
+}
+
 
 .todo-item {
   display: flex;
+  /* align-content: ; */
+  justify-content: space-between;
+  font-size: large;
+  color: white;
+  width: max;
+  padding-top: 2%;
   padding-left: 5%;
-  margin: 15px;
+  margin: 15px 0;
   background-color: grey;
+  border-radius: 5px;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.5s;
 }
