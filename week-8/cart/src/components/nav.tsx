@@ -13,7 +13,7 @@ export default function Nav() {
   const totalProducts = cart.reduce((acc, item) => acc + item.quantity, 0);
   return (
     <div>
-      <header className='text-gray-600 body-font bg-amber-300 fixed z-10 w-full'>
+      <header className='text-gray-600 body-font bg-amber-300 fixed z-10 w-lvw'>
         <div className='container mx-auto flex flex-wrap px-5 py-1 flex-col md:flex-row items-center'>
           <div className='flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0'>
             <Link to={`/`}>
@@ -22,36 +22,46 @@ export default function Nav() {
           </div>
 
           <div className='md:ml-auto flex flex-wrap items-center text-base justify-center'>
-            
-              <Link to='/cart' className='mr-5 hover:text-gray-900'>
-                {/* <FontAwesomeIcon icon={faCartShopping} className='text-2xl mr-4 absolute' />
+            <Link
+              to={cart.length === 0 ? '#' : '/cart'}
+              className={
+                cart.length === 0 ? 'mr-5 cursor-not-allowed ' : 'mr-5 hover:text-gray-900'
+              }
+            >
+              {/* <FontAwesomeIcon icon={faCartShopping} className='text-2xl mr-4 absolute' />
               <span className='sr-only'>Notifications</span>
               <div className=' relative inline-flex items-center justify-center text-xs -top-5 left-5 font-bold text-white bg-red-500 border-2 border-white rounded-full dark:border-gray-900'>
                 20
               </div> */}
-                <svg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg' className=''>
-                  {/* Filled Cart Body */}
-                  <path d='M16 16h4l6 24h24l6-16H22z' fill='#4a5565' />
+              <svg
+                width='64'
+                height='64'
+                viewBox='0 0 64 64'
+                xmlns='http://www.w3.org/2000/svg'
+                className=''
+              >
+                {/* Filled Cart Body */}
+                <path d='M16 16h4l6 24h24l6-16H22z' fill='#4a5565' />
 
-                  {/* Wheels */}
-                  <circle cx='26' cy='48' r='4' fill='#4a5565' />
-                  <circle cx='46' cy='48' r='4' fill='#4a5565' />
+                {/* Wheels */}
+                <circle cx='26' cy='48' r='4' fill='#4a5565' />
+                <circle cx='46' cy='48' r='4' fill='#4a5565' />
 
-                  {/* <!-- Number inside the cart --> */}
-                  <text
-                    x='38'
-                    y='37'
-                    text-anchor='middle'
-                    font-size='12'
-                    font-family='Arial'
-                    fill='white'
-                    font-weight='bold'
-                  >
-                    {totalProducts}
-                  </text>
-                </svg>
-              </Link>
-          
+                {/* <!-- Number inside the cart --> */}
+                <text
+                  x='38'
+                  y='37'
+                  text-anchor='middle'
+                  font-size='12'
+                  font-family='Arial'
+                  fill='white'
+                  font-weight='bold'
+                >
+                  {totalProducts}
+                </text>
+              </svg>
+            </Link>
+
             {/* profile drop-down */}
             <Menu>
               <MenuButton className=' hover:text-gray-900 cursor-pointer'>

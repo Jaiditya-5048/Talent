@@ -3,18 +3,26 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCart } from './CartContext';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../utils/types';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Cart: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const { cart, removeFromCart, addQuantity, subtractQuantity } = useCart();
+  const navigate = useNavigate(); 
 
-  // calculate total price whenever the cart changes
+  useEffect(() => {
+    if (cart.length === 0) {
+      navigate('/');
+    }
+  }, [cart, navigate]);
+
+  // total price
   useEffect(() => {
     const newTotalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     setTotalPrice(newTotalPrice);
   }, [cart]);
-
+  
+  
   function handleAdd(item: Product) {
     addQuantity(item);
   }
@@ -24,8 +32,8 @@ const Cart: React.FC = () => {
   }
 
   return (
-    <div className='w-dvw h-lvh flex justify-center text-black'>
-      <div className='w-full shadow-lg p-4 mb'>
+    <div className=' flex justify-center text-black'>
+      <div className='w-[60%] shadow-lg p-4 mb'>
         <h2 className='text-3xl font-bold'>🛒 Cart</h2>
 
         <div className='flex flex-col'>
@@ -34,13 +42,13 @@ const Cart: React.FC = () => {
               <p className='pl-3'>Item</p>
             </div>
             <div>
-              <p className='pl-3'>Price</p>
+              <p className='pl-5'>Price</p>
             </div>
             <div>
               <p className='pl-9'>Quantity</p>
             </div>
             <div>
-              <p className='pl-1'>Total</p>
+              <p className='pl-5'>Total</p>
             </div>
             <div></div>
           </div>
@@ -60,7 +68,7 @@ const Cart: React.FC = () => {
                     <p className='text-sm'>{item.title}</p>
                   </div>
                 </div>
-                <div className='flex items-center'>
+                <div className='flex items-center pl-4'>
                   <p className='text-sm font-bold'>${item.price}</p>
                 </div>
                 <div>
@@ -125,7 +133,7 @@ const Cart: React.FC = () => {
                     </div>
                   </form>
                 </div>
-                <div className='flex items-center'>
+                <div className='flex items-center pl-4'>
                   <p className='text-sm font-bold'>${(item.price * item.quantity).toFixed(2)}</p>
                 </div>
                 <div>
@@ -142,14 +150,20 @@ const Cart: React.FC = () => {
 
           {/* Conditionally render the total price only if there are items in the cart */}
           {cart.length > 0 && (
-            <div className='grid grid-cols-5 mt-5 border-b p-3'>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div>
-                <p className='pl-1'>${totalPrice.toFixed(2)}</p>
+            <div className='flex pt-5'>
+              <div className='w-1/2 flex justify-between mt-5 p-5'>
+                <Link to={'/'}>
+                  <p className='text-blue-900'>Continue Shopping</p>
+                </Link>
               </div>
-              <div></div>
+              <div className=' w-1/2 flex justify-between mt-5 p-5'>
+                <div className=' font-bold'>
+                  <p>Grand Total</p>
+                </div>
+                <div>
+                  <p className=''>${totalPrice.toFixed(2)}</p>
+                </div>
+              </div>
             </div>
           )}
         </div>
