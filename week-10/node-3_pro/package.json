@@ -1,0 +1,11 @@
+{
+  "name": "pro",
+  "version": "1.0.0",
+  "description": "pro test",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.jns"
+  },
+  "author": "JB",
+  "license": "ISC"
+}

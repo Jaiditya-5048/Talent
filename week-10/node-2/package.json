@@ -1,0 +1,11 @@
+{
+  "name": "w3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.jns"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

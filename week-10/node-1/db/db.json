@@ -16,5 +16,14 @@
     },
     "email": "sk@sohail.com",
     "password": "Sohail@123"
+  },
+  {
+    "id": "2",
+    "name": {
+      "fName": "sk",
+      "lName": "sohail"
+    },
+    "email": "sk@sohail.com",
+    "password": "Sohail@123"
   }
 ]
