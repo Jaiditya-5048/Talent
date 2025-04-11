@@ -1,9 +1,13 @@
 const express = require('express');
+const dotenv = require('dotenv');
 const app =  express();
-const PORT = 3000;
+// const PORT = 3000;
 const fs = require('fs');
 const { json } = require('stream/consumers');
+
 app.use(express.json());
+
+dotenv.config();
 
 
 
@@ -18,9 +22,21 @@ app.get('/', (req, res) => {
   }
 });
 
+app.post('/users',(req,res)=>{
+ const users= req.body;
+ console.log(users)
+  res.status(200).json({ message: "ok" });
+})
+
+
+
 app.post('/post', (req, res) => {
   try {
     const newData = req.body;
+    const {firstName,lastName,email,password}=req.body;
+    if(!newData) {
+      res.status(400).json({ message: 'empty user' }); 
+    } else {
 
     // Read data
     const fileData = fs.readFileSync('./db/db.json', 'utf-8');
@@ -33,6 +49,7 @@ app.post('/post', (req, res) => {
     fs.writeFileSync('./db/db.json', JSON.stringify(jsonArray, null, 2), 'utf-8');
 
     res.status(200).json({ message: 'Data appended successfully', data: newData });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
@@ -52,7 +69,7 @@ app.put('/put', (req, res) => {
 
     if (index !== -1) {
       // Replace
-      jsonArray[index] = newData;
+      jsonArray[index] = newData;  
     } else {
       // push if not found
       jsonArray.push(newData);
@@ -129,4 +146,4 @@ app.patch('/patch/:id', (req, res) => {
 
 
 
-app.listen(PORT, () => { console.log('server is running on port =>', PORT) })
+app.listen(process.env.PORT, () => { console.log('server is running on port =>', process.env.PORT) })
