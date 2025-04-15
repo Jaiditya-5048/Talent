@@ -53,10 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
         favouriteCities.forEach((city) => {
             const li = document.createElement('li');
             li.className =
-                'flex justify-between items-center px-3 py-1 text-gray-700 hover:bg-gray-100 cursor-pointer ';
+                'fav-cities flex justify-between items-center px-3 py-1 text-gray-700 hover:bg-gray-100 cursor-pointer ';
             // City Name
-            const citySpan = document.createElement('span');
+            const citySpan = document.createElement('button');
             citySpan.textContent = city;
+            citySpan.onclick = handleClickFav_cities;
             // Remove Button
             const removeBtn = document.createElement('button');
             removeBtn.innerHTML = '<i class="fas fa-trash"></i>'; // Font Awesome Trash Icon
@@ -110,6 +111,34 @@ document.addEventListener('DOMContentLoaded', () => {
         // location.reload(); // Perform logout logic here
     });
 });
+//function for fav_cities
+async function handleClickFav_cities(e) {
+    e.preventDefault();
+    const target = e.target;
+    if (!target)
+        return;
+    const cityName = target.innerText.trim(); // or innerHTML if needed
+    console.log(cityName);
+    try {
+        const coordinates = await getCoordinates(cityName);
+        if (!coordinates || coordinates.length === 0) {
+            console.error('No coordinates found');
+            return;
+        }
+        const [{ lat, lon }] = coordinates;
+        const weatherData = await getWeatherData(lat, lon);
+        const cityData = await getCityName(lat, lon);
+        if (weatherData === undefined)
+            return;
+        fillDateAndTimeBox(cityData, weatherData);
+        fillMainBox(weatherData);
+        fillHourlyBox(weatherData);
+        fillFiveDaysBox(weatherData);
+    }
+    catch (error) {
+        console.error('Error handling favorite city click:', error);
+    }
+}
 //profile functionality
 async function editProfile() {
     new FormValidator('edit-form', 'form-edit-btn');
@@ -122,7 +151,7 @@ async function editProfile() {
     const fNameTag = document.getElementById('first-name');
     const lNameTag = document.getElementById('last-name');
     const emailTag = document.getElementById('email-edit');
-    const oldPasswordTag = document.getElementById('old-password');
+    const oldPasswordTag = document.getElementById('old-password-confirm');
     const newPasswordTag = document.getElementById('password-change');
     fNameTag.value = userData[0].name.fName;
     lNameTag.value = userData[0].name.lName;
@@ -141,7 +170,6 @@ async function editProfile() {
     });
     document.getElementById('form-delete-btn')?.addEventListener('click', (e) => {
         e.preventDefault();
-        ;
         deleteUser(loggedInUser.user_id);
         deleteUserWishlist(loggedInUser.user_id);
         localStorage.clear();
@@ -203,7 +231,7 @@ async function fillData() {
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-// cearch bar funtionality
+// search bar funtionality
 document.getElementById('search-bar')?.addEventListener('keypress', (event) => {
     if (event.key === 'Enter' &&
         document.getElementById('search-bar').value.trim().length > 0) {
@@ -219,8 +247,8 @@ document.getElementById('search-form')?.addEventListener('submit', (event) => {
 });
 async function serachBar() {
     const dom = new Dom();
-    dom.removeClass('loader-wrapper', 'hidden fade-out');
-    dom.addClass('loader-wrapper', 'fade-in');
+    dom.removeClass('loader-wrapper', 'hidden fade-out'); //initiate loader
+    dom.addClass('loader-wrapper', 'fade-in'); //initiate loader
     const serachBar = document.getElementById('search-bar');
     const serachBarInput = serachBar.value.trim();
     const coordinates = await getCoordinates(serachBarInput);

@@ -57,17 +57,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!favCitiesList) return;
 
     const favouriteCities = await getCityData(loggedInUser.user_id);
-    if(favouriteCities.length === 0){favouriteCities.push('Chandigarh')}
+    if (favouriteCities.length === 0) {
+      favouriteCities.push('Chandigarh');
+    }
     favCitiesList.innerHTML = ''; // Clear previous items
 
     favouriteCities.forEach((city: string) => {
       const li = document.createElement('li');
       li.className =
-        'flex justify-between items-center px-3 py-1 text-gray-700 hover:bg-gray-100 cursor-pointer ';
+        'fav-cities flex justify-between items-center px-3 py-1 text-gray-700 hover:bg-gray-100 cursor-pointer ';
 
       // City Name
-      const citySpan = document.createElement('span');
+      const citySpan = document.createElement('button');
       citySpan.textContent = city;
+      citySpan.onclick = handleClickFav_cities;
 
       // Remove Button
       const removeBtn = document.createElement('button');
@@ -94,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updatedLocationArr.sort();
     whishlist.fav_locations = updatedLocationArr;
     await replaceWishlist(loggedInUser.user_id, whishlist);
-  
+
     whishlistClass.checkHeartColor();
     loadFavouriteCities();
   }
@@ -126,11 +129,42 @@ document.addEventListener('DOMContentLoaded', () => {
   //Profile functionality
   profileBtn?.addEventListener('click', (e) => {
     e.preventDefault();
-     
+
     editProfile();
     // location.reload(); // Perform logout logic here
   });
 });
+
+//function for fav_cities
+
+async function handleClickFav_cities(e: MouseEvent): Promise<void> {
+  e.preventDefault();
+
+  const target = e.target as HTMLElement;
+  if (!target) return;
+
+  const cityName = target.innerText.trim(); // or innerHTML if needed
+  console.log(cityName);
+
+  try {
+    const coordinates = await getCoordinates(cityName);
+    if (!coordinates || coordinates.length === 0) {
+      console.error('No coordinates found');
+      return;
+    }
+
+    const [{ lat, lon }] = coordinates;
+    const weatherData = await getWeatherData(lat, lon);
+    const cityData = await getCityName(lat, lon);
+    if (weatherData === undefined) return;
+    fillDateAndTimeBox(cityData, weatherData);
+    fillMainBox(weatherData);
+    fillHourlyBox(weatherData);
+    fillFiveDaysBox(weatherData);
+  } catch (error) {
+    console.error('Error handling favorite city click:', error);
+  }
+}
 
 //profile functionality
 async function editProfile() {
@@ -139,48 +173,42 @@ async function editProfile() {
   const loggedInUser: loggedInUser | null = JSON.parse(
     localStorage.getItem('logginUser') || 'null',
   );
-   
-  if (loggedInUser === null) return;
-  const userData : UserData[] | null = await getSingleUser({id : loggedInUser.user_id.toString()});
-  
 
-  if(userData === null)return;
+  if (loggedInUser === null) return;
+  const userData: UserData[] | null = await getSingleUser({ id: loggedInUser.user_id.toString() });
+
+  if (userData === null) return;
 
   const fNameTag = document.getElementById('first-name') as HTMLInputElement;
   const lNameTag = document.getElementById('last-name') as HTMLInputElement;
   const emailTag = document.getElementById('email-edit') as HTMLInputElement;
   const oldPasswordTag = document.getElementById('old-password-confirm') as HTMLInputElement;
   const newPasswordTag = document.getElementById('password-change') as HTMLInputElement;
-  
 
   fNameTag.value = userData[0].name.fName;
   lNameTag.value = userData[0].name.lName;
   emailTag.value = userData[0].email;
 
-  document.getElementById('form-edit-btn')?.addEventListener('click' , (e) => {
+  document.getElementById('form-edit-btn')?.addEventListener('click', (e) => {
     e.preventDefault();
-    
-    
-    if(oldPasswordTag.value.trim() !== userData[0].password){
+
+    if (oldPasswordTag.value.trim() !== userData[0].password) {
       showToast('toast-error-edit');
-    }else {
+    } else {
       userData[0].password = newPasswordTag.value.trim();
-      const userObj = userData[0]
+      const userObj = userData[0];
       console.log(userObj);
       updateUserData(userObj);
-      
     }
-  })
+  });
 
   document.getElementById('form-delete-btn')?.addEventListener('click', (e) => {
     e.preventDefault();
-     ;
     deleteUser(loggedInUser.user_id);
-    deleteUserWishlist(loggedInUser.user_id)
+    deleteUserWishlist(loggedInUser.user_id);
     localStorage.clear();
     location.reload();
   });
-
 }
 
 // Event listener on heart button for whishlist functionality
@@ -253,7 +281,7 @@ async function fillData() {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-// cearch bar funtionality
+// search bar funtionality
 
 document.getElementById('search-bar')?.addEventListener('keypress', (event: KeyboardEvent) => {
   if (
@@ -274,8 +302,9 @@ document.getElementById('search-form')?.addEventListener('submit', (event: Submi
 
 async function serachBar() {
   const dom = new Dom();
-  dom.removeClass('loader-wrapper', 'hidden fade-out');
-  dom.addClass('loader-wrapper', 'fade-in');
+  dom.removeClass('loader-wrapper', 'hidden fade-out'); //initiate loader
+  dom.addClass('loader-wrapper', 'fade-in'); //initiate loader
+
   const serachBar = document.getElementById('search-bar') as HTMLInputElement;
   const serachBarInput = serachBar.value.trim();
   const coordinates = await getCoordinates(serachBarInput);
@@ -438,7 +467,6 @@ function fillFiveDaysBox(weatherData: WeatherAPIResponse) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // window.FlashMessage.success('Logged Out Successfully', { type: 'success', timeout: 200000 });
