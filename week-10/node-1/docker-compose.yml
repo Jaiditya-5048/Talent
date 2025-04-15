@@ -5,7 +5,7 @@ services:
     image: mongo:latest
     container_name: mongo
     ports:
-      - '27017:27017' # Expose MongoDB port
+      - "27017:27017" # Expose MongoDB port
     volumes:
       - mongo_data:/data/db # Persistent volume for MongoDB data
     restart: always
@@ -15,3 +15,5 @@ services:
 
 volumes:
   mongo_data: # Define a named volume for MongoDB
+
+ 
