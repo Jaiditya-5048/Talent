@@ -1,3 +1,4 @@
 {
-  "livePreview.defaultPreviewPath": "/week-5/day-5/weather/public/login.html"
+  "livePreview.defaultPreviewPath": "/week-5/day-5/weather/public/login.html",
+  "postman.settings.dotenv-detection-notification-visibility": false
 }

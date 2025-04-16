@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017" # Expose MongoDB port
+    volumes:
+      - mongo_data:/data/db # Persistent volume for MongoDB data
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root # Admin username
+      MONGO_INITDB_ROOT_PASSWORD: root # Admin password
+
+volumes:
+  mongo_data: # Define a named volume for MongoDB
+
+ 
