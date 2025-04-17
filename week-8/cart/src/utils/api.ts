@@ -13,10 +13,10 @@ export async function getProductData(): Promise<ApiResponseProductData | null> {
   }
 }
 
-// Function to post UserData
+// Function to post UserData 
 export async function postData(userData: UserData) {
   try {
-    const response = await fetch('http://localhost:3000/users', {
+    const response = await fetch('http://localhost:8080/user', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
@@ -47,6 +47,27 @@ export async function getSingleUser(
   } catch (error) {
     console.error('Error fetching user data:', error);
     return null;
+  }
+}
+
+export async function checkEmail(email: string) {
+  try {
+    const response = await fetch('http://localhost:8080/check-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      const data = await response.json();
+      return [response, data];
+    }
+  } catch (error) {
+    console.log('Fetch error:', error);
   }
 }
 

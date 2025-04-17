@@ -29,8 +29,8 @@ export type ApiResponseProductData = {
 };
 
 export type UserData = {
-  first_Name: string;
-  last_Name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 };
