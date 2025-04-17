@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getSingleUser, postCartData, postData } from '../utils/api';
+import { checkEmail, postCartData, postData } from '../utils/api';
 import { UserData } from '../utils/types';
 
 function Register() {
@@ -8,12 +8,13 @@ function Register() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isDisabled, setDisabled] = useState(true);
   const [isActive, setIsActive] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   function getInput(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
     // console.log(e);
     setValues((prevValues) => ({ ...prevValues, [id]: value }));
-    console.log(errors);
+    // console.log(errors);
     // console.log(value);
 
     const newErrors = { ...errors };
@@ -87,41 +88,48 @@ function Register() {
   async function handleSignUp(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     const userData: UserData = {
-      first_Name: values.first_name.charAt(0).toUpperCase() + values.first_name.slice(1),
-      last_Name: values.last_name.charAt(0).toUpperCase() + values.last_name.slice(1),
+      firstName: values.first_name.charAt(0).toUpperCase() + values.first_name.slice(1),
+      lastName: values.last_name.charAt(0).toUpperCase() + values.last_name.slice(1),
       email: values.email,
       password: values.new_password,
     };
-    const emailCheck = await getSingleUser({email: values.email});
+    const emailCheck = await checkEmail(values.email);
+    console.log(emailCheck);
+    
+    
     if(emailCheck === null) {console.log('error fetching data');
     } else {
-    if(emailCheck.length !== 0) {
-      setErrors({ email: 'Please enter a new Email'});
+    if (emailCheck[0].status === 409 ) {
+      setApiError(emailCheck[1].message);
+      setErrors({ email: 'Please enter a new Email' });
       setDisabled(true);
       setIsActive(true);
-      console.log("before time out: ", isActive);
-      
-    setTimeout(() => {
-      setIsActive(false)
-    }, 3000) 
-  console.log(isActive);
- 
-  } else{
-    const cartData = {
-      id: userData.email,
-      cart: []
-    }
-    postData(userData);
-    postCartData(cartData)
-    setValues(({}));
- 
-    navigate('/signin');
+      // console.log("before time out: ", isActive);
+
+      setTimeout(() => {
+        setIsActive(false);
+      }, 3000);
+      // console.log(isActive);
+    } else {
+      const cartData = {
+        id: userData.email,
+        cart: [],
+      };
+      const response = await postData(userData);
+      console.log(userData);
+
+      console.log(response);
+
+      postCartData(cartData);
+      setValues({});
+
+      navigate('/signin');
     }
 }
   }
     
     const clickHandler = () => navigate('/signin');
-  console.log(errors);
+  // console.log(errors);
   return (
     <>
       <section className='text-gray-600 body-font'>
@@ -230,7 +238,7 @@ function Register() {
                       <span className='sr-only'>Error icon</span>
                     </div>
                     <div className='ms-3 text-sm font-normal'>
-                      User with same email already exists!
+                      {apiError}
                     </div>
                   </div>
                 </div>
