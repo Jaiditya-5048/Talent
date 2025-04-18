@@ -1,12 +1,15 @@
 import './App.css'
-import Form from './components/form'
+import { NoticeProvider } from './context/noticeContext'
+import Landing from './pages/Landing'
 
 function App() {
   // const [count, setCount] = useState(0)
 
   return (
     <>
-    <Form />
+    <NoticeProvider >
+    <Landing />
+    </ NoticeProvider >
     </>
   )
 }
