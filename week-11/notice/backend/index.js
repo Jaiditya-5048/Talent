@@ -8,11 +8,22 @@ app.use(express.json());
 dotenv.config();
 connectDB();
 
+const allowedOrigins = ['http://localhost:5173', 'http://192.168.0.19:5173'];
+
 app.use(cors({
-  origin: 'http://localhost:5173', // URL for frontend
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  credentials: true,
 }));
+
+
 
 
 app.use('/', noticeRouter)

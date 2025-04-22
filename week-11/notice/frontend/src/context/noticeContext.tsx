@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { Notice } from '../util/types';
+import { Notice, Flasy } from '../util/types';
 
-
+;
 
 export interface NoticeContextType {
   notices: Notice[];
@@ -12,7 +12,9 @@ export interface NoticeContextType {
   closeModal: () => void;
   deleteId: string | number;
   setDeleteId: (Id: string | number) => void;
-  saveNotices: (data:Notice[]) => void;
+  saveNotices: (data: Notice[]) => void;
+  flashy: Flasy | null;
+  setFlashy: (flash: Flasy | null) => void;
 }
 
 const NoticeContext = createContext<NoticeContextType | undefined>(undefined);
@@ -21,6 +23,7 @@ export const NoticeProvider = ({ children }: { children: ReactNode }) => {
   const [notices, setNotices] = useState<Notice[]>([]);
   const [deleteId, setDeleteId] = useState<string | number>('');
   const [modal, setModal] = useState<'add' | 'delete' | null>(null);
+  const [flashy, setFlashy] = useState<Flasy | null>(null);
   // const [refresh, setRefresh] = useState<boolean>();
 
   // const addNotice = (notice: Notice) => {
@@ -45,6 +48,8 @@ export const NoticeProvider = ({ children }: { children: ReactNode }) => {
         deleteId,
         setDeleteId,
         saveNotices,
+        flashy,
+        setFlashy,
       }}
     >
       {children}
@@ -57,3 +62,7 @@ export const useNotice = () => {
   if (!context) throw new Error('useNotice must be used within NoticeProvider');
   return context;
 };
+
+
+
+// noticeContext;

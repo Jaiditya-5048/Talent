@@ -1,22 +1,22 @@
-import { noticeData } from "./types";
-import axios from 'axios';
-
+import { noticeData } from './types';
+// import axios from 'axios';
+import { api } from './base_controller';
 
 export async function addNoticeApi(noticeData: noticeData) {
   try {
-    const response = await axios.post('http://localhost:8080/', noticeData);
-    console.log(response)
+    const response = await api.post('notice', noticeData);
+    console.log(response);
     console.log(response.data);
     return response;
   } catch (error: any) {
     console.error('Failed to add notice:', error.response?.data || error.message);
-    return error.response
+    return error.response;
   }
 }
 
 export async function deleteNoticeApi(id: string | number) {
   try {
-    const response = await axios.delete(`http://localhost:8080/${id}`);
+    const response = await api.delete(`notice/${id}`);
     console.log(response);
     return response;
   } catch (error: any) {
@@ -27,7 +27,7 @@ export async function deleteNoticeApi(id: string | number) {
 
 export async function getNoticesApi() {
   try {
-    const response = await axios.get('http://localhost:8080/');
+    const response = await api.get('notice');
     // console.log(response);
     return response;
   } catch (error: any) {
@@ -35,3 +35,20 @@ export async function getNoticesApi() {
     return error.response;
   }
 }
+
+// import { api } from '../base_controller';
+// import { User_Login } from '../../types/types';
+
+// // FUNCTION TO REGISTER A NEW USER
+// export const login_user = async (userData: User_Login) => {
+//   try {
+//     const response = await api.post('/users/login/', userData);
+//     console.log(response.data);
+//     return response;
+//   } catch (error) {
+//     console.error('Error registering user:', error);
+//     throw error;
+//   }
+// };
+
+// export default api;
