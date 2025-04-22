@@ -1,15 +1,11 @@
 const Notice = require('../model/notice.model.cjs')
 
 const addNotice = async (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, pin } = req.body;
   const errors = {};
 
-  if (!title.trim()) {
+  if (!title.trim() && !description.trim()) {
     errors.title = 'Title is required';
-  }
-
-  if (!description.trim()) {
-    errors.description = 'Description is required';
   }
 
   if (Object.keys(errors).length > 0) {
@@ -23,11 +19,13 @@ const addNotice = async (req, res) => {
     // Create new notice
     const newNotice = new Notice({
       title,
-      description
+      description,
+      pin
     });
 
     // Save to MongoDB
     const savedNotice = await newNotice.save();
+    
 
     res.status(201).json({
       message: 'Notice saved to MongoDB successfully',

@@ -4,11 +4,13 @@ import { useNotice } from '../context/noticeContext';
 import { deleteNoticeApi, getNoticesApi } from '../util/api';
 
 function Delete() {
-  const { closeModal, deleteId, saveNotices } = useNotice();
+  const { closeModal, deleteId, saveNotices, setFlashy } = useNotice();
   const handleDelete = async (e: React.FormEvent) => {
     e.preventDefault();
     await deleteNoticeApi(deleteId);
     await refreshFunc();
+    const flash = { message: 'Notice Deleted successfully!', type: 'success' };
+    setFlashy(flash);
     closeModal();
   };
   const refreshFunc = async () => {
@@ -18,18 +20,21 @@ function Delete() {
   };
   return (
     <>
-      <div className='w-[30vw] m-auto backdrop-blur-xs mt-40 p-10 bg-gray-900 rounded-sm'>
+      <div className='lg:w-[30vw] sm:w-[90vw] md:w-[50vw] m-auto backdrop-blur-xs mt-40 p-6 pt-4 bg-white text-black rounded-sm border-2'>
         <div className='flex justify-between mb-10'>
           <p className='text-4xl'>Delete Notice</p>
           <button type='button' onClick={() => closeModal()}>
-            <FontAwesomeIcon icon={faCircleXmark} className='hover:text-red-600 cursor-pointer' />
+            <FontAwesomeIcon
+              icon={faCircleXmark}
+              className='hover:text-red-600 cursor-pointer text-xl'
+            />
           </button>
         </div>
         <div className='flex flex-col gap-5'>
           <p className='text-xl'>Confirm to delete Notice</p>
           <button
             type='button'
-            className='self-end border-1 cursor-pointer h-8 w-20 hover:text-gray-900 hover:bg-white'
+            className='self-end border-1 cursor-pointer h-8 w-20 hover:shadow-xs hover:outline-none hover:border-0 hover:shadow-black  bg-black text-white rounded'
             onClick={(e) => handleDelete(e)}
           >
             Confirm
