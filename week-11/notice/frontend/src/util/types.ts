@@ -1,6 +1,7 @@
 export type noticeData = {
   title: string;
   description: string;
+  pin: boolean
 };
 
 export interface Notice {
@@ -8,11 +9,11 @@ export interface Notice {
   title: string;
   description: string;
   pin: boolean
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export type flasy = {
+export type Flasy = {
   message: string;
   type: string;
 };

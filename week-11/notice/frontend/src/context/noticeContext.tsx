@@ -5,51 +5,58 @@ import { Notice, Flasy } from '../util/types';
 
 export interface NoticeContextType {
   notices: Notice[];
-  // addNotice: (notice: Notice) => void;
-  // deleteNotice: (id: string) => void;
+  setNotices: (notice: Notice[]) => void;
   modal: 'add' | 'delete' | null;
   openModal: (type: 'add' | 'delete') => void;
   closeModal: () => void;
-  deleteId: string | number;
-  setDeleteId: (Id: string | number) => void;
+  noticeId: string | number;
+  setNoticeId: (Id: string | number) => void;
   saveNotices: (data: Notice[]) => void;
   flashy: Flasy | null;
   setFlashy: (flash: Flasy | null) => void;
+  edit: boolean;
+  setEdit: (flag: boolean) => void;
+  notice: Notice;
+  setNotice: (notice: Notice) => void;
 }
 
 const NoticeContext = createContext<NoticeContextType | undefined>(undefined);
 
 export const NoticeProvider = ({ children }: { children: ReactNode }) => {
+ const note = {
+  _id: '',
+  title: '',
+  description: '',
+  pin: false,
+  createdAt: '',
+  updatedAt: '',
+}
   const [notices, setNotices] = useState<Notice[]>([]);
-  const [deleteId, setDeleteId] = useState<string | number>('');
+  const [noticeId, setNoticeId] = useState<string | number>('');
+  const [notice, setNotice] = useState<Notice>(note);
   const [modal, setModal] = useState<'add' | 'delete' | null>(null);
   const [flashy, setFlashy] = useState<Flasy | null>(null);
-  // const [refresh, setRefresh] = useState<boolean>();
-
-  // const addNotice = (notice: Notice) => {
-  //   setNotices((prev) => [...prev, notice]);
-  // };
-
-  // const deleteNotice = (id: string) => {
-  //   setNotices((prev) => prev.filter((notice) => notice.id !== id));
-  // };
-
+  const [edit, setEdit] = useState<boolean>(false);
   const openModal = (type: 'add' | 'delete') => setModal(type);
-  const closeModal = () => setModal(null);
+  const closeModal = () => {setModal(null); setEdit(false)};
   const saveNotices = (data:Notice[]) => setNotices(data);
   return (
     <NoticeContext.Provider
       value={{
         notices,
-        // addNotice,
+        setNotices,
         modal,
         openModal,
         closeModal,
-        deleteId,
-        setDeleteId,
+        noticeId,
+        setNoticeId,
         saveNotices,
         flashy,
         setFlashy,
+        edit,
+        setEdit,
+        notice,
+        setNotice,
       }}
     >
       {children}
@@ -62,7 +69,3 @@ export const useNotice = () => {
   if (!context) throw new Error('useNotice must be used within NoticeProvider');
   return context;
 };
-
-
-
-// noticeContext;

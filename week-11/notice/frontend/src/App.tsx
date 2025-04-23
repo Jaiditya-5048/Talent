@@ -1,4 +1,5 @@
 import './App.css'
+import Nav from './components/Nav'
 import { NoticeProvider } from './context/noticeContext'
 import Landing from './pages/Landing'
 
@@ -8,6 +9,7 @@ function App() {
   return (
     <>
     <NoticeProvider >
+      <Nav />
     <Landing />
     </ NoticeProvider >
     </>

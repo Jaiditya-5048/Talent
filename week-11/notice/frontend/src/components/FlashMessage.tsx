@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 interface FlashMessageProps {
   message: string;
-  type?: 'success' | 'error' | 'info';
+  type?: 'success' | 'error' | 'info' | string;
   onClose: () => void;
 }
 

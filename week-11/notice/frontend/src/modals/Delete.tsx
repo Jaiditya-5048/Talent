@@ -4,19 +4,16 @@ import { useNotice } from '../context/noticeContext';
 import { deleteNoticeApi, getNoticesApi } from '../util/api';
 
 function Delete() {
-  const { closeModal, deleteId, saveNotices, setFlashy } = useNotice();
+  const { closeModal, notice, setFlashy, setNotices } = useNotice();
   const handleDelete = async (e: React.FormEvent) => {
     e.preventDefault();
-    await deleteNoticeApi(deleteId);
-    await refreshFunc();
+    await deleteNoticeApi(notice._id);    
+    const response = await getNoticesApi();
+    setNotices(response.data.data);
+    // await refreshFunc();
     const flash = { message: 'Notice Deleted successfully!', type: 'success' };
     setFlashy(flash);
     closeModal();
-  };
-  const refreshFunc = async () => {
-    const response = await getNoticesApi();
-    saveNotices(response.data.data);
-    console.log(response.data.data);
   };
   return (
     <>
