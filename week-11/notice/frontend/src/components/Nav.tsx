@@ -1,13 +1,41 @@
-import { faGear } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from 'react';
+import { getCategoriesApi, getNoticesByCategoryApi } from '../util/api';
+import { useNotice } from '../context/noticeContext';
+import { catagoryApiResponse, Notice } from '../util/types';
 
 export default function Nav() {
+  const { setCategories, categories, setNotices } = useNotice();
   const [dropdown, setDropdown] = useState<boolean>(false);
-  function handleDropDown (){
-    if(dropdown){
-      setDropdown(false)
-    } else {setDropdown(true)}
+  function handleDropDown() {
+    if (dropdown) {
+      setDropdown(false);
+    } else {
+      setDropdown(true);
+    }
+  }
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await getCategoriesApi();
+
+        setCategories(response.data.data);
+        // console.log(response.data.data);
+      } catch (error) {
+        console.error('Error fetching notices:', error);
+      }
+    }
+    fetchCategories();
+  }, [setCategories]);
+
+  async function handleCategoryClick(id: string) {
+    const NoticeApiData = await getNoticesByCategoryApi(id)
+    console.log(NoticeApiData.data.data);
+    
+    if (NoticeApiData.data.data.length > 0) {
+      setNotices(NoticeApiData.data.data);
+    }
   }
   return (
     <>
@@ -47,11 +75,15 @@ export default function Nav() {
             className={`${dropdown ? '' : 'hidden'} absolute top-12 w-30 bg-black text-white shadow-xs shadow-black p-2 rounded-xl cursor-pointer `}
           >
             <ul className='flex flex-col gap-3 items-center'>
-              <li className='border-b-2 border-black hover:border-white hover:border-b-2'>MERN</li>
-              <li className='border-b-2 border-black hover:border-white hover:border-b-2'>MEAN</li>
-              <li className='border-b-2 border-black hover:border-white hover:border-b-2'>
-                PYTHON
-              </li>
+              {categories.map((cat) => (
+                <li
+                  key={cat._id}
+                  className='border-b-2 border-black hover:border-white hover:border-b-2'
+                  onClick={()=>handleCategoryClick(cat._id)}
+                >
+                  {cat.category}
+                </li>
+              ))}
             </ul>
           </div>
 

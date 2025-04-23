@@ -13,6 +13,11 @@ const noticeSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  categories: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true
+  }],
 }, { timestamps: true });
 
 

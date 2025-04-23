@@ -8,7 +8,7 @@ function Landing() {
   
   return (
     <>
-      <div className=''>
+      <div className='mb-5'>
         {modal === 'add' && (
           <div className='z-10 fixed mx-auto w-[100vw] top-0 h-lvh backdrop-blur-xs'>
             <Form />

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { Notice, Flasy } from '../util/types';
+import { Notice, Flasy, catagoryApiResponse } from '../util/types';
 
 ;
 
@@ -18,6 +18,8 @@ export interface NoticeContextType {
   setEdit: (flag: boolean) => void;
   notice: Notice;
   setNotice: (notice: Notice) => void;
+  categories: catagoryApiResponse[];
+  setCategories: (catgories: catagoryApiResponse[]) => void;
 }
 
 const NoticeContext = createContext<NoticeContextType | undefined>(undefined);
@@ -37,6 +39,7 @@ export const NoticeProvider = ({ children }: { children: ReactNode }) => {
   const [modal, setModal] = useState<'add' | 'delete' | null>(null);
   const [flashy, setFlashy] = useState<Flasy | null>(null);
   const [edit, setEdit] = useState<boolean>(false);
+  const [categories, setCategories] = useState<catagoryApiResponse[]>([]);
   const openModal = (type: 'add' | 'delete') => setModal(type);
   const closeModal = () => {setModal(null); setEdit(false)};
   const saveNotices = (data:Notice[]) => setNotices(data);
@@ -57,6 +60,8 @@ export const NoticeProvider = ({ children }: { children: ReactNode }) => {
         setEdit,
         notice,
         setNotice,
+        categories,
+        setCategories,
       }}
     >
       {children}
