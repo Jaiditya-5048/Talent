@@ -10,12 +10,12 @@ function Landing() {
     <>
       <div className=''>
         {modal === 'add' && (
-          <div className='z-10 fixed mx-auto w-[100vw] h-lvh backdrop-blur-xs'>
+          <div className='z-10 fixed mx-auto w-[100vw] top-0 h-lvh backdrop-blur-xs'>
             <Form />
           </div>
         )}
         {modal === 'delete' && (
-          <div className='z-10 fixed mx-auto w-[100vw] h-lvh backdrop-blur-xs'>
+          <div className='z-10 fixed mx-auto w-[100vw] top-0 h-lvh backdrop-blur-xs'>
             <Delete />
           </div>
         )}

@@ -1,12 +1,63 @@
 const Notice = require('../model/notice.model.cjs')
 
+const editNotice = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, pin } = req.body;
+
+  const errors = {};
+
+  if (!title.trim()) {
+    errors.title = 'Title is required';
+  }
+
+  if (!description.trim()) {
+    errors.description = 'Description is required';
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({
+      message: 'Validation failed',
+      errors: errors,
+    });
+  }
+
+  try {
+    const updatedNotice = await Notice.findByIdAndUpdate(
+      id,
+      { title, description, pin },
+      { new: true, runValidators: true } // return updated document and validate schema
+    );
+
+    if (!updatedNotice) {
+      return res.status(404).json({ success: false, message: 'Notice not found' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Notice updated successfully',
+      data: updatedNotice,
+    });
+  } catch (error) {
+    console.error('Edit notice error:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+};
+
 const addNotice = async (req, res) => {
   const { title, description, pin } = req.body;
   const errors = {};
 
-  if (!title.trim() && !description.trim()) {
+  if (!title.trim()) {
     errors.title = 'Title is required';
   }
+
+  if (!description.trim()) {
+    errors.description = 'Description is required';
+  }
+
+  // if(!pin){
+  //   pin = false
+  // }
 
   if (Object.keys(errors).length > 0) {
     return res.status(400).json({
@@ -62,7 +113,7 @@ const deleteNotice = async (req, res) => {
 
 const getNotices = async (req, res) => {
   try {
-    const noticeData = await Notice.find();
+    const noticeData = await Notice.find().sort({ createdAt: 1 });
 
     if (noticeData.length === 0) {
       return res.status(404).json({ message: 'No notices found' });
@@ -79,4 +130,4 @@ const getNotices = async (req, res) => {
 };
 
 
-module.exports = { addNotice, deleteNotice, getNotices };
+module.exports = { addNotice, deleteNotice, getNotices, editNotice };

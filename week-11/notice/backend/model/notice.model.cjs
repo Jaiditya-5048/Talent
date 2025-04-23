@@ -11,8 +11,10 @@ const noticeSchema = new mongoose.Schema({
   },
   pin: {
     type: Boolean,
+    default: false
   },
 }, { timestamps: true });
+
 
 const Notice = mongoose.model('Notice', noticeSchema);
 
