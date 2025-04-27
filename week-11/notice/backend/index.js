@@ -1,8 +1,9 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
-const connectDB = require('./config/mongodb.config.cjs');
+const connectDB = require('./config/mongoDB.config.cjs');
 const noticeRouter = require('./routes/notice.route.cjs');
+const categoryRouter = require('./routes/category.route.cjs');
 const cors = require('cors');
 app.use(express.json());
 dotenv.config();
@@ -19,7 +20,7 @@ app.use(cors({
       return callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true,
 }));
 
@@ -27,6 +28,7 @@ app.use(cors({
 
 
 app.use('/', noticeRouter)
+app.use('/', categoryRouter)
 
 
 

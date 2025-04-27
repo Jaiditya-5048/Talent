@@ -1,101 +1,45 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus, faThumbtack, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlus, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'; //faThumbtack
 import { useNotice } from '../context/noticeContext';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getNoticesApi } from '../util/api';
 import FlashMessage from './FlashMessage';
+import type { Notice } from '../util/types';
 
-// const data = [
-//   {
-//     id: 1,
-//     title: 'test 1',
-//     description:
-//       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-//   },
-//   {
-//     id: 2,
-//     title: 'test 2',
-//     description:
-//       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-//   },
-//   {
-//     id: 3,
-//     title: 'test 3',
-//     description:
-//       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-//   },
-//   {
-//     id: 4,
-//     title: 'test 4',
-//     description:
-//       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-//   },
-//   {
-//     id: 5,
-//     title: 'test 5',
-//     description:
-//       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-//   },
-//   {
-//     id: 6,
-//     title: 'test 6',
-//     description:
-//       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-//   },
-//   {
-//     id: 7,
-//     title: 'test 7',
-//     description:
-//       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-//   },
-//   {
-//     id: 8,
-//     title: 'test 8',
-//     description:
-//       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-//   },
-//   {
-//     id: 9,
-//     title: 'test 9',
-//     description:
-//       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-//   },
-//   {
-//     id: 10,
-//     title: 'test 10',
-//     description:
-//       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-//   },
-// ];
 
 function Notice() {
-  const { openModal, setDeleteId, notices, saveNotices, setFlashy, flashy } = useNotice();
-   const [checkNotice, setCheckNotice] = useState<boolean>(false);
-
-  const fetchNotices = useCallback(async () => {
-    try {
-      const response = await getNoticesApi();
-      if (response.status !== 200) {
-        setCheckNotice(true);
-      } else {
-        setCheckNotice(false);
-      }
-      
-      
-      saveNotices(response.data.data);
-      console.log(response.data.data);
-    } catch (error) {
-      console.error('Error fetching notices:', error);
-    }
-  }, [saveNotices]);
+  const { openModal, setNotice, notices, setFlashy, flashy, setNotices, setEdit } = useNotice();
+  const [checkNotice, setCheckNotice] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchNotices();
-  }, []);
+    async function fetchNotices() {
+      try {
+        const response = await getNoticesApi();
+        if (response.status !== 200) {
+          setCheckNotice(true);
+        } else {
+          setCheckNotice(false);
+        }
 
-  function deleteBtn(id: string | number) {
-    setDeleteId(id);
+        setNotices(response.data.data);
+        // console.log(response.data.data);
+      } catch (error) {
+        console.error('Error fetching notices:', error);
+      }
+    }
+    fetchNotices();
+  }, [setNotices]);
+
+
+  function deleteBtn(notice: Notice) {
+    setNotice(notice);
     openModal('delete');
+  }
+
+  function editBtn(notice: Notice) {
+    setNotice(notice);
+    openModal('add');
+    setEdit(true);
   }
 
   function getDayAndMonth(dateStr: string): string {
@@ -108,13 +52,11 @@ function Notice() {
     return result;
   }
 
-  function clickHandlerPin (id: number | string) {
-    const notice = notices.filter((notice) => notice._id === id);
-    notice[0].pin = true
-    console.log(notice);
-    
-    
-  }
+  // function clickHandlerPin(id: number | string) {
+  //   const notice = notices.filter((notice) => notice._id === id);
+  //   notice[0].pin = true;
+  //   console.log(notice);
+  // }
   return (
     <>
       {flashy !== null ? (
@@ -151,24 +93,41 @@ function Notice() {
                 <div className='flex flex-col gap-2'>
                   <div className='flex justify-between'>
                     <p className='text-3xl mb-1 break-all'>{notice.title}</p>
-                    <FontAwesomeIcon
+                    {/* <FontAwesomeIcon
                       icon={faThumbtack}
                       className='text-gray-500 hover:text-gray-800 cursor-pointer'
                       onClick={() => clickHandlerPin(notice._id)}
-                    />
+                    /> */}
                   </div>
 
                   <p className='text-lg break-all'>{notice.description}</p>
                 </div>
                 <div className='flex justify-between mt-2 bottom-0'>
-                  <p className='text-gray-500'>{getDayAndMonth(notice.createdAt)}</p>
-                  <button
-                    type='button'
-                    className='hover:text-red-900 text-red-600 cursor-pointer text-lg'
-                    onClick={() => deleteBtn(notice._id)}
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
+                  <p className='text-gray-500'>
+                    {notice.createdAt ? (
+                      getDayAndMonth(notice.createdAt)
+                    ) : (
+                      <>
+                        <span>Date not available</span>
+                      </>
+                    )}
+                  </p>
+                  <div className='flex gap-3'>
+                    <button
+                      type='button'
+                      className='hover:text-yellow-900 text-yellow-400 cursor-pointer text-lg'
+                      onClick={() => editBtn(notice)}
+                    >
+                      <FontAwesomeIcon icon={faPenToSquare} />
+                    </button>
+                    <button
+                      type='button'
+                      className='hover:text-red-900 text-red-600 cursor-pointer text-lg'
+                      onClick={() => deleteBtn(notice)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))

@@ -11,8 +11,15 @@ const noticeSchema = new mongoose.Schema({
   },
   pin: {
     type: Boolean,
+    default: false
   },
+  categories: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true
+  }],
 }, { timestamps: true });
+
 
 const Notice = mongoose.model('Notice', noticeSchema);
 

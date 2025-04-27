@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,ts,jsx,tsx}'], // Adjust paths as needed
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}", // for flowbite-react
+    "./node_modules/flowbite/**/*.js", // for core flowbite
+  ],
   theme: {
     extend: {
       keyframes: {
@@ -14,5 +19,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require('flowbite/plugin')],
 };
