@@ -1,17 +1,19 @@
 import { faCirclePlus, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNotice } from '../context/noticeContext';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // import { noticeData } from '../util/types';
-import { addNoticeApi, editNoticeApi, getNoticesApi } from '../util/api';
+import { addCategoryApi, addNoticeApi, editNoticeApi, getNoticesApi } from '../util/api';
 
 function Form() {
-  const { setFlashy, setNotices, edit, notice } = useNotice();
+  const { setFlashy, setNotices, edit, notice, categories } = useNotice();
   const [value, setValue] = useState<{ title: string; description: string }>({
     title: '',
     description: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [categoryValue, setCategoryValue] = useState<{ [key: string]: string }>({});
+  const [categoryError, setCategoryErrors] = useState<{ [key: string]: string }>({});
   // const [submitBtnState, setSubmitBtnState] = useState<boolean>(false);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [categoryFlag, setCategoryFlag] = useState<boolean>(false);
@@ -28,15 +30,19 @@ function Form() {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // console.log(hasEmptyFields);
+    setErrors({})
     if (value.title.trim().length === 0) {
-      setErrors({
+      setErrors((prev) => ({
+        ...prev,
         title: 'Title is required',
-      });
-    };
+      }));
+    }
+
     if (value.description.trim().length === 0) {
-      setErrors({
+      setErrors((prev) => ({
+        ...prev,
         description: 'Description is required',
-      });
+      }));
     }
     
     const hasEmptyFields = Object.values(value).some((val) => !val.trim());
@@ -85,28 +91,31 @@ function Form() {
     }));
   };
 
-  useEffect(() => {
-    if (edit) {
-      setValue({
-        title: notice.title,
-        description: notice.description,
-      });
-    }
-    // else {
-    //   setValue({
-    //     _id: '',
-    //     title: '',
-    //     description: '',
-    //     pin: false,
-    //   });
-    // }
-  }, []);
+  function handleChangeCategory(e: React.ChangeEvent<HTMLInputElement>){
+    const { name, value: inputValue } = e.target;
 
-  // useEffect(() => {
-  //   const hasErrors = Object.values(errors).some((err) => err !== '');
-  //   const hasEmptyFields = Object.values(value).some((val) => !val.trim());
-  //   setSubmitBtnState(hasErrors || hasEmptyFields);
-  // }, [errors, value]);
+    setCategoryValue((prev) => ({
+      ...prev,
+      [name]: inputValue,
+    }));
+
+    setCategoryErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: inputValue.trim() ? '' : 'Cannot be empty',
+    }));
+
+  }
+
+  async function handleClickAddCategory(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    if (!categoryValue.category.trim()) return;
+    console.log(categoryValue.category);
+    
+    await addCategoryApi(categoryValue.category);
+    setCategoryFlag(false);
+  }
+
+
 
   return (
     <>
@@ -128,23 +137,37 @@ function Form() {
 
         <form className='flex flex-col gap-5' onSubmit={submitHandler}>
           {categoryFlag ? (
-            <div className='flex gap-2 justify-between'>
-              <div className='flex flex-col gap-2 w-2/3'>
-                <label htmlFor='category'>Category</label>
-                <input
-                  type='text'
-                  name='category'
-                  id='category'
-                  className='h-10 border-2 border-black p-2'
-                />
+            <div className='flex flex-col gap-2'>
+              <div className='flex justify-between'>
+                <div className='flex flex-col gap-2 w-[70%]'>
+                  <label htmlFor='category'>Category</label>
+                  <input
+                    value={categoryValue.category}
+                    type='text'
+                    name='category'
+                    id='category'
+                    className='h-10 w-[100%] border-2 border-black p-2'
+                    onChange={(e) => handleChangeCategory(e)}
+                  />
+                </div>
+                <div className='flex gap-2'>
+                  <button
+                    type='button'
+                    className=' bg-blue-600 text-white size-10 self-end p-2 rounded-sm cursor-pointer hover:shadow-sm hover:shadow-black'
+                    onClick={(e) => handleClickAddCategory(e)}
+                  >
+                    <FontAwesomeIcon icon={faCirclePlus} className='text-white' />
+                  </button>
+                  <button
+                    type='button'
+                    className=' bg-red-600 text-white size-10 self-end p-2 rounded-sm cursor-pointer hover:shadow-sm hover:shadow-black'
+                    onClick={() => setCategoryFlag(false)}
+                  >
+                    <FontAwesomeIcon icon={faCircleXmark} className='text-white ' />
+                  </button>
+                </div>
               </div>
-              <button
-                type='button'
-                className=' bg-black text-white h-10 self-end p-2 rounded-sm cursor-pointer hover:shadow-sm hover:shadow-black'
-                onClick={() => setCategoryFlag(true)}
-              >
-                add category
-              </button>
+              <p className='text-red-600 text-sm'>{categoryError.category || ''}</p>
             </div>
           ) : (
             <div className='flex self-end gap-2'>
@@ -155,7 +178,7 @@ function Form() {
                   onClick={() => {
                     handleDropDown();
                   }}
-                  className='text-black w-30 hover:bg-black hover:text-white border-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer'
+                  className='text-black w-30 mt-7 hover:bg-black hover:text-white border-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer'
                   type='button'
                 >
                   Category
@@ -178,25 +201,25 @@ function Form() {
 
                 <div
                   id='dropdown'
-                  className={`${dropdown ? '' : 'hidden'} absolute top-12 border-white w-30 bg-black text-white shadow-xs shadow-black p-2 rounded-2xl cursor-pointer `}
+                  className={`${dropdown ? '' : 'hidden'} absolute top-19 border-white w-30 bg-black text-white shadow-xs shadow-black p-2 rounded-2xl cursor-pointer `}
                 >
                   <ul className='flex flex-col gap-3 items-center'>
-                    <li className='border-b-2 border-black hover:border-white hover:border-b-2'>
-                      MERN
-                    </li>
-                    <li className='border-b-2 border-black hover:border-white hover:border-b-2'>
-                      MEAN
-                    </li>
-                    <li className='border-b-2 border-black hover:border-white hover:border-b-2'>
-                      PYTHON
-                    </li>
+                    {categories.map((cat) => (
+                      <li
+                        key={cat._id}
+                        className='border-b-2 border-black hover:border-white hover:border-b-2'
+                        // onClick={() => handleCategoryClick(cat._id)}
+                      >
+                        {cat.category}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
 
               <button
                 type='button'
-                className='bg-black size-11 rounded-lg cursor-pointer'
+                className='bg-black size-11 mt-7 rounded-lg cursor-pointer'
                 onClick={() => setCategoryFlag(true)}
               >
                 <FontAwesomeIcon icon={faCirclePlus} className='text-white hover:text-xl' />

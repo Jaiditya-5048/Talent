@@ -17,3 +17,9 @@ export type Flasy = {
   message: string;
   type: string;
 };
+
+export type catagoryApiResponse = {
+  _id: string
+  category: string;
+  counter: number;
+};
