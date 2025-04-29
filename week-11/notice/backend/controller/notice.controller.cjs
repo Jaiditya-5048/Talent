@@ -1,7 +1,7 @@
 const Notice = require('../model/notice.model.cjs')
 const Category = require('../model/category.model.cjs')
 
-const DEFAULT_CATEGORY = '680883bcaefeb26d002c79cc';
+const DEFAULT_CATEGORY = '680f0c5d80e550f6b26a92f6';
 
 const editNotice = async (req, res) => {
   const { id } = req.params;
@@ -31,32 +31,33 @@ const editNotice = async (req, res) => {
       return res.status(404).json({ message: 'Notice not found' });
     }
 
-    const categoriesFromBody = [...new Set(categories)]; //add categories from api body to newCategories const while checking for duplicates
+    const allCategories = [...new Set([...categories, DEFAULT_CATEGORY])]; //add categories from api body to newCategories const while checking for duplicates
 
     //to check if the categories from api exist in category collection
-    for (const cat of categoriesFromBody) {
+    for (const cat of allCategories) {
       const existing = await Category.findById(cat);
       if (!existing) {
         return res.status(404).json({ message: 'Invalid Category' });
       }
     }
 
-    const catagoriesToRemove = existingNotice.categories.filter(item => !categoriesFromBody.includes(item));
-    const catagoriesToAdd = categoriesFromBody.filter(item => !existingNotice.categories.includes(item));
+    const categoriesToRemove = existingNotice.categories
+      .map((item) => String(item))
+      .filter((item) => item !== DEFAULT_CATEGORY);
 
     //loop to increment
-    for (const cat of catagoriesToAdd) {
+    for (const cat of categories) {
       await Category.findByIdAndUpdate(cat, { $inc: { counter: 1 } });
     }
 
     //loop to decrement
-    for (const cat of catagoriesToRemove) {
+    for (const cat of categoriesToRemove) {
       await Category.findByIdAndUpdate(cat, { $inc: { counter: -1 } });
     }
-    
+
     const updatedNotice = await Notice.findByIdAndUpdate(
       id,
-      { title, description, pin },
+      { title, description, pin, categories: allCategories },
       { new: true, runValidators: true } // return updated document and validate schema
     );
 
@@ -98,7 +99,16 @@ const addNotice = async (req, res) => {
     });
   }
 
-  let categoryList = [...new Set(categories?.length ? categories : [DEFAULT_CATEGORY])];
+  console.log("log:", categories);
+
+  const filterCategories = categories.filter((cat) => cat !== '')
+
+  if (!filterCategories.includes(DEFAULT_CATEGORY)) {
+    filterCategories.push(DEFAULT_CATEGORY);
+  }
+
+
+  let categoryList = [...new Set(filterCategories?.length ? filterCategories : [DEFAULT_CATEGORY])];
 
   try {
     // Create new notice
@@ -108,8 +118,8 @@ const addNotice = async (req, res) => {
       pin,
       categories: categoryList,
     })
-    
-    if(dbResponseNotice._id) {
+
+    if (dbResponseNotice._id) {
       for (const cat of categoryList) {
         await Category.findByIdAndUpdate(cat, { $inc: { counter: 1 } });
       }
@@ -183,9 +193,9 @@ const getNoticesByCategory = async (req, res) => {
       .populate('categories')
       .sort({ createdAt: 1 });
 
-    if (noticeData.length === 0) {
-      return res.status(404).json({ message: 'No notices found' });
-    }
+    // if (noticeData.length === 0) {
+    //   return res.status(404).json({ message: 'No notices found' });
+    // }
 
     return res.status(200).json({
       message: 'Notices retrieved successfully',

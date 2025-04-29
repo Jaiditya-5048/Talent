@@ -4,11 +4,12 @@ export type noticeData = {
   pin: boolean
 };
 
-export interface Notice {
+export interface Notice  {
   _id: string | number;
   title: string;
   description: string;
   pin: boolean
+  categories: string[];
   createdAt?: string;
   updatedAt?: string;
 }

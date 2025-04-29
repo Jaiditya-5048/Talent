@@ -5,8 +5,6 @@ import { api } from './base_controller';
 export async function addNoticeApi(noticeData: noticeData) {
   try {
     const response = await api.post('notice', noticeData);
-    console.log(response);
-    console.log(response.data);
     return response;
   } catch (error: any) {    // eslint-disable-line
     console.error('Failed to add notice:', error.response?.data || error.message);
@@ -29,7 +27,6 @@ export async function editNoticeApi(noticeData: Notice) {
 export async function deleteNoticeApi(id: string | number) {
   try {
     const response = await api.delete(`notice/${id}`);
-    console.log(response);
     return response;
   } catch (error: any) {    // eslint-disable-line
     console.error('Failed to delete notice:', error.response?.data || error.message);
@@ -61,7 +58,7 @@ export async function getNoticesByCategoryApi(categoryId: string) {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-export async function addCategoryApi(category: string) {
+export async function addCategoryApi(category: {category: string}) {
   try {
     const response = await api.post('category', category);
     console.log(response);

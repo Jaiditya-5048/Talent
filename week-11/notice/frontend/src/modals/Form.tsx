@@ -1,23 +1,32 @@
 import { faCirclePlus, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNotice } from '../context/noticeContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import { noticeData } from '../util/types';
-import { addCategoryApi, addNoticeApi, editNoticeApi, getNoticesApi } from '../util/api';
+import {
+  addCategoryApi,
+  addNoticeApi,
+  editNoticeApi,
+  getCategoriesApi,
+  getNoticesApi,
+} from '../util/api';
 
 function Form() {
-  const { setFlashy, setNotices, edit, notice, categories } = useNotice();
+  const { setFlashy, setNotices, edit, notice, categories, setCategories } = useNotice();
   const [value, setValue] = useState<{ title: string; description: string }>({
     title: '',
     description: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [categoryValue, setCategoryValue] = useState<{ [key: string]: string }>({});
+  const [categoryLocal, setCategoryLocal] = useState('');
+  const [categoryId, setCategoryId] = useState('');
+  // const [categoryValue, setCategoryValue] = useState<{ [key: string]: string }>({});
+  const [categoryValue, setCategoryValue] = useState('');
   const [categoryError, setCategoryErrors] = useState<{ [key: string]: string }>({});
   // const [submitBtnState, setSubmitBtnState] = useState<boolean>(false);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [categoryFlag, setCategoryFlag] = useState<boolean>(false);
-  const { closeModal } = useNotice();
+  const { closeModal, setCategory } = useNotice();
 
   function handleDropDown() {
     if (dropdown) {
@@ -30,7 +39,7 @@ function Form() {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // console.log(hasEmptyFields);
-    setErrors({})
+    setErrors({});
     if (value.title.trim().length === 0) {
       setErrors((prev) => ({
         ...prev,
@@ -44,13 +53,12 @@ function Form() {
         description: 'Description is required',
       }));
     }
-    
+
     const hasEmptyFields = Object.values(value).some((val) => !val.trim());
-    if (hasEmptyFields !== true) {     
-    
+    if (hasEmptyFields !== true) {
       if (edit) {
-        console.log('edit test');
-        const noticeData = { ...value, _id: notice._id, pin: notice.pin };
+        const noticeData = { ...value, _id: notice._id, pin: notice.pin, categories: [categoryId] };
+
         const response = await editNoticeApi(noticeData); //add api !!!!!!!!!!!!
         if (response.status !== 200) {
           setErrors(response.data.errors);
@@ -59,11 +67,14 @@ function Form() {
           setFlashy(flash);
           const response = await getNoticesApi();
           setNotices(response.data.data);
+          setCategory('Category');
+          const responseCat = await getCategoriesApi();
+          setCategories(responseCat.data.data);
           closeModal();
         }
       } else {
-        const addPin = { ...value, pin: false }; //adding pin field with default vale false to the notice object
-        const response = await addNoticeApi(addPin);
+        const addValues = { ...value, pin: false, categories: [categoryId] }; //adding pin field with default vale false to the notice object
+        const response = await addNoticeApi(addValues);
         if (response.status !== 201) {
           setErrors(response.data.errors);
         } else {
@@ -71,6 +82,9 @@ function Form() {
           setFlashy(flash);
           const response = await getNoticesApi();
           setNotices(response.data.data);
+          setCategory('Category');
+          const responseCat = await getCategoriesApi();
+          setCategories(responseCat.data.data);
           closeModal();
         }
       }
@@ -91,31 +105,58 @@ function Form() {
     }));
   };
 
-  function handleChangeCategory(e: React.ChangeEvent<HTMLInputElement>){
+  function handleChangeCategory(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value: inputValue } = e.target;
 
-    setCategoryValue((prev) => ({
-      ...prev,
-      [name]: inputValue,
-    }));
+    setCategoryValue(inputValue);
+    // setCategoryValue((prev) => ({
+    //   ...prev,
+    //   [name]: inputValue,
+    // }));
 
     setCategoryErrors((prevErrors) => ({
       ...prevErrors,
       [name]: inputValue.trim() ? '' : 'Cannot be empty',
     }));
-
   }
 
   async function handleClickAddCategory(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault()
-    if (!categoryValue.category.trim()) return;
-    console.log(categoryValue.category);
-    
-    await addCategoryApi(categoryValue.category);
+    e.preventDefault();
+    if (!categoryValue.trim()) return;
+    console.log(categoryValue);
+
+    await addCategoryApi({ category: categoryValue });
     setCategoryFlag(false);
+    const response = await getCategoriesApi();
+    setCategories(response.data.data);
+    const flash = { message: 'Category added successfully!', type: 'success' };
+    setFlashy(flash);
   }
 
+  async function handleCategoryClick(id: string, category: string) {
+    setCategoryLocal(category);
+    setDropdown(false);
+    setCategoryId(id);
+  }
 
+  useEffect(() => {
+    if (edit === true) {
+      setValue({
+        title: notice.title,
+        description: notice.description,
+      });
+      const filterCategory = notice.categories.filter((cat) => cat !== '680f0c5d80e550f6b26a92f6');
+      setCategoryId(filterCategory[0]);
+      const category = categories.find((cat) => cat._id === filterCategory[0]);
+      //  console.log(category.category);
+
+      if (!category?.category) {
+        setCategoryLocal('General');
+      } else {
+        setCategoryLocal(category.category);
+      }
+    }
+  }, [edit]);
 
   return (
     <>
@@ -142,7 +183,7 @@ function Form() {
                 <div className='flex flex-col gap-2 w-[70%]'>
                   <label htmlFor='category'>Category</label>
                   <input
-                    value={categoryValue.category}
+                    value={categoryValue}
                     type='text'
                     name='category'
                     id='category'
@@ -181,7 +222,7 @@ function Form() {
                   className='text-black w-30 mt-7 hover:bg-black hover:text-white border-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer'
                   type='button'
                 >
-                  Category
+                  {categoryLocal ? categoryLocal : 'Category'}
                   <svg
                     className='w-2.5 h-2.5 ms-3'
                     aria-hidden='true'
@@ -208,7 +249,7 @@ function Form() {
                       <li
                         key={cat._id}
                         className='border-b-2 border-black hover:border-white hover:border-b-2'
-                        // onClick={() => handleCategoryClick(cat._id)}
+                        onClick={() => handleCategoryClick(cat._id, cat.category)}
                       >
                         {cat.category}
                       </li>
