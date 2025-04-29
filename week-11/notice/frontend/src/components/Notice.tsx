@@ -6,7 +6,6 @@ import { getNoticesApi } from '../util/api';
 import FlashMessage from './FlashMessage';
 import type { Notice } from '../util/types';
 
-
 function Notice() {
   const { openModal, setNotice, notices, setFlashy, flashy, setNotices, setEdit } = useNotice();
   const [checkNotice, setCheckNotice] = useState<boolean>(false);
@@ -29,7 +28,6 @@ function Notice() {
     }
     fetchNotices();
   }, [setNotices]);
-
 
   function deleteBtn(notice: Notice) {
     setNotice(notice);
@@ -82,7 +80,7 @@ function Notice() {
         </div>
 
         <div className='flex flex-wrap gap-5 justify-center'>
-          {checkNotice == true ? (
+          {checkNotice == true || notices.length === 0 ? (
             <div className='text-2xl text-gray-500 mt-10'>No notices available</div>
           ) : (
             notices.map((notice) => (

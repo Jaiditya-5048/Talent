@@ -10,14 +10,14 @@ export default function FlashMessage({ message, type = 'info', onClose }: FlashM
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [onClose]);
 
   return (
     <div
-      className={`fixed top-20 right-5 z-50 px-6 py-3 text-white rounded-md shadow-lg transition-transform transform animate-slide-in 
+      className={`fixed top-10 left-5 z-50 px-6 py-3 text-white rounded-md shadow-lg transition-transform transform animate-slide-in 
       ${type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-blue-600'}`}
     >
       {message}

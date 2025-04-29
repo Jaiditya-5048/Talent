@@ -3,10 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { getCategoriesApi, getNoticesByCategoryApi } from '../util/api';
 import { useNotice } from '../context/noticeContext';
-import { catagoryApiResponse, Notice } from '../util/types';
+// import { catagoryApiResponse, Notice } from '../util/types';
 
 export default function Nav() {
-  const { setCategories, categories, setNotices } = useNotice();
+  // const [category, setCategory] = useState('');
+  const { setCategories, categories, setNotices, category, setCategory } = useNotice();
   const [dropdown, setDropdown] = useState<boolean>(false);
   function handleDropDown() {
     if (dropdown) {
@@ -29,12 +30,21 @@ export default function Nav() {
     fetchCategories();
   }, [setCategories]);
 
-  async function handleCategoryClick(id: string) {
-    const NoticeApiData = await getNoticesByCategoryApi(id)
-    console.log(NoticeApiData.data.data);
-    
+  async function handleCategoryClick(id: string, category: string) {
+    const NoticeApiData = await getNoticesByCategoryApi(id);
+    setDropdown(false);
+    // console.log(NoticeApiData);
+    if (NoticeApiData.data.data.length <= 0) {      
+      setNotices([]);
+      setCategory(category);
+      return;
+    }
     if (NoticeApiData.data.data.length > 0) {
       setNotices(NoticeApiData.data.data);
+      setCategory(category);
+    } else {
+      setNotices([]);
+      setCategory(category);
     }
   }
   return (
@@ -52,7 +62,7 @@ export default function Nav() {
             className='text-black w-30 hover:bg-black hover:text-white border-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer'
             type='button'
           >
-            Category
+            {category.length > 0 ? category : 'Category'}
             <svg
               className='w-2.5 h-2.5 ms-3'
               aria-hidden='true'
@@ -79,18 +89,21 @@ export default function Nav() {
                 <li
                   key={cat._id}
                   className='border-b-2 border-black hover:border-white hover:border-b-2'
-                  onClick={()=>handleCategoryClick(cat._id)}
+                  onClick={() => handleCategoryClick(cat._id, cat.category)}
                 >
-                  {cat.category}
+                  <div className='flex justify-between w-20'>
+                    <div>{cat.category}</div>
+                    <div><span className='text-red-600'>  ({cat.counter})</span></div>
+                  </div>
                 </li>
               ))}
             </ul>
           </div>
 
-          <button type='button'>
+          <button type='button' className='hidden'>
             <FontAwesomeIcon
               icon={faGear}
-              className='text-2xl cursor-pointer transition-transform duration-300 ease-in-out hover:rotate-180'
+              className='text-2xl cursor-pointer transition-transform duration-300 ease-in-out hover:rotate-180 '
             />
           </button>
         </div>

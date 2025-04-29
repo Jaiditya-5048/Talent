@@ -1,8 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { Notice, Flasy, catagoryApiResponse } from '../util/types';
 
-;
-
 export interface NoticeContextType {
   notices: Notice[];
   setNotices: (notice: Notice[]) => void;
@@ -20,19 +18,22 @@ export interface NoticeContextType {
   setNotice: (notice: Notice) => void;
   categories: catagoryApiResponse[];
   setCategories: (catgories: catagoryApiResponse[]) => void;
+  category: string;
+  setCategory: (category: string) => void;
 }
 
 const NoticeContext = createContext<NoticeContextType | undefined>(undefined);
 
 export const NoticeProvider = ({ children }: { children: ReactNode }) => {
- const note = {
-  _id: '',
-  title: '',
-  description: '',
-  pin: false,
-  createdAt: '',
-  updatedAt: '',
-}
+  const note = {
+    _id: '',
+    title: '',
+    description: '',
+    pin: false,
+    categories: [''],
+    createdAt: '',
+    updatedAt: '',
+  };
   const [notices, setNotices] = useState<Notice[]>([]);
   const [noticeId, setNoticeId] = useState<string | number>('');
   const [notice, setNotice] = useState<Notice>(note);
@@ -40,9 +41,13 @@ export const NoticeProvider = ({ children }: { children: ReactNode }) => {
   const [flashy, setFlashy] = useState<Flasy | null>(null);
   const [edit, setEdit] = useState<boolean>(false);
   const [categories, setCategories] = useState<catagoryApiResponse[]>([]);
+  const [category, setCategory] = useState('');
   const openModal = (type: 'add' | 'delete') => setModal(type);
-  const closeModal = () => {setModal(null); setEdit(false)};
-  const saveNotices = (data:Notice[]) => setNotices(data);
+  const closeModal = () => {
+    setModal(null);
+    setEdit(false);
+  };
+  const saveNotices = (data: Notice[]) => setNotices(data);
   return (
     <NoticeContext.Provider
       value={{
@@ -62,6 +67,8 @@ export const NoticeProvider = ({ children }: { children: ReactNode }) => {
         setNotice,
         categories,
         setCategories,
+        category,
+        setCategory,
       }}
     >
       {children}
