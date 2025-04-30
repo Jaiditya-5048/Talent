@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'; //faThumbtack
 import { useNotice } from '../context/noticeContext';
 import { useEffect, useState } from 'react';
-import { getNoticesApi } from '../util/api';
+import { getNoticesByCategoryApi } from '../util/api';
 import FlashMessage from './FlashMessage';
 import type { Notice } from '../util/types';
 
@@ -13,7 +13,8 @@ function Notice() {
   useEffect(() => {
     async function fetchNotices() {
       try {
-        const response = await getNoticesApi();
+        // const response = await getNoticesApi();
+        const response = await getNoticesByCategoryApi('680f0c5d80e550f6b26a92f6');
         if (response.status !== 200) {
           setCheckNotice(true);
         } else {
@@ -87,6 +88,7 @@ function Notice() {
               <div
                 key={notice._id}
                 className='flex flex-col gap-2 justify-between border-2 p-3 w-full sm:w-[48%] md:w-[31%] lg:w-[23%]'
+                
               >
                 <div className='flex flex-col gap-2'>
                   <div className='flex justify-between'>

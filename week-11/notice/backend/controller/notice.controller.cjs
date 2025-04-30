@@ -32,7 +32,7 @@ const editNotice = async (req, res) => {
     }
 
     const allCategories = [...new Set([...categories, DEFAULT_CATEGORY])]; //add categories from api body to newCategories const while checking for duplicates
-
+    // if(existingNotice.categories === categories)
     //to check if the categories from api exist in category collection
     for (const cat of allCategories) {
       const existing = await Category.findById(cat);
