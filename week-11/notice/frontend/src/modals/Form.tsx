@@ -145,15 +145,14 @@ function Form() {
         title: notice.title,
         description: notice.description,
       });
-      const filterCategory = notice.categories.filter((cat) => cat !== '680f0c5d80e550f6b26a92f6');
-      setCategoryId(filterCategory[0]);
-      const category = categories.find((cat) => cat._id === filterCategory[0]);
-      //  console.log(category.category);
 
-      if (!category?.category) {
-        setCategoryLocal('General');
+      if(notice.categories.length > 1) {
+        const filterCategory = notice.categories.filter((cat) => cat._id !== '680f0c5d80e550f6b26a92f6');
+        setCategoryId(filterCategory[0]._id);
+        setCategoryLocal(filterCategory[0].category);
       } else {
-        setCategoryLocal(category.category);
+        setCategoryId(notice.categories[0]._id)
+        setCategoryLocal(notice.categories[0].category)
       }
     }
   }, [edit]);
