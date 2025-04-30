@@ -6,22 +6,16 @@ import { useNotice } from '../context/noticeContext';
 // import { catagoryApiResponse, Notice } from '../util/types';
 
 export default function Nav() {
-  // const [category, setCategory] = useState('');
   const { setCategories, categories, setNotices, category, setCategory } = useNotice();
   const [dropdown, setDropdown] = useState<boolean>(false);
-  function handleDropDown() {
-    if (dropdown) {
-      setDropdown(false);
-    } else {
-      setDropdown(true);
-    }
-  }
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
   useEffect(() => {
     async function fetchCategories() {
       try {
         const response = await getCategoriesApi();
 
         setCategories(response.data.data);
+        setCategory("General")
         // console.log(response.data.data);
       } catch (error) {
         console.error('Error fetching notices:', error);
@@ -33,7 +27,6 @@ export default function Nav() {
   async function handleCategoryClick(id: string, category: string) {
     const NoticeApiData = await getNoticesByCategoryApi(id);
     setDropdown(false);
-    // console.log(NoticeApiData);
     if (NoticeApiData.data.data.length <= 0) {      
       setNotices([]);
       setCategory(category);
@@ -47,9 +40,21 @@ export default function Nav() {
       setCategory(category);
     }
   }
+   useEffect(() => {
+     
+     const handleScroll = () => {
+      
+       if (window.scrollY > 50) {
+         setIsScrolled(true);
+       } else {
+         setIsScrolled(false);
+       }
+     };     
+     window.addEventListener('scroll', handleScroll);    
+   }, []);
   return (
     <>
-      <div className='flex justify-between pl-5 pr-5 mt-5 fixed-top w-[99dvw]'>
+      <div className={`flex justify-between pl-5 pr-5 mt-5 fixed w-[99dvw] `}>
         <div></div>
         {/* <img src='../../public/img/notice.webp' alt='logo' className='h-14' /> */}
         <div className='flex gap-5 relative '>
@@ -57,11 +62,13 @@ export default function Nav() {
             id='dropdownDefaultButton'
             // data-dropdown-toggle='dropdown'
             onClick={() => {
-              handleDropDown();
+              setDropdown(!dropdown);
             }}
-            className='text-black w-30 hover:bg-black hover:text-white border-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer'
+            className={`text-black w-30 hover:bg-black hover:text-white border-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer
+              ${isScrolled ? 'bg-black text-white hover:border-2 hover:border-gray-600' : 'bg-white'}`}
             type='button'
           >
+            {/* {category} */}
             {category.length > 0 ? category : 'Category'}
             <svg
               className='w-2.5 h-2.5 ms-3'
@@ -91,9 +98,11 @@ export default function Nav() {
                   className='border-b-2 border-black hover:border-white hover:border-b-2'
                   onClick={() => handleCategoryClick(cat._id, cat.category)}
                 >
-                  <div className='flex justify-between w-20'>
+                  <div className='flex justify-between w-auto min-w-20 gap-2'>
                     <div>{cat.category}</div>
-                    <div><span className='text-red-600'>  ({cat.counter})</span></div>
+                    <div>
+                      <span className='text-red-600'> ({cat.counter})</span>
+                    </div>
                   </div>
                 </li>
               ))}

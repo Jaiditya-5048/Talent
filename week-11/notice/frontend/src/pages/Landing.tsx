@@ -1,11 +1,12 @@
 import Delete from '../modals/Delete';
-import Form from '../modals/Form'
-import Notice from '../components/Notice'
-import {useNotice} from '../context/noticeContext'
+import Form from '../modals/Form';
+import Notice from '../components/Notice';
+import { useNotice } from '../context/noticeContext';
+import { DndContext } from '@dnd-kit/core';
 
 function Landing() {
   const { modal } = useNotice();
-  
+
   return (
     <>
       <div className='mb-5'>
@@ -19,11 +20,12 @@ function Landing() {
             <Delete />
           </div>
         )}
-  
-        <Notice />
+        <DndContext>
+          <Notice />
+        </DndContext>
       </div>
     </>
   );
 }
 
-export default Landing
+export default Landing;

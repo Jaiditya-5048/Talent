@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'; //faThumbtack
 import { useNotice } from '../context/noticeContext';
 import { useEffect, useState } from 'react';
-import { getNoticesByCategoryApi } from '../util/api';
+import { getNoticesApi } from '../util/api';
 import FlashMessage from './FlashMessage';
 import type { Notice } from '../util/types';
 
@@ -13,16 +13,14 @@ function Notice() {
   useEffect(() => {
     async function fetchNotices() {
       try {
-        // const response = await getNoticesApi();
-        const response = await getNoticesByCategoryApi('680f0c5d80e550f6b26a92f6');
+        const response = await getNoticesApi();
+        // console.log(response);
         if (response.status !== 200) {
           setCheckNotice(true);
         } else {
           setCheckNotice(false);
         }
-
         setNotices(response.data.data);
-        // console.log(response.data.data);
       } catch (error) {
         console.error('Error fetching notices:', error);
       }
@@ -79,16 +77,16 @@ function Notice() {
             ADD task
           </button>
         </div>
-
-        <div className='flex flex-wrap gap-5 justify-center'>
+        {/* flex flex-wrap gap-5 justify-center */}
+        <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-5'>
           {checkNotice == true || notices.length === 0 ? (
             <div className='text-2xl text-gray-500 mt-10'>No notices available</div>
           ) : (
             notices.map((notice) => (
               <div
                 key={notice._id}
-                className='flex flex-col gap-2 justify-between border-2 p-3 w-full sm:w-[48%] md:w-[31%] lg:w-[23%]'
-                
+                // sm:w-[48%] md:w-[31%] lg:w-[23%]
+                className='flex flex-col gap-2 justify-between border-2 p-3 w-full'
               >
                 <div className='flex flex-col gap-2'>
                   <div className='flex justify-between'>
