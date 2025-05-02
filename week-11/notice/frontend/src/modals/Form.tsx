@@ -14,14 +14,14 @@ import {
 import { catagoryApiResponse } from '../util/types';
 
 function Form() {
-  const { setFlashy, setNotices, edit, notice, categories, setCategories } = useNotice();
+  const { setFlashy, setNotices, edit, notice, categories, setCategories, categoryId, setCategoryId } = useNotice();
   const [value, setValue] = useState<{ title: string; description: string }>({
     title: '',
     description: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [categoryLocal, setCategoryLocal] = useState('');
-  const [categoryId, setCategoryId] = useState('');
+  
   const [categoryValue, setCategoryValue] = useState('');
   const [categoryError, setCategoryErrors] = useState<{ [key: string]: string }>({});
   const [dropdown, setDropdown] = useState<boolean>(false);
@@ -73,6 +73,9 @@ function Form() {
         } else {
           const flash = { message: 'Notice added successfully!', type: 'success' };
           setFlashy(flash);
+          // console.log('id:',categoryId);
+          // debugger
+          
           const response = await getNoticesByCategoryApi(categoryId);
           setNotices(response.data.data);
           const responseCat = await getCategoriesApi();

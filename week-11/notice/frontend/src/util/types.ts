@@ -4,7 +4,7 @@ export type noticeData = {
   pin: boolean
 };
 
-export interface Notice {
+export interface NoticeApi {
   _id: string | number;
   title: string;
   description: string;
