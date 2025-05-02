@@ -7,6 +7,6 @@ import flowbiteReact from "flowbite-react/plugin/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss(), flowbiteReact()],
   server: {
-    port: 5000, // Replace 3000 with your desired port number
+    port: 5173,
   },
 });
