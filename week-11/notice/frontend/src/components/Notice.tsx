@@ -1,28 +1,38 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'; //faThumbtack
 import { useNotice } from '../context/noticeContext';
 import { useEffect, useState } from 'react';
-import { getNoticesApi } from '../util/api';
+import { getCategoriesApi, getNoticesApi } from '../util/api';
 import FlashMessage from './FlashMessage';
-import type { Notice } from '../util/types';
+// import type { NoticeApi } from '../util/types';
+import NoticeCard from './NoticeCard';
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { SortableContext, rectSwappingStrategy } from '@dnd-kit/sortable';
+import { catagoryApiResponse } from '../util/types';
 
-
-function Notice() {
-  const { openModal, setNotice, notices, setFlashy, flashy, setNotices, setEdit } = useNotice();
+function Notice() {   
+  const { openModal, notices, setFlashy, flashy, setNotices, setCategory, setCategoryId } = useNotice();
   const [checkNotice, setCheckNotice] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchNotices() {
       try {
+        const catResponse = await getCategoriesApi()
+        console.log(catResponse);
+        const GeneralCat:catagoryApiResponse = catResponse.data.data.find((cat: catagoryApiResponse) => cat.category === 'General');
+        setCategory('General');
+        setCategoryId(GeneralCat._id);
+        // console.log('id:',GeneralCat._id);
+        
+        // debugger
+        
         const response = await getNoticesApi();
+        // console.log(response);
         if (response.status !== 200) {
           setCheckNotice(true);
         } else {
           setCheckNotice(false);
         }
-
         setNotices(response.data.data);
-        // console.log(response.data.data);
       } catch (error) {
         console.error('Error fetching notices:', error);
       }
@@ -30,33 +40,6 @@ function Notice() {
     fetchNotices();
   }, [setNotices]);
 
-
-  function deleteBtn(notice: Notice) {
-    setNotice(notice);
-    openModal('delete');
-  }
-
-  function editBtn(notice: Notice) {
-    setNotice(notice);
-    openModal('add');
-    setEdit(true);
-  }
-
-  function getDayAndMonth(dateStr: string): string {
-    const date = new Date(dateStr);
-
-    const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'long' });
-    const result = day + ', ' + month;
-
-    return result;
-  }
-
-  // function clickHandlerPin(id: number | string) {
-  //   const notice = notices.filter((notice) => notice._id === id);
-  //   notice[0].pin = true;
-  //   console.log(notice);
-  // }
   return (
     <>
       {flashy !== null ? (
@@ -80,57 +63,20 @@ function Notice() {
             ADD task
           </button>
         </div>
-
-        <div className='flex flex-wrap gap-5 justify-center'>
-          {checkNotice == true ? (
-            <div className='text-2xl text-gray-500 mt-10'>No notices available</div>
+        {/* flex flex-wrap gap-5 justify-center */}
+        <div>
+          {checkNotice == true || notices.length === 0 ? (
+            <div className=' mt-10 flex justify-center'>
+              <p className='text-2xl text-gray-500'>No notices available</p>
+            </div>
           ) : (
-            notices.map((notice) => (
-              <div
-                key={notice._id}
-                className='flex flex-col gap-2 justify-between border-2 p-3 w-full sm:w-[48%] md:w-[31%] lg:w-[23%]'
-              >
-                <div className='flex flex-col gap-2'>
-                  <div className='flex justify-between'>
-                    <p className='text-3xl mb-1 break-all'>{notice.title}</p>
-                    {/* <FontAwesomeIcon
-                      icon={faThumbtack}
-                      className='text-gray-500 hover:text-gray-800 cursor-pointer'
-                      onClick={() => clickHandlerPin(notice._id)}
-                    /> */}
-                  </div>
-
-                  <p className='text-lg break-all'>{notice.description}</p>
-                </div>
-                <div className='flex justify-between mt-2 bottom-0'>
-                  <p className='text-gray-500'>
-                    {notice.createdAt ? (
-                      getDayAndMonth(notice.createdAt)
-                    ) : (
-                      <>
-                        <span>Date not available</span>
-                      </>
-                    )}
-                  </p>
-                  <div className='flex gap-3'>
-                    <button
-                      type='button'
-                      className='hover:text-yellow-900 text-yellow-400 cursor-pointer text-lg'
-                      onClick={() => editBtn(notice)}
-                    >
-                      <FontAwesomeIcon icon={faPenToSquare} />
-                    </button>
-                    <button
-                      type='button'
-                      className='hover:text-red-900 text-red-600 cursor-pointer text-lg'
-                      onClick={() => deleteBtn(notice)}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
+            <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-5'>
+              <SortableContext items={notices.map((n) => n._id)} strategy={rectSwappingStrategy}>
+                {notices.map((notice) => (
+                  <NoticeCard key={notice._id} notice={notice} />
+                ))}
+              </SortableContext>
+            </div>
           )}
         </div>
       </div>
