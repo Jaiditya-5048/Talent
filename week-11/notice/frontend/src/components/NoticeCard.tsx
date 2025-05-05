@@ -29,7 +29,7 @@ function NoticeCard({ notice }: NoticeCardProps) {
     openModal('delete');
   }
 
-  function editBtn(notice: NoticeApi) {
+  function editBtn(notice: NoticeApi) {    
     setNotice(notice);
     openModal('add');
     setEdit(true);

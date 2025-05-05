@@ -14,10 +14,17 @@ const noticeSchema = new mongoose.Schema({
     default: false
   },
   categories: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
-    required: true
-  }],
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true
+    },
+    order: {
+      type: Number,
+      required: true,
+      default: 0
+    }
+  }]
 }, { timestamps: true });
 
 

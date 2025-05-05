@@ -9,6 +9,8 @@ export default function Nav() {
   const { setCategories, categories, setNotices, category, setCategory } = useNotice();
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+
+  //useEffrect to fetch categories on load
   useEffect(() => {
     async function fetchCategories() {
       try {
@@ -16,7 +18,6 @@ export default function Nav() {
 
         setCategories(response.data.data);
         setCategory("General")
-        // console.log(response.data.data);
       } catch (error) {
         console.error('Error fetching notices:', error);
       }
@@ -26,6 +27,8 @@ export default function Nav() {
 
   async function handleCategoryClick(id: string, category: string) {
     const NoticeApiData = await getNoticesByCategoryApi(id);
+    // console.log('NoticeApiData:', NoticeApiData.data.data);
+    
     setDropdown(false);
     if (NoticeApiData.data.data.length <= 0) {      
       setNotices([]);
@@ -33,6 +36,8 @@ export default function Nav() {
       return;
     }
     if (NoticeApiData.data.data.length > 0) {
+      console.log('NoticeApiData:', NoticeApiData.data.data);
+      
       setNotices(NoticeApiData.data.data);
       setCategory(category);
     } else {
@@ -40,6 +45,8 @@ export default function Nav() {
       setCategory(category);
     }
   }
+
+  //useEffect to handle scroll event and change the background color of the button of the drop down on the nav bar
    useEffect(() => {
      
      const handleScroll = () => {
@@ -52,6 +59,7 @@ export default function Nav() {
      };     
      window.addEventListener('scroll', handleScroll);    
    }, []);
+   
   return (
     <>
       <div className={`flex justify-between pl-5 pr-5 mt-5 fixed w-[99dvw] `}>

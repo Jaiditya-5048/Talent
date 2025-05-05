@@ -1,14 +1,15 @@
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNotice } from '../context/noticeContext';
-import { deleteNoticeApi, getCategoriesApi, getNoticesApi } from '../util/api';
+import { deleteNoticeApi, getCategoriesApi, getNoticesByCategoryApi } from '../util/api';
 
 function Delete() {
-  const { closeModal, notice, setFlashy, setNotices, setCategories, setCategory } = useNotice();
+  const { closeModal, notice, setFlashy, setNotices, setCategories, setCategory, categoryId } =
+    useNotice();
   const handleDelete = async (e: React.FormEvent) => {
     e.preventDefault();
     await deleteNoticeApi(notice._id);    
-    const response = await getNoticesApi();
+    const response = await getNoticesByCategoryApi(categoryId);
     if(response.status === 200) {
       setNotices(response.data.data);
     } else {

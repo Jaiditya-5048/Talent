@@ -9,7 +9,7 @@ export interface NoticeApi {
   title: string;
   description: string;
   pin: boolean;
-  categories: catagoryApiResponse[];
+  categories: {category: categoryApiResponse,order:number, _id: string}[];  //the _id here the subdocumnet id given by mongoose
   createdAt?: string;
   updatedAt?: string;
 }
@@ -19,7 +19,7 @@ export type Flasy = {
   type: string;
 };
 
-export type catagoryApiResponse = {
+export type categoryApiResponse = {
   _id: string
   category: string;
   counter: number;

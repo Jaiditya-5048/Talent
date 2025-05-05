@@ -1,13 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNotice } from '../context/noticeContext';
 import { useEffect, useState } from 'react';
-import { getCategoriesApi, getNoticesApi } from '../util/api';
+import { getCategoriesApi, getNoticesByCategoryApi } from '../util/api';
 import FlashMessage from './FlashMessage';
-// import type { NoticeApi } from '../util/types';
 import NoticeCard from './NoticeCard';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { SortableContext, rectSwappingStrategy } from '@dnd-kit/sortable';
-import { catagoryApiResponse } from '../util/types';
+import { categoryApiResponse } from '../util/types';
 
 function Notice() {   
   const { openModal, notices, setFlashy, flashy, setNotices, setCategory, setCategoryId } = useNotice();
@@ -16,16 +15,14 @@ function Notice() {
   useEffect(() => {
     async function fetchNotices() {
       try {
+        
         const catResponse = await getCategoriesApi()
-        console.log(catResponse);
-        const GeneralCat:catagoryApiResponse = catResponse.data.data.find((cat: catagoryApiResponse) => cat.category === 'General');
+        // console.log(catResponse);
+        const GeneralCat:categoryApiResponse = catResponse.data.data.find((cat: categoryApiResponse) => cat.category === 'General');
         setCategory('General');
         setCategoryId(GeneralCat._id);
-        // console.log('id:',GeneralCat._id);
         
-        // debugger
-        
-        const response = await getNoticesApi();
+        const response = await getNoticesByCategoryApi(GeneralCat._id);
         // console.log(response);
         if (response.status !== 200) {
           setCheckNotice(true);

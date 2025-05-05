@@ -1,5 +1,7 @@
+const mongoose = require('mongoose');
 const Notice = require('../model/notice.model.cjs')
-const Category = require('../model/category.model.cjs')
+const Category = require('../model/category.model.cjs');
+const { MongoNetworkError } = require('mongodb');
 
 const DEFAULT_CATEGORY = '680f0c5d80e550f6b26a92f6';
 
@@ -33,7 +35,7 @@ const editNotice = async (req, res) => {
 
     const allCategories = [...new Set([...categories, DEFAULT_CATEGORY])]; //add categories from api body to newCategories const while checking for duplicates
 
-    if (categories[0] === DEFAULT_CATEGORY || !existingNotice.categories.map(cat => cat.toString()).includes(categories[0])) {
+    if (categories[0] === DEFAULT_CATEGORY || !existingNotice.categories.map(catData => catData.category.toString()).includes(categories[0])) {
 
       //to check if the categories from api exist in category collection
       for (const cat of allCategories) {
@@ -43,9 +45,19 @@ const editNotice = async (req, res) => {
         }
       }
 
-      // const categoriesToRemove = existingNotice.categories.map((item) => String(item)).filter((item) => item !== DEFAULT_CATEGORY);
-      const categoriesToRemove = existingNotice.categories.filter((cat) => cat.toString() !== DEFAULT_CATEGORY)
+      const categoriesToRemove = existingNotice.categories
+        .filter(catData => catData.category.toString() !== DEFAULT_CATEGORY)
+        .map(catData => catData.category.toString());
+
       const categoriesToAdd = categories.filter((cat) => cat !== DEFAULT_CATEGORY)
+      console.log(categories);
+      console.log(allCategories);
+      console.log(existingNotice.categories)
+
+
+      console.log('remove:', categoriesToRemove, 'add:', categoriesToAdd);
+      debugger
+
 
       //loop to increment
       for (const cat of categoriesToAdd) {
@@ -56,14 +68,62 @@ const editNotice = async (req, res) => {
       for (const cat of categoriesToRemove) {
         await Category.findByIdAndUpdate(cat.toString(), { $inc: { counter: -1 } });
       }
-      console.log("from notice ", existingNotice.categories)
+
+      //query to remove categories from notice collection
+      if (categoriesToRemove.length > 0) {
+        for (const cat of categoriesToRemove) {
+          await Notice.updateOne(
+            { _id: id },
+            {
+              $pull: {
+                categories: {
+                  category: new mongoose.Types.ObjectId(cat.category)
+                }
+              }
+            }
+          );
+        }
+      }
+
+    
+
+      //query to add categories from notice collection
+      if (categoriesToAdd.length > 0) {
+        for (const cat of categoriesToAdd) {
+          const categoryId = new mongoose.Types.ObjectId(cat);
+
+          // Get the current max order for this category across all notices
+          const last = await Notice.aggregate([
+            { $unwind: "$categories" },
+            { $match: { "categories.category": categoryId } },
+            { $sort: { "categories.order": -1 } },
+            { $limit: 1 },
+            { $project: { order: "$categories.order" } }
+          ]);
+
+          const lastOrder = last.length > 0 ? last[0].order : 0;
+
+          // Push the new category with incremented order
+          await Notice.updateOne(
+            { _id: id },
+            {
+              $push: {
+                categories: {
+                  category: categoryId,
+                  order: lastOrder + 1
+                }
+              }
+            }
+          );
+        }
+      }
+ 
+
     }
-
-
 
     const updatedNotice = await Notice.findByIdAndUpdate(
       id,
-      { title, description, pin, categories: allCategories },
+      { title, description, pin },
       { new: true, runValidators: true } // return updated document and validate schema
     );
 
@@ -115,22 +175,36 @@ const addNotice = async (req, res) => {
   }
 
 
-  let categoryList = [...new Set(filterCategories?.length ? filterCategories : [DEFAULT_CATEGORY])];
+  // let categoryList = [...new Set(filterCategories?.length ? filterCategories : [DEFAULT_CATEGORY])];
+  const filteredCategories = [...new Set(categories.filter((c) => c).concat(DEFAULT_CATEGORY))];
 
   try {
+    // Prepare categories with incremented order
+    const categoriesWithOrder = await Promise.all(filteredCategories.map(async (catId) => {
+      const lastNotice = await Notice.findOne({ 'categories.category': catId })
+        .sort({ 'categories.order': -1 });
+
+      const lastOrder = lastNotice
+        ? (lastNotice.categories.find(c => c.category.equals(catId))?.order ?? 0)
+        : 0;
+
+      return {
+        category: catId,
+        order: lastOrder + 1,
+      };
+    }));
     // Create new notice
     const dbResponseNotice = await Notice.create({
       title,
       description,
       pin,
-      categories: categoryList,
+      categories: categoriesWithOrder,
     })
 
-    if (dbResponseNotice._id) {
-      for (const cat of categoryList) {
-        await Category.findByIdAndUpdate(cat, { $inc: { counter: 1 } });
-      }
-    }
+    // Increment counters in each category
+    await Promise.all(filteredCategories.map(catId =>
+      Category.findByIdAndUpdate(catId, { $inc: { counter: 1 } })
+    ));
 
     res.status(201).json({
       message: 'Notice saved to MongoDB successfully',
@@ -155,10 +229,29 @@ const deleteNotice = async (req, res) => {
     const noticeByDb = await Notice.findById(id);
     if (noticeByDb) {
       for (const cat of noticeByDb.categories) {
-        await Category.findByIdAndUpdate(cat, { $inc: { counter: -1 } });
+        await Category.findByIdAndUpdate(cat.category, { $inc: { counter: -1 } });
       }
     }
 
+    for (const { category, order } of noticeByDb.categories) {
+      await Notice.updateMany(
+        {
+          _id: { $ne: id },
+          'categories.category': category,
+          'categories.order': { $gt: order }
+        },
+        {
+          $inc: { 'categories.$[elem].order': -1 }
+        },
+        {
+          arrayFilters: [{ 'elem.category': category, 'elem.order': { $gt: order } }]
+        }
+      );
+    } 
+
+    console.log(noticeByDb.categories);
+    
+    
     const deleted = await Notice.findByIdAndDelete(id);
 
     if (!deleted) {
@@ -175,7 +268,7 @@ const deleteNotice = async (req, res) => {
 
 const getNotices = async (req, res) => {
   try {
-    const noticeData = await Notice.find().populate('categories').sort({ createdAt: 1 });
+    const noticeData = await Notice.find().populate('categories.category').sort({ 'categories.order': 1 });
 
     if (noticeData.length === 0) {
       return res.status(404).json({ message: 'No notices found' });
@@ -196,9 +289,79 @@ const getNoticesByCategory = async (req, res) => {
   try {
     // const noticeData = await Notice.find({"categories": id }).sort({ createdAt: 1 });
 
-    const noticeData = await Notice.find({ categories: id })
-      .populate('categories')
-      .sort({ createdAt: 1 });
+    const categoryId = new mongoose.Types.ObjectId(id);
+
+    const noticeData = await Notice.aggregate([
+      {
+        $match: {
+          'categories.category': categoryId
+        }
+      },
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'categories.category',
+          foreignField: '_id',
+          as: 'categoryDocs'
+        }
+      },
+      {
+        $addFields: {
+          categories: {
+            $map: {
+              input: '$categories',
+              as: 'cat',
+              in: {
+                $mergeObjects: [
+                  '$$cat',
+                  {
+                    category: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: '$categoryDocs',
+                            as: 'cd',
+                            cond: { $eq: ['$$cd._id', '$$cat.category'] }
+                          }
+                        },
+                        0
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          title: 1,
+          description: 1,
+          pin: 1,
+          categories: {
+            $sortArray: {
+              input: '$categories',
+              sortBy: { order: 1 }
+            }
+          },
+          createdAt: 1,
+          updatedAt: 1
+        }
+      }
+    ]);
+
+
+
+
+
+
+
+
+
+
+
+      console.log(noticeData);
 
     // if (noticeData.length === 0) {
     //   return res.status(404).json({ message: 'No notices found' });
