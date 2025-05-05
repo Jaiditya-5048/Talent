@@ -1,10 +1,10 @@
-import { noticeData, Notice } from './types';
+import { noticeData, NoticeApi } from './types';
 // import axios from 'axios';
 import { api } from './base_controller';
 
 export async function addNoticeApi(noticeData: noticeData) {
   try {
-    const response = await api.post('notice', noticeData);
+    const response = await api.post('notice', noticeData);    
     return response;
   } catch (error: any) {    // eslint-disable-line
     console.error('Failed to add notice:', error.response?.data || error.message);
@@ -12,7 +12,7 @@ export async function addNoticeApi(noticeData: noticeData) {
   }
 }
 
-export async function editNoticeApi(noticeData: Notice) {
+export async function editNoticeApi(noticeData: NoticeApi) {
   try {
     const response = await api.patch(`notice/${noticeData._id}`, noticeData);
     // console.log(response);

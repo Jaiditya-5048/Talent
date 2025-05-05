@@ -8,25 +8,33 @@ import {
   addNoticeApi,
   editNoticeApi,
   getCategoriesApi,
-  getNoticesApi,
   getNoticesByCategoryApi,
 } from '../util/api';
-import { catagoryApiResponse } from '../util/types';
+import { categoryApiResponse } from '../util/types';
 
 function Form() {
-  const { setFlashy, setNotices, edit, notice, categories, setCategories, categoryId, setCategoryId } = useNotice();
+  const {
+    setFlashy,
+    setNotices,
+    edit,
+    notice,
+    categories,
+    setCategories,
+    categoryId,
+    setCategoryId,
+  } = useNotice();
   const [value, setValue] = useState<{ title: string; description: string }>({
     title: '',
     description: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [categoryLocal, setCategoryLocal] = useState('');
-  
+
   const [categoryValue, setCategoryValue] = useState('');
   const [categoryError, setCategoryErrors] = useState<{ [key: string]: string }>({});
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [categoryFlag, setCategoryFlag] = useState<boolean>(false);
-  const { closeModal, setCategory } = useNotice();  
+  const { closeModal, setCategory } = useNotice();
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,7 +58,6 @@ function Form() {
     if (hasEmptyFields !== true) {
       if (edit) {
         const noticeData = { ...value, _id: notice._id, pin: notice.pin, categories: [categoryId] };
-        
 
         const response = await editNoticeApi(noticeData);
         if (response.status !== 200) {
@@ -58,7 +65,7 @@ function Form() {
         } else {
           const flash = { message: 'Notice edited successfully!', type: 'success' };
           setFlashy(flash);
-          const response = await getNoticesApi();
+          const response = await getNoticesByCategoryApi(categoryId);
           setNotices(response.data.data);
           setCategory('Category');
           const responseCat = await getCategoriesApi();
@@ -75,12 +82,14 @@ function Form() {
           setFlashy(flash);
           // console.log('id:',categoryId);
           // debugger
-          
+
           const response = await getNoticesByCategoryApi(categoryId);
           setNotices(response.data.data);
           const responseCat = await getCategoriesApi();
           setCategories(responseCat.data.data);
-          const cat = responseCat.data.data.find((cat: catagoryApiResponse) => cat._id === categoryId);       
+          const cat = responseCat.data.data.find(
+            (cat: categoryApiResponse) => cat._id === categoryId,
+          );
           setCategory(cat.category);
           closeModal();
         }
@@ -133,20 +142,28 @@ function Form() {
   }
 
   useEffect(() => {
-    if(!edit) {setCategoryLocal("Category")}
+    if (!edit) {
+      setCategoryLocal('Category');
+    }
     if (edit === true) {
       setValue({
         title: notice.title,
         description: notice.description,
       });
+      
+      console.log("notice:",notice.categories);
+      
 
-      if(notice.categories.length > 1) {
-        const filterCategory = notice.categories.filter((cat) => cat._id !== '680f0c5d80e550f6b26a92f6');
-        setCategoryId(filterCategory[0]._id);
-        setCategoryLocal(filterCategory[0].category);
+      if (notice.categories.length > 1) {
+        const filterCategory = notice.categories.filter(
+          (cat) => cat.category._id !== '680f0c5d80e550f6b26a92f6',
+        );
+        console.log("current:",filterCategory);
+        setCategoryId(filterCategory[0].category._id);
+        setCategoryLocal(filterCategory[0].category.category);
       } else {
-        setCategoryId(notice.categories[0]._id)
-        setCategoryLocal(notice.categories[0].category)
+        setCategoryId(notice.categories[0].category._id);
+        setCategoryLocal(notice.categories[0].category.category);
       }
     }
   }, [edit]);
@@ -210,10 +227,9 @@ function Form() {
                   id='dropdownDefaultButton'
                   // data-dropdown-toggle='dropdown'
                   onClick={() => setDropdown(!dropdown)}
-                  
                   className='text-black w-30 mt-7 hover:bg-black text-ellipsis hover:text-white border-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex justify-between items-center cursor-pointer'
                   type='button'
-                >                  
+                >
                   {categoryLocal}
                   <svg
                     className='w-2.5 h-2.5 ms-3'

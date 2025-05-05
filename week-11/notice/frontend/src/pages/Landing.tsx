@@ -10,7 +10,7 @@ import { NoticeApi } from '../util/types';
 
 function Landing() {
   const { modal, notices, setNotices, setDraggbleId } = useNotice();
-  console.log('before:', notices);
+  // console.log('before:', notices);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -34,9 +34,9 @@ function Landing() {
     const sortedArray = (notices: NoticeApi[]) => arraySwap(notices, oldIndex, newIndex);
     setNotices((prevNotices) => sortedArray(prevNotices));
 
-    console.log(oldIndex, newIndex);
+    // console.log(oldIndex, newIndex);
   };
-  console.log('after:', notices);
+  // console.log('after:', notices);
 
   return (
     <>
