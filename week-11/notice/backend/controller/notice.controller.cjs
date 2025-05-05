@@ -32,28 +32,34 @@ const editNotice = async (req, res) => {
     }
 
     const allCategories = [...new Set([...categories, DEFAULT_CATEGORY])]; //add categories from api body to newCategories const while checking for duplicates
-    // if(existingNotice.categories === categories)
-    //to check if the categories from api exist in category collection
-    for (const cat of allCategories) {
-      const existing = await Category.findById(cat);
-      if (!existing) {
-        return res.status(404).json({ message: 'Invalid Category' });
+
+    if (categories[0] === DEFAULT_CATEGORY || !existingNotice.categories.map(cat => cat.toString()).includes(categories[0])) {
+
+      //to check if the categories from api exist in category collection
+      for (const cat of allCategories) {
+        const existing = await Category.findById(cat);
+        if (!existing) {
+          return res.status(404).json({ message: 'Invalid Category' });
+        }
       }
+
+      // const categoriesToRemove = existingNotice.categories.map((item) => String(item)).filter((item) => item !== DEFAULT_CATEGORY);
+      const categoriesToRemove = existingNotice.categories.filter((cat) => cat.toString() !== DEFAULT_CATEGORY)
+      const categoriesToAdd = categories.filter((cat) => cat !== DEFAULT_CATEGORY)
+
+      //loop to increment
+      for (const cat of categoriesToAdd) {
+        await Category.findByIdAndUpdate(cat, { $inc: { counter: 1 } });
+      }
+
+      //loop to decrement
+      for (const cat of categoriesToRemove) {
+        await Category.findByIdAndUpdate(cat.toString(), { $inc: { counter: -1 } });
+      }
+      console.log("from notice ", existingNotice.categories)
     }
 
-    const categoriesToRemove = existingNotice.categories
-      .map((item) => String(item))
-      .filter((item) => item !== DEFAULT_CATEGORY);
 
-    //loop to increment
-    for (const cat of categories) {
-      await Category.findByIdAndUpdate(cat, { $inc: { counter: 1 } });
-    }
-
-    //loop to decrement
-    for (const cat of categoriesToRemove) {
-      await Category.findByIdAndUpdate(cat, { $inc: { counter: -1 } });
-    }
 
     const updatedNotice = await Notice.findByIdAndUpdate(
       id,
@@ -74,6 +80,7 @@ const editNotice = async (req, res) => {
     console.error('Edit notice error:', error);
     res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }
+
 };
 
 const addNotice = async (req, res) => {
@@ -168,7 +175,7 @@ const deleteNotice = async (req, res) => {
 
 const getNotices = async (req, res) => {
   try {
-    const noticeData = await Notice.find().sort({ createdAt: 1 });
+    const noticeData = await Notice.find().populate('categories').sort({ createdAt: 1 });
 
     if (noticeData.length === 0) {
       return res.status(404).json({ message: 'No notices found' });

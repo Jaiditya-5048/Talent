@@ -9,32 +9,24 @@ import {
   editNoticeApi,
   getCategoriesApi,
   getNoticesApi,
+  getNoticesByCategoryApi,
 } from '../util/api';
+import { catagoryApiResponse } from '../util/types';
 
 function Form() {
-  const { setFlashy, setNotices, edit, notice, categories, setCategories } = useNotice();
+  const { setFlashy, setNotices, edit, notice, categories, setCategories, categoryId, setCategoryId } = useNotice();
   const [value, setValue] = useState<{ title: string; description: string }>({
     title: '',
     description: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [categoryLocal, setCategoryLocal] = useState('');
-  const [categoryId, setCategoryId] = useState('');
-  // const [categoryValue, setCategoryValue] = useState<{ [key: string]: string }>({});
+  
   const [categoryValue, setCategoryValue] = useState('');
   const [categoryError, setCategoryErrors] = useState<{ [key: string]: string }>({});
-  // const [submitBtnState, setSubmitBtnState] = useState<boolean>(false);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [categoryFlag, setCategoryFlag] = useState<boolean>(false);
-  const { closeModal, setCategory } = useNotice();
-
-  function handleDropDown() {
-    if (dropdown) {
-      setDropdown(false);
-    } else {
-      setDropdown(true);
-    }
-  }
+  const { closeModal, setCategory } = useNotice();  
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,8 +50,9 @@ function Form() {
     if (hasEmptyFields !== true) {
       if (edit) {
         const noticeData = { ...value, _id: notice._id, pin: notice.pin, categories: [categoryId] };
+        
 
-        const response = await editNoticeApi(noticeData); //add api !!!!!!!!!!!!
+        const response = await editNoticeApi(noticeData);
         if (response.status !== 200) {
           setErrors(response.data.errors);
         } else {
@@ -80,11 +73,15 @@ function Form() {
         } else {
           const flash = { message: 'Notice added successfully!', type: 'success' };
           setFlashy(flash);
-          const response = await getNoticesApi();
+          // console.log('id:',categoryId);
+          // debugger
+          
+          const response = await getNoticesByCategoryApi(categoryId);
           setNotices(response.data.data);
-          setCategory('Category');
           const responseCat = await getCategoriesApi();
           setCategories(responseCat.data.data);
+          const cat = responseCat.data.data.find((cat: catagoryApiResponse) => cat._id === categoryId);       
+          setCategory(cat.category);
           closeModal();
         }
       }
@@ -109,10 +106,6 @@ function Form() {
     const { name, value: inputValue } = e.target;
 
     setCategoryValue(inputValue);
-    // setCategoryValue((prev) => ({
-    //   ...prev,
-    //   [name]: inputValue,
-    // }));
 
     setCategoryErrors((prevErrors) => ({
       ...prevErrors,
@@ -140,6 +133,7 @@ function Form() {
   }
 
   useEffect(() => {
+    if(!edit) {setCategoryLocal("Category")}
     if (edit === true) {
       setValue({
         title: notice.title,
@@ -215,13 +209,12 @@ function Form() {
                 <button
                   id='dropdownDefaultButton'
                   // data-dropdown-toggle='dropdown'
-                  onClick={() => {
-                    handleDropDown();
-                  }}
-                  className='text-black w-30 mt-7 hover:bg-black hover:text-white border-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer'
+                  onClick={() => setDropdown(!dropdown)}
+                  
+                  className='text-black w-30 mt-7 hover:bg-black text-ellipsis hover:text-white border-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex justify-between items-center cursor-pointer'
                   type='button'
-                >
-                  {categoryLocal ? categoryLocal : 'Category'}
+                >                  
+                  {categoryLocal}
                   <svg
                     className='w-2.5 h-2.5 ms-3'
                     aria-hidden='true'
