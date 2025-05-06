@@ -1,16 +1,25 @@
 const express = require('express');
-const app = express();
 const dotenv = require('dotenv');
+const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
+
 const connectDB = require('./config/mongoDB.config.cjs');
 const noticeRouter = require('./routes/notice.route.cjs');
 const categoryRouter = require('./routes/category.route.cjs');
-const cors = require('cors');
-app.use(express.json());
+
 dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 8000;
+
+// Connect to MongoDB
 connectDB();
 
-const allowedOrigins = ['http://localhost:5173', 'http://192.168.0.19:5173'];
+// Middleware
+app.use(express.json());
 
+// CORS Configuration
+const allowedOrigins = ['http://localhost:5173', 'http://192.168.0.19:5173'];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
@@ -24,17 +33,37 @@ app.use(cors({
   credentials: true,
 }));
 
+// Swagger Configuration
+const swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: 'My API',
+    version: '1.0.0',
+    description: 'Auto-generated Swagger documentation',
+  },
+  servers: [
+    {
+      url: `http://localhost:${PORT}`,
+    },
+  ],
+};
 
+const options = {
+  swaggerDefinition,
+  apis: ['./routes/*.cjs'], // updated to match your route file extensions
+};
 
+const swaggerSpec = swaggerJSDoc(options);
 
-app.use('/', noticeRouter)
-app.use('/', categoryRouter)
+// Swagger UI Route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// Routes
+app.use('/', noticeRouter);
+app.use('/', categoryRouter);
 
-
-
-
-
-
-
-app.listen(process.env.PORT || 3000, () => { console.log('server is running on port =>', process.env.PORT) })
+// Start Server
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Swagger UI available at http://localhost:${PORT}/api-docs`);
+});
