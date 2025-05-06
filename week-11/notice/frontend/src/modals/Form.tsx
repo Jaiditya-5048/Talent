@@ -67,13 +67,17 @@ function Form() {
           setFlashy(flash);
           const response = await getNoticesByCategoryApi(categoryId);
           setNotices(response.data.data);
-          setCategory('Category');
           const responseCat = await getCategoriesApi();
+          const cat = responseCat.data.data.find(
+            (cat: categoryApiResponse) => cat._id === categoryId,
+          );
+          setCategory(cat.category);
           setCategories(responseCat.data.data);
           closeModal();
         }
       } else {
         const addValues = { ...value, pin: false, categories: [categoryId] }; //adding pin field with default vale false to the notice object
+        
         const response = await addNoticeApi(addValues);
         if (response.status !== 201) {
           setErrors(response.data.errors);
@@ -90,7 +94,9 @@ function Form() {
           const cat = responseCat.data.data.find(
             (cat: categoryApiResponse) => cat._id === categoryId,
           );
+          console.log(cat.category);          
           setCategory(cat.category);
+    
           closeModal();
         }
       }
@@ -151,7 +157,7 @@ function Form() {
         description: notice.description,
       });
       
-      console.log("notice:",notice.categories);
+      console.log("notice:",notice);
       
 
       if (notice.categories.length > 1) {

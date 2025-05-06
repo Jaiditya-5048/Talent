@@ -54,7 +54,10 @@ function Notice() {
           <button
             type='button'
             className='text-xl h-11 hover:shadow-xs hover:outline-none hover:border-0 hover:shadow-black  bg-black text-white cursor-pointer rounded border-1 mt-3'
-            onClick={() => openModal('add')}
+            onClick={() => {
+              openModal('add');
+              setCategoryId('680f0c5d80e550f6b26a92f6');
+            }}
           >
             <FontAwesomeIcon icon={faCirclePlus} className='mr-5' />
             ADD task

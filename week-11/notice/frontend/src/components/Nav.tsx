@@ -3,10 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { getCategoriesApi, getNoticesByCategoryApi } from '../util/api';
 import { useNotice } from '../context/noticeContext';
+import { categoryApiResponse } from '../util/types';
 // import { catagoryApiResponse, Notice } from '../util/types';
 
 export default function Nav() {
-  const { setCategories, categories, setNotices, category, setCategory } = useNotice();
+  const { setCategories, categories, setNotices, category, setCategory, setCategoryId } = useNotice();
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
@@ -18,6 +19,10 @@ export default function Nav() {
 
         setCategories(response.data.data);
         setCategory("General")
+        const cat = response.data.data.find(
+                    (cat: categoryApiResponse) => cat.category === 'General',
+                  );
+        setCategoryId(cat._id);
       } catch (error) {
         console.error('Error fetching notices:', error);
       }
@@ -40,9 +45,15 @@ export default function Nav() {
       
       setNotices(NoticeApiData.data.data);
       setCategory(category);
+      const cat = categories.find((cat: categoryApiResponse) => cat.category === category);
+      setCategoryId(cat._id);
+      // console.log('cat:', cat._id);
     } else {
       setNotices([]);
       setCategory(category);
+        const cat = categories.find((cat: categoryApiResponse) => cat.category === category);
+        setCategoryId(cat._id);
+        // console.log('cat:', cat._id);
     }
   }
 
