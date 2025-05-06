@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Notice = require('../model/notice.model.cjs')
 const Category = require('../model/category.model.cjs');
-const { MongoNetworkError } = require('mongodb');
+// const { MongoNetworkError } = require('mongodb');
 
 const DEFAULT_CATEGORY = '680f0c5d80e550f6b26a92f6';
 
@@ -77,7 +77,7 @@ const editNotice = async (req, res) => {
             {
               $pull: {
                 categories: {
-                  category: new mongoose.Types.ObjectId(cat.category)
+                  category: new mongoose.Types.ObjectId(cat)
                 }
               }
             }
@@ -265,7 +265,6 @@ const deleteNotice = async (req, res) => {
   }
 };
 
-
 const getNotices = async (req, res) => {
   try {
     const noticeData = await Notice.find().populate('categories.category').sort({ 'categories.order': 1 });
@@ -289,14 +288,94 @@ const getNoticesByCategory = async (req, res) => {
   try {
     // const noticeData = await Notice.find({"categories": id }).sort({ createdAt: 1 });
 
+    // const categoryId = new mongoose.Types.ObjectId(id);
+
+    // const noticeData = await Notice.aggregate([
+    //   {
+    //     $match: {
+    //       'categories.category': categoryId
+    //     }
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'categories',
+    //       localField: 'categories.category',
+    //       foreignField: '_id',
+    //       as: 'categoryDocs'
+    //     }
+    //   },
+    //   {
+    //     $addFields: {
+    //       categories: {
+    //         $map: {
+    //           input: '$categories',
+    //           as: 'cat',
+    //           in: {
+    //             $mergeObjects: [
+    //               '$$cat',
+    //               {
+    //                 category: {
+    //                   $arrayElemAt: [
+    //                     {
+    //                       $filter: {
+    //                         input: '$categoryDocs',
+    //                         as: 'cd',
+    //                         cond: { $eq: ['$$cd._id', '$$cat.category'] }
+    //                       }
+    //                     },
+    //                     0
+    //                   ]
+    //                 }
+    //               }
+    //             ]
+    //           }
+    //         }
+    //       }
+    //     }
+    //   },
+    //   {
+    //     $project: {
+    //       title: 1,
+    //       description: 1,
+    //       pin: 1,
+    //       categories: {
+    //         $sortArray: {
+    //           input: '$categories',
+    //           sortBy: { order: 1 }
+    //         }
+    //       },
+    //       createdAt: 1,
+    //       updatedAt: 1
+    //     }
+    //   }
+    // ]);
+    
     const categoryId = new mongoose.Types.ObjectId(id);
 
     const noticeData = await Notice.aggregate([
+      // Step 1: Match notices that contain the target category
       {
         $match: {
           'categories.category': categoryId
         }
       },
+
+      // Step 2: Add a matchedCategory field for sorting
+      {
+        $addFields: {
+          matchedCategory: {
+            $first: {
+              $filter: {
+                input: '$categories',
+                as: 'cat',
+                cond: { $eq: ['$$cat.category', categoryId] }
+              }
+            }
+          }
+        }
+      },
+
+      // Step 3: Lookup to populate all categories in the notice
       {
         $lookup: {
           from: 'categories',
@@ -305,6 +384,8 @@ const getNoticesByCategory = async (req, res) => {
           as: 'categoryDocs'
         }
       },
+
+      // Step 4: Merge category data into categories array
       {
         $addFields: {
           categories: {
@@ -334,17 +415,36 @@ const getNoticesByCategory = async (req, res) => {
           }
         }
       },
+
+      // Step 5: Sort categories array inside each notice by `order` field
+      // {
+      //   $addFields: {
+      //     categories: {
+      //       $function: {
+      //         body: function (cats) {
+      //           return cats.sort((a, b) => a.order - b.order);
+      //         },
+      //         args: ['$categories'],
+      //         lang: 'js'
+      //       }
+      //     }
+      //   }
+      // },
+
+      // Step 6: Sort the entire result set by the matched category's order
+      {
+        $sort: {
+          'matchedCategory.order': 1
+        }
+      },
+
+      // Step 7: Final projection
       {
         $project: {
           title: 1,
           description: 1,
           pin: 1,
-          categories: {
-            $sortArray: {
-              input: '$categories',
-              sortBy: { order: 1 }
-            }
-          },
+          categories: 1,
           createdAt: 1,
           updatedAt: 1
         }
@@ -353,15 +453,12 @@ const getNoticesByCategory = async (req, res) => {
 
 
 
+   
+    console.log(categoryId);
+    
+    console.log('Notice Data:', noticeData);
 
-
-
-
-
-
-
-
-      console.log(noticeData);
+  
 
     // if (noticeData.length === 0) {
     //   return res.status(404).json({ message: 'No notices found' });
@@ -377,5 +474,38 @@ const getNoticesByCategory = async (req, res) => {
   }
 };
 
+const editOrder = async (req, res) => {
+  const { oldIndex, newIndex, activeNoticeId, overNoticeId, categoryId } = req.body;
+  try {
+    const activeNotice = await Notice.findById(activeNoticeId);
+    const overNotice = await Notice.findById(overNoticeId);
+    if (!activeNotice && !overNotice) {
+      return res.status(404).json({ message: 'Notice not found' });
+    }
 
-module.exports = { addNotice, deleteNotice, getNotices, editNotice, getNoticesByCategory };
+    const category = activeNotice.categories.find(cat => cat.category.toString() === categoryId);
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found in this notice' });
+    }
+
+   await Notice.updateOne(
+      { _id: activeNoticeId, 'categories.category': categoryId },
+      { $set: { 'categories.$.order': newIndex } }
+    );
+
+   await Notice.updateOne(
+      { _id: overNoticeId, 'categories.category': categoryId },
+      { $set: { 'categories.$.order': oldIndex } }
+    );
+
+    res.status(200).json({ message: 'Order updated successfully' });
+  } catch (err) {
+    console.error('Error updating order:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+
+
+}
+
+
+module.exports = { addNotice, deleteNotice, getNotices, editNotice, getNoticesByCategory, editOrder };

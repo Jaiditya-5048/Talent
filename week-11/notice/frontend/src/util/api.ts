@@ -93,3 +93,23 @@ export async function deleteCategoryApi(id: string) {
     return error.response;
   }
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+export async function updateOrderApi(orderData: {
+  oldIndex: number;
+  newIndex: number;
+  activeNoticeId: string | number;
+  overNoticeId: string | number;
+  categoryId: string;
+}) {
+  try {
+    const response = await api.patch('notices/order', orderData);
+    console.log(response);
+    console.log(response.data);
+    return response;
+  } catch (error: any) { // eslint-disable-line
+    console.error('Failed to update order:', error.response?.data || error.message);
+    return error.response;
+  }
+}
