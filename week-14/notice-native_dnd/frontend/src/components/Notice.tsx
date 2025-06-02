@@ -1,15 +1,23 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNotice } from '../context/noticeContext';
-import { useEffect, useState } from 'react';
-import { getCategoriesApi, getNoticesByCategoryApi } from '../util/api';
+import { useEffect, useRef, useState } from 'react';
+import { getCategoriesApi, getNoticesByCategoryApi, updateOrderApi } from '../util/api';
 import FlashMessage from './FlashMessage';
 import NoticeCard from './NoticeCard';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-import { SortableContext, rectSwappingStrategy } from '@dnd-kit/sortable';
 import { categoryApiResponse } from '../util/types';
 
 function Notice() {   
-  const { openModal, notices, setFlashy, flashy, setNotices, setCategory, setCategoryId } = useNotice();
+  const {
+    openModal,
+    notices,
+    setFlashy,
+    flashy,
+    setNotices,
+    setCategory,
+    setCategoryId,
+    categoryId,
+    } = useNotice();
   const [checkNotice, setCheckNotice] = useState<boolean>(false);
 
   useEffect(() => {
@@ -36,6 +44,59 @@ function Notice() {
     }
     fetchNotices();
   }, [setNotices]);
+
+  const dragItem = useRef<number | null>(null);
+  const dragOverItem = useRef<number | null>(null);
+
+  const handleDragStart = (index: number) => {
+    dragItem.current = index;
+  };
+
+  const handleDragEnter = (index: number) => {
+    dragOverItem.current = index;
+  };
+
+  const handleDrop = async () => {
+    const from = dragItem.current;
+    const to = dragOverItem.current;
+    if (from === null || to === null || from === to) return;
+    
+
+    // setNotices(updated);
+    console.log(notices);
+    
+    console.log({
+      oldIndex: from + 1,
+      newIndex: to + 1,
+      activeNoticeId: notices[from]._id,
+      overNoticeId: notices[to]._id,
+      categoryId,
+    });
+    
+
+    try {
+      await updateOrderApi({
+        oldIndex: from + 1,
+        newIndex: to + 1,
+        activeNoticeId: notices[from]._id,
+        overNoticeId: notices[to]._id,
+        categoryId,
+      });
+    } catch (err) {
+      console.error('Failed to update order:', err);
+    }
+
+    dragItem.current = null;
+    dragOverItem.current = null;
+    const response = await getNoticesByCategoryApi(categoryId);
+    // console.log(response);
+    if (response.status !== 200) {
+      setCheckNotice(true);
+    } else {
+      setCheckNotice(false);
+    }
+    setNotices(response.data.data);
+  };
 
   return (
     <>
@@ -71,11 +132,16 @@ function Notice() {
             </div>
           ) : (
             <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-5'>
-              <SortableContext items={notices.map((n) => n._id)} strategy={rectSwappingStrategy}>
-                {notices.map((notice) => (
-                  <NoticeCard key={notice._id} notice={notice} />
-                ))}
-              </SortableContext>
+              {notices.map((notice, index) => (
+                <NoticeCard
+                  key={notice._id}
+                  notice={notice}
+                  index={index}
+                  onDragStart={handleDragStart}
+                  onDragEnter={handleDragEnter}
+                  onDragEnd={handleDrop}
+                />
+              ))}
             </div>
           )}
         </div>
