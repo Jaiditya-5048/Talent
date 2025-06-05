@@ -2,34 +2,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNotice } from '../context/noticeContext';
 import { NoticeApi } from '../util/types';
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useSortable, AnimateLayoutChanges } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 
 interface NoticeCardProps {
   notice: NoticeApi;
+  index: number;
+  onDragStart: (index: number) => void;
+  onDragEnter: (index: number) => void;
+  onDragEnd: () => void;
 }
 
-function NoticeCard({ notice }: NoticeCardProps) {
-  const { openModal, setNotice, setEdit, draggbleId } = useNotice();
-  const animateLayoutChanges: AnimateLayoutChanges = ({ isSorting, wasDragging }) => {
-    return isSorting && !wasDragging;
-  };
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id: notice._id,
-    animateLayoutChanges,
-  });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+function NoticeCard({ notice, index, onDragStart, onDragEnter, onDragEnd }: NoticeCardProps) {
+  const { openModal, setNotice, setEdit } = useNotice();
 
   function deleteBtn(notice: NoticeApi) {
     setNotice(notice);
     openModal('delete');
   }
 
-  function editBtn(notice: NoticeApi) {    
+  function editBtn(notice: NoticeApi) {
     setNotice(notice);
     openModal('add');
     setEdit(true);
@@ -53,13 +43,12 @@ function NoticeCard({ notice }: NoticeCardProps) {
 
   return (
     <div
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      style={style}
-      // key={notice._id}
-      // sm:w-[48%] md:w-[31%] lg:w-[23%]
-      className={`flex flex-col gap-2 justify-between border-2 p-3 w-full bg-white cursor-grab  ${draggbleId !== null ? 'cursor-grabbing' : ''}`}
+      className={`flex flex-col gap-2 justify-between border-[1px] border-[#ccc] rounded-xl shadow-xl  p-3 w-full bg-white cursor-move`}
+      draggable
+      onDragStart={() => onDragStart(index)}
+      onDragEnter={() => onDragEnter(index)}
+      onDragEnd={onDragEnd}
+      onDragOver={(e) => e.preventDefault()}
     >
       <div className='flex flex-col gap-2'>
         <div className='flex justify-between'>
@@ -67,7 +56,7 @@ function NoticeCard({ notice }: NoticeCardProps) {
           {/* <FontAwesomeIcon
                           icon={faThumbtack}
                           className='text-gray-500 hover:text-gray-800 cursor-pointer'
-                          onClick={() => clickHandlerPin(notice._id)}
+                          onClick={() => clickHandlerPin(notice._id)} mm
                         /> */}
           <div></div>
         </div>

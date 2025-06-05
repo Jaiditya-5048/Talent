@@ -477,6 +477,8 @@ const getNoticesByCategory = async (req, res) => {
 const editOrder = async (req, res) => {
   const { oldIndex, newIndex, activeNoticeId, overNoticeId, categoryId } = req.body;
   try {
+    console.log("api body",req.body);
+    
     const activeNotice = await Notice.findById(activeNoticeId);
     const overNotice = await Notice.findById(overNoticeId);
     if (!activeNotice && !overNotice) {

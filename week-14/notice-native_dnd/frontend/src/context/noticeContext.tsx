@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { NoticeApi, Flasy, catagoryApiResponse } from '../util/types';
+import { NoticeApi, Flasy, categoryApiResponse } from '../util/types';
 
 export interface NoticeContextType {
   notices: NoticeApi[];
@@ -16,14 +16,14 @@ export interface NoticeContextType {
   setEdit: (flag: boolean) => void;
   notice: NoticeApi;
   setNotice: (notice: NoticeApi) => void;
-  categories: catagoryApiResponse[];
-  setCategories: (catgories: catagoryApiResponse[]) => void;
+  categories: categoryApiResponse[];
+  setCategories: (catgories: categoryApiResponse[]) => void;
   category: string;
   setCategory: (category: string) => void;
   categoryId: string;
   setCategoryId: (categoryId: string) => void;
-  draggbleId: string | null;
-  setDraggbleId: (draggbleId: string | null) => void;
+  draggble: boolean;
+  setDraggble: (draggbleId: boolean) => void;
 }
 
 const NoticeContext = createContext<NoticeContextType | undefined>(undefined);
@@ -34,7 +34,7 @@ export const NoticeProvider = ({ children }: { children: ReactNode }) => {
     title: '',
     description: '',
     pin: false,
-    categories: [{_id: '',category: '',counter: 0 }],
+    categories: [{ category: { _id: '', category: '', counter: 0, }, order: 0, _id: '' }],
     createdAt: '',
     updatedAt: '',
   };
@@ -45,10 +45,10 @@ export const NoticeProvider = ({ children }: { children: ReactNode }) => {
   const [modal, setModal] = useState<'add' | 'delete' | null>(null);
   const [flashy, setFlashy] = useState<Flasy | null>(null);
   const [edit, setEdit] = useState<boolean>(false);
-  const [categories, setCategories] = useState<catagoryApiResponse[]>([]);
+  const [categories, setCategories] = useState<categoryApiResponse[]>([]);
   const [category, setCategory] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const [draggbleId, setDraggbleId] = useState(null);
+  const [draggble, setDraggble] = useState(false);
   const openModal = (type: 'add' | 'delete') => setModal(type);
   const closeModal = () => {
     setModal(null);
@@ -78,8 +78,8 @@ export const NoticeProvider = ({ children }: { children: ReactNode }) => {
         setCategory,
         categoryId,
         setCategoryId,
-        draggbleId,
-        setDraggbleId,
+        draggble,
+        setDraggble,
       }}
     >
       {children}
