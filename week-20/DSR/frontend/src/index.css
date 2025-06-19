@@ -1,0 +1,10 @@
+@import "tailwindcss";
+.bg-split {
+  background: linear-gradient(
+    to bottom,
+    #1d2c54 0%,
+    #1d2c54 30%,
+    #f8f9fe 30%,
+    #f8f9fe 100%
+  );
+}
