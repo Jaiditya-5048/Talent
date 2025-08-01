@@ -2,9 +2,9 @@
 'use client';
 
 import { useState } from 'react';
-import EventDetailsForm from '@/components/EventDetailsForm';
-import EventInstanceForm from '@/components/EventInstanceForm';
-import EventReviewForm from '@/components/EventReviewForm';
+import EventDetailsForm from '@/components/rough/original forms/EventDetailsForm';
+import EventInstanceForm from '@/components/rough/original forms/EventInstanceForm';
+import EventReviewForm from '@/components/rough/original forms/EventReviewForm';
 import { useEventForm } from '@/context/EventFormContext';
 import { Button } from '@/components/ui/button';
 

@@ -8,6 +8,9 @@ import path from 'path';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+   server: {
+    port: 5175,
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'), // this makes @/ map to src/
