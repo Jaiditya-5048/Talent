@@ -1,4 +1,4 @@
-// EventInstanceForm.tsx
+  // EventInstanceForm.tsx
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Formik, Field, Form, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { useEventForm } from '@/context/EventFormContext';
 import AddVenueModal from '@/components/modals/AddVenueModal';
 import AddArtistModal from '@/components/modals/AddArtistModal';
-import { Button } from '../ui/button';
+
 import {
   createInstance,
   deleteInstance,
@@ -14,6 +14,7 @@ import {
 } from '@/apis/services/organiser_apis/instance_api';
 import { formatDate, formatTime, toISOStringUTC } from '@/utils/formatDateTime';
 import { EventInstance } from '@/utils/types/event_types';
+import { Button } from '@/components/ui/button';
 
 interface Ticket {
   name: string;

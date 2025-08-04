@@ -7,7 +7,7 @@ import { ORGANISER_EVENT_ENDPOINTS } from "../../endpoins";
 type EventPayload = {
   name: string;
   description: string;
-  category_id: number;
+  category_id: string;
 };
 
 export const createEvent = async (paylod: EventPayload): Promise<Event> => {
@@ -35,7 +35,7 @@ export const getAllEventsUnderOrganiser = async (): Promise<Event[]> => {
   }
 };
 
-export const getEventByIdUnderOrganiser = async (eventId: number): Promise<Event> => {
+export const getEventByIdUnderOrganiser = async (eventId: string): Promise<Event> => {
   try {
     const response = await requestBuilder.getAuth<API_Response<Event>>(
       ORGANISER_EVENT_ENDPOINTS.GET_EVENT_BY_ID(eventId)
@@ -48,7 +48,7 @@ export const getEventByIdUnderOrganiser = async (eventId: number): Promise<Event
 };
 
 export const updateEvent = async (
-  eventId: number,
+  eventId: string,
   payload: Partial<EventPayload>
 ): Promise<Event> => {
   try {
@@ -63,7 +63,7 @@ export const updateEvent = async (
   }
 };
 
-export const deleteEvent = async (eventId: number): Promise<string> => {
+export const deleteEvent = async (eventId: string): Promise<string> => {
   try {
     const response = await requestBuilder.deleteAuth<API_Response<null>>(
       ORGANISER_EVENT_ENDPOINTS.DELETE_EVENT(eventId)
