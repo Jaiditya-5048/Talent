@@ -1,12 +1,12 @@
-  // EventInstanceForm.tsx
+// EventInstanceForm.tsx
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Formik, Field, Form, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
-
+import { FaTrashAlt } from 'react-icons/fa';
 import { useEventForm } from '@/context/EventFormContext';
 import AddVenueModal from '@/components/modals/AddVenueModal';
 import AddArtistModal from '@/components/modals/AddArtistModal';
-
+import { Button } from '../ui/button';
 import {
   createInstance,
   deleteInstance,
@@ -14,7 +14,6 @@ import {
 } from '@/apis/services/organiser_apis/instance_api';
 import { formatDate, formatTime, toISOStringUTC } from '@/utils/formatDateTime';
 import { EventInstance } from '@/utils/types/event_types';
-import { Button } from '@/components/ui/button';
 
 interface Ticket {
   name: string;
@@ -46,7 +45,7 @@ const validationSchema = Yup.object().shape({
   venue_id: Yup.string().required('Venue is required'),
   artist_ids: Yup.array()
     .of(Yup.string().required('Artist is required'))
-    .min(1, 'At least one artist is required'),
+    .min(1, 'At least one artist is required'), 
   tickets: Yup.array()
     .of(
       Yup.object().shape({
@@ -58,7 +57,7 @@ const validationSchema = Yup.object().shape({
     .min(1, 'At least one ticket type is required'),
 });
 
-const EventInstanceFormOld = forwardRef<EventInstanceFormRef, Props>(
+const EventInstanceForm = forwardRef<EventInstanceFormRef, Props>(
   ({ onSubmitHandler }, ref) => {
 
   const { venuesList, artistsList, event } = useEventForm();
@@ -106,6 +105,8 @@ const EventInstanceFormOld = forwardRef<EventInstanceFormRef, Props>(
       } else {
         // Create new instance
         const created = await createInstance(payload);
+        console.log(created);
+        
         setInstances((prev) => [...prev, created]);
       }
 
@@ -189,7 +190,7 @@ const EventInstanceFormOld = forwardRef<EventInstanceFormRef, Props>(
                   .slice(0, 5),
                 venue_id: String(editInstance.venue_id),
                 artist_ids:
-                  editInstance.artists.map((artist) =>
+                  editInstance.Artists.map((artist) =>
                     artist.artist_id.toString()
                   ) || [],
                 tickets: editInstance.TicketTypes || [],
@@ -248,8 +249,12 @@ const EventInstanceFormOld = forwardRef<EventInstanceFormRef, Props>(
                     </option>
                   ))}
                 </Field>
-                <Button type="button" onClick={() => setVenueModalOpen(true)}>
-                  + Add
+                <Button
+                  type="button"
+                  variant="mono"
+                  onClick={() => setVenueModalOpen(true)}
+                >
+                  + Add new
                 </Button>
               </div>
               <ErrorMessage
@@ -330,9 +335,10 @@ const EventInstanceFormOld = forwardRef<EventInstanceFormRef, Props>(
                   </select>
                   <Button
                     type="button"
+                    variant="mono"
                     onClick={() => setArtistModalOpen(true)}
                   >
-                    + Add
+                    + Add new
                   </Button>
                 </div>
               </div>
@@ -390,8 +396,13 @@ const EventInstanceFormOld = forwardRef<EventInstanceFormRef, Props>(
                           }
                           className="w-full border p-2 rounded"
                         />
-                        <Button type="button" onClick={() => remove(index)}>
-                          X
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="destructive"
+                          onClick={() => remove(index)}
+                        >
+                          <FaTrashAlt />
                         </Button>
                       </div>
                     ))}
@@ -421,7 +432,7 @@ const EventInstanceFormOld = forwardRef<EventInstanceFormRef, Props>(
       </Formik>
 
       {/* Render Event Instances */}
-      <div className="mt-6 space-y-4">
+      <div className={initialValues.editingInstanceId ? `hidden`:`mt-6 space-y-4`}>
         <h2 className="text-lg font-bold">Created Event Instances</h2>
         {instances.length === 0 ? (
           <p>No Instances</p>
@@ -441,8 +452,10 @@ const EventInstanceFormOld = forwardRef<EventInstanceFormRef, Props>(
                 <strong>Venue ID:</strong> {instance.venue_id}
               </p>
               <p>
-                <strong>Artists:</strong> {instance.artists?.join(', ')}
+                <strong>Artists:</strong>{' '}
+                {instance.Artists.map((a) => a.name).join(', ')}
               </p>
+              <p>Ticket types</p>
               <ul className="list-disc pl-5">
                 {instance.TicketTypes?.map((ticket, idx) => (
                   <li key={idx}>
@@ -472,4 +485,4 @@ const EventInstanceFormOld = forwardRef<EventInstanceFormRef, Props>(
   );
 });
 
-export default EventInstanceFormOld;
+export default EventInstanceForm;

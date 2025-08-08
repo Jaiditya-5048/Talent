@@ -1,9 +1,10 @@
 import EventForm from '@/components/forms/EventForm'
-import EventInstanceForm from '@/components/rough/original forms/eventForms/EventInstanceForm';
+import EventInstanceForm from '@/components/forms/EventInstanceForm';
+import EventInstanceFormOld from '@/components/rough/original forms/eventForms/EventInstanceForm';
 import React, { useState } from 'react'
 
 function CreateEvent() {
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(2);
 
   return (
     <>
@@ -17,7 +18,7 @@ function CreateEvent() {
         {step === 0 && <EventForm onSuccess={()=> setStep(1)} />}
             {step === 1 && (
           <>
-            <EventInstanceForm  />
+            <EventInstanceFormOld  />
 
             {/* <div className="flex justify-end mt-4">
               <Button
@@ -29,6 +30,7 @@ function CreateEvent() {
           </>
         )}
 
+        {step === 2 && <EventInstanceForm />}
         
        </div>
      
