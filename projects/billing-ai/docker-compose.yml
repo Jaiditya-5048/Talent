@@ -1,0 +1,38 @@
+
+version: '3.8'
+services:
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+  backend:
+    build: ./apps/backend
+    env_file: .env
+    depends_on:
+      - mongo
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    volumes:
+      - ./apps/backend:/usr/src/app
+    command: npm run start:dev
+
+  frontend:
+    build: ./apps/frontend
+    env_file: .env
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    volumes:
+      - ./apps/frontend:/usr/src/app
+    command: npm run dev
+
+volumes:
+  mongo-data:
